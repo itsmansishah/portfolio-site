@@ -3,7 +3,7 @@ import FilingCabinet from "./components/FilingCabinet";
 export default function App() {
   return (
     <div className="bg-[#EEEEE8] text-[#111111] min-h-screen">
-      <header className="pt-16 pb-6 text-center px-6">
+      <header className="pt-16 pb-0 text-center px-6">
         <p className="font-mono text-[11px] tracking-[0.3em] uppercase text-black/50 mb-4">
           // portfolio — v1.0
         </p>

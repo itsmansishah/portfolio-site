@@ -13,7 +13,7 @@ type Entry =
       title: string;
       role: string;
       status?: string; // optional — omit to hide the second pill
-      caseStudyUrl: string;
+      caseStudyUrl?: string; // optional — omit to hide the "View Case Study" link
       lines: string[];
       tabLeftPct: number;
     }
@@ -29,7 +29,6 @@ const ENTRIES: Entry[] = [
     label: "DESCRIBE TO DESIGN",
     title: "Describe to Design",
     role: "Lead Designer",
-    caseStudyUrl: "#",
     lines: [
       "Describe to Design set out to let people describe what they wanted in plain language and have AI simply build and configure the workflow for them. This project was successfully launched in 2026.",
     ],
@@ -42,7 +41,6 @@ const ENTRIES: Entry[] = [
     label: "UNIFIED TRANSFORM",
     title: "Unified Transform",
     role: "Lead Designer",
-    caseStudyUrl: "#",
     lines: [
       "Placeholder copy — a short framing of the problem and who it was for.",
       "Placeholder copy — the approach, the key decisions, and what shipped.",
@@ -57,7 +55,6 @@ const ENTRIES: Entry[] = [
     label: "OXM NON VOICE",
     title: "OXM Non Voice",
     role: "Lead Designer",
-    caseStudyUrl: "#",
     lines: [
       "Placeholder copy — a short framing of the problem and who it was for.",
       "Placeholder copy — the approach, the key decisions, and what shipped.",
@@ -105,7 +102,7 @@ const BEHIND_LIFT = -20; // folders behind lean back a touch
 // tallest card to eject fully, but it is recomputed from the *measured*
 // active card so an unexpectedly tall card pushes the stack down rather
 // than climbing out of the container into the hero.
-const BASE_HEADROOM = 200;
+const BASE_HEADROOM = 174;
 const BASE_POCKET_UP = 470; // clip-region travel room above each folder top
 const TOP_MARGIN = 8; // smallest gap kept between an ejected card and the top
 
@@ -244,7 +241,7 @@ function FolderPiece({
   // Real case-study links open in a new tab. The "#" placeholders must not —
   // target="_blank" on "#" spawns a useless blank tab.
   const caseStudyIsExternal =
-    entry.kind === "project" && /^https?:\/\//.test(entry.caseStudyUrl);
+    entry.kind === "project" && /^https?:\/\//.test(entry.caseStudyUrl ?? "");
 
   const handlers = isInteractive
     ? {
@@ -334,17 +331,19 @@ function FolderPiece({
                     </span>
                   )}
                 </div>
-                <a
-                  href={entry.caseStudyUrl}
-                  target={caseStudyIsExternal ? "_blank" : undefined}
-                  rel={caseStudyIsExternal ? "noopener noreferrer" : undefined}
-                  className="mt-3 inline-block font-mono text-sm tracking-wide underline underline-offset-4 decoration-white/40 hover:decoration-white"
-                  // The clipping pocket sets pointer-events: none, so re-enable
-                  // it just for this link, and only while the card is open.
-                  style={{ pointerEvents: isActive ? "auto" : "none" }}
-                >
-                  View Case Study
-                </a>
+                {entry.caseStudyUrl && (
+                  <a
+                    href={entry.caseStudyUrl}
+                    target={caseStudyIsExternal ? "_blank" : undefined}
+                    rel={caseStudyIsExternal ? "noopener noreferrer" : undefined}
+                    className="mt-3 inline-block font-mono text-sm tracking-wide underline underline-offset-4 decoration-white/40 hover:decoration-white"
+                    // The clipping pocket sets pointer-events: none, so re-enable
+                    // it just for this link, and only while the card is open.
+                    style={{ pointerEvents: isActive ? "auto" : "none" }}
+                  >
+                    View Case Study
+                  </a>
+                )}
               </>
             )}
           </motion.div>
