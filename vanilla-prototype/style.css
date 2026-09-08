@@ -1,0 +1,304 @@
+/* ---------- tokens ---------- */
+:root{
+  --bg: #0a0b0a;
+  --bg-soft: #111311;
+  --ink: #e9e6dd;
+  --muted: #82897f;
+  --accent: #7cffa8;
+  --folder: #d9c9a0;
+  --folder-shadow: #8f7f5c;
+  --paper-1: #c2b48c;
+  --paper-2: #a99a76;
+  --rule: rgba(233,230,221,0.12);
+  --mono: "IBM Plex Mono", ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+}
+
+*{ box-sizing: border-box; }
+
+html{ scroll-behavior: smooth; }
+
+body{
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--mono);
+  font-size: 15px;
+  line-height: 1.6;
+  -webkit-font-smoothing: antialiased;
+}
+
+a{ color: inherit; }
+
+/* ---------- hero ---------- */
+.hero{
+  min-height: 100svh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  padding: 24px;
+  border-bottom: 1px solid var(--rule);
+}
+
+.hero-inner{ max-width: 620px; }
+
+.kicker{
+  margin: 0 0 18px;
+  color: var(--accent);
+  letter-spacing: 0.08em;
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.name{
+  margin: 0 0 14px;
+  font-size: clamp(32px, 6vw, 56px);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+
+.role{
+  margin: 0 0 40px;
+  color: var(--muted);
+  font-size: 15px;
+}
+
+.scroll-hint{
+  margin: 0;
+  font-size: 12px;
+  color: var(--muted);
+  letter-spacing: 0.05em;
+}
+
+.arrow{
+  display: inline-block;
+  animation: bob 1.6s ease-in-out infinite;
+}
+
+@keyframes bob{
+  0%, 100%{ transform: translateY(0); }
+  50%{ transform: translateY(5px); }
+}
+
+/* ---------- drawer / stack ---------- */
+.drawer{
+  padding: 4vh 24px 10vh;
+}
+
+.project{
+  min-height: 140vh;
+  display: flex;
+  justify-content: center;
+}
+
+.project:last-of-type{ min-height: 110vh; }
+
+.project-inner{
+  position: sticky;
+  top: 8vh;
+  width: 100%;
+  max-width: 620px;
+  height: min-content;
+  perspective: 1600px;
+}
+
+.project:nth-of-type(1) .project-inner{ z-index: 10; }
+.project:nth-of-type(2) .project-inner{ z-index: 20; top: 10vh; }
+.project:nth-of-type(3) .project-inner{ z-index: 30; top: 12vh; }
+.project:nth-of-type(4) .project-inner{ z-index: 40; top: 14vh; }
+
+/* stacked papers peeking out behind the folder */
+.stackpapers{ position: absolute; inset: 0; z-index: 0; }
+.stackpapers::before,
+.stackpapers::after{
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: var(--paper-1);
+}
+.stackpapers::before{
+  transform: rotate(-2.4deg) translate(-6px, 10px);
+  background: var(--paper-1);
+}
+.stackpapers::after{
+  transform: rotate(1.8deg) translate(8px, 14px);
+  background: var(--paper-2);
+}
+
+.folder{
+  position: relative;
+  z-index: 1;
+  transform: translateY(0);
+  transition: transform 0.5s ease;
+}
+
+.folder-back{
+  position: absolute;
+  inset: 0;
+  border-radius: 6px;
+  background: var(--folder-shadow);
+  transform: translateY(4px);
+}
+
+/* the closed "lid" that covers the terminal until opened */
+.folder-lid{
+  position: absolute;
+  inset: 0;
+  z-index: 5;
+  background: var(--folder);
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 0 20px;
+  color: #2b2417;
+  transform-origin: top center;
+  transform: rotateX(0deg);
+  transition: transform 0.85s cubic-bezier(.6,.1,.25,1), box-shadow 0.85s ease;
+  box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+  backface-visibility: hidden;
+  cursor: default;
+}
+
+.tab-index{
+  font-weight: 600;
+  font-size: 13px;
+  opacity: 0.6;
+}
+
+.tab-name{
+  font-weight: 600;
+  font-size: 14px;
+  letter-spacing: 0.01em;
+}
+
+.folder.is-open .folder-lid{
+  transform: rotateX(-100deg) translateY(-2px);
+  box-shadow: 0 2px 10px rgba(0,0,0,0.25);
+}
+
+.folder.is-open .project-inner,
+.project.is-active .project-inner{ }
+
+.project.is-active .folder{
+  transform: translateY(-6px);
+}
+
+/* ---------- terminal card ---------- */
+.terminal{
+  position: relative;
+  z-index: 2;
+  background: var(--bg-soft);
+  border: 1px solid var(--rule);
+  border-radius: 6px;
+  overflow: hidden;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+}
+
+.terminal-standalone{ max-width: 620px; margin: 0 auto; }
+
+.terminal-bar{
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  padding: 12px 16px;
+  border-bottom: 1px solid var(--rule);
+  background: rgba(255,255,255,0.02);
+}
+
+.dot{
+  width: 9px; height: 9px;
+  border-radius: 50%;
+  background: var(--muted);
+  opacity: 0.5;
+}
+
+.terminal-path{
+  margin-left: 8px;
+  font-size: 12px;
+  color: var(--muted);
+}
+
+.terminal-body{
+  padding: 22px 20px 26px;
+}
+
+.tline{
+  margin: 0 0 10px;
+  color: var(--ink);
+  opacity: 0;
+  transform: translateY(4px);
+  transition: opacity 0.5s ease, transform 0.5s ease;
+  font-size: 13.5px;
+}
+
+.tline:last-child{ margin-bottom: 0; }
+
+.folder.is-open .terminal .tline,
+.about .terminal .tline,
+.contact .terminal .tline{
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.tline:nth-child(1){ transition-delay: 0.55s; }
+.tline:nth-child(2){ transition-delay: 0.66s; }
+.tline:nth-child(3){ transition-delay: 0.77s; }
+.tline:nth-child(4){ transition-delay: 0.88s; }
+.tline:nth-child(5){ transition-delay: 0.99s; }
+.tline:nth-child(6){ transition-delay: 1.10s; }
+.tline:nth-child(7){ transition-delay: 1.21s; }
+
+.prompt{ color: var(--accent); margin-right: 6px; }
+
+.tline a{ text-decoration: none; }
+.tline a:hover{ color: var(--accent); }
+
+.cmd{ color: var(--muted); }
+
+.cursor{
+  display: inline-block;
+  color: var(--accent);
+  animation: blink 1s steps(1) infinite;
+}
+
+@keyframes blink{
+  0%, 49%{ opacity: 1; }
+  50%, 100%{ opacity: 0; }
+}
+
+/* ---------- about / contact ---------- */
+.about, .contact{
+  padding: 8vh 24px;
+  border-top: 1px solid var(--rule);
+}
+
+.contact{ padding-bottom: 6vh; }
+
+.about .tline, .contact .tline{
+  transition-delay: 0s !important;
+}
+
+.fine-print{
+  max-width: 620px;
+  margin: 24px auto 0;
+  text-align: center;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+/* ---------- small screens ---------- */
+@media (max-width: 640px){
+  .project-inner{ max-width: 100%; }
+  .terminal-body{ padding: 18px 16px 22px; }
+  .tline{ font-size: 12.5px; }
+}
+
+@media (prefers-reduced-motion: reduce){
+  html{ scroll-behavior: auto; }
+  .folder-lid, .tline, .folder, .arrow{ transition: none !important; animation: none !important; }
+  .folder-lid{ transform: rotateX(-122deg) !important; }
+  .tline{ opacity: 1 !important; transform: none !important; }
+}
