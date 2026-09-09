@@ -42,6 +42,7 @@ const ENTRIES: Entry[] = [
     code: "[02]",
     label: "UNIFIED TRANSFORM",
     title: "Unified Transform",
+    meta: ["2026", "redesign", "UXR"],
     role: "Lead Designer",
     lines: [
       "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end.",
@@ -95,7 +96,11 @@ const TAB_MARGIN = 14; // keeps a tab from touching its folder's side edges
 // by rising until its body clears the folder's top line — leaving only this
 // much tucked back behind the wall, like a document standing in a pocket.
 const LIP_TUCK = 40;
-const HOVER_LIFT = 20; // hover peeks in the same upward direction
+// Hover peeks in the same upward direction as opening, but far enough to
+// clear the card's header row plus one full line of copy (measured at 81px
+// from the card's top edge) so there is a real preview before any click.
+const HOVER_LIFT = 92;
+const HOVER_FOLDER_LIFT = -20; // the folder + its tab also rise on hover
 const FRONT_DROP = 40; // the front lip drops away as the document comes up
 const BEHIND_LIFT = -20; // folders behind lean back a touch
 
@@ -214,7 +219,7 @@ function FolderPiece({
   const bodyH = (N - 1 - i) * STEP + PANEL_H;
 
   const gapShift = !someActive || isActive ? 0 : i < activeIndex ? BEHIND_LIFT : FRONT_DROP;
-  const extraY = isActive ? -12 : isHovered ? -12 + gapShift : gapShift;
+  const extraY = isActive ? -12 : isHovered ? HOVER_FOLDER_LIFT + gapShift : gapShift;
   const bodyTop = headroom + i * STEP + extraY;
 
   // Clip travel must always exceed this folder's own ejection distance,
@@ -324,7 +329,7 @@ function FolderPiece({
                   // out of the tab order while the card is closed.
                   tabIndex={isActive ? 0 : -1}
                   className="mt-4 inline-block font-mono text-sm tracking-wide underline underline-offset-4 decoration-current/40 hover:decoration-current"
-                  style={{ color: "#DBF1FE", pointerEvents: isActive ? "auto" : "none" }}
+                  style={{ color: "#CADD57", pointerEvents: isActive ? "auto" : "none" }}
                 >
                   say hello!
                 </a>
