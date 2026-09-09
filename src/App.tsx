@@ -1,4 +1,13 @@
+import type { ReactNode } from "react";
 import FilingCabinet from "./components/FilingCabinet";
+
+function Kbd({ children }: { children: ReactNode }) {
+  return (
+    <kbd className="inline-flex items-center rounded border border-black/25 bg-[#F7F7F3] px-2 py-0.5 font-mono text-[11px] text-black/70 shadow-[0_1px_0_rgba(0,0,0,0.12)]">
+      {children}
+    </kbd>
+  );
+}
 
 export default function App() {
   return (
@@ -10,6 +19,18 @@ export default function App() {
         <h1 className="text-6xl sm:text-7xl font-bold tracking-tight">MANSI SHAH</h1>
         <p className="mt-4 text-[15px] text-black/55">UX Designer — product, systems, research</p>
       </header>
+
+      {/* Keyboard affordance — the folder tabs are real buttons, so this
+          tells people the drawer is operable without a mouse. */}
+      <p className="mt-10 flex flex-wrap items-center justify-center gap-2 px-6 font-mono text-[11px] text-black/45">
+        <Kbd>Tab</Kbd>
+        <span>to focus</span>
+        <span aria-hidden="true" className="text-black/25">·</span>
+        <Kbd>Enter</Kbd>
+        <span>or</span>
+        <Kbd>Space</Kbd>
+        <span>to open</span>
+      </p>
 
       <FilingCabinet />
 

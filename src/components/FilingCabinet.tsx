@@ -11,6 +11,7 @@ type Entry =
       code: string;
       label: string;
       title: string;
+      meta?: string[]; // small filled pills (year, 0→1, …) shown before the role
       role: string;
       status?: string; // optional — omit to hide the second pill
       caseStudyUrl?: string; // optional — omit to hide the "View Case Study" link
@@ -28,6 +29,7 @@ const ENTRIES: Entry[] = [
     code: "[01]",
     label: "DESCRIBE TO DESIGN",
     title: "Describe to Design",
+    meta: ["2026", "0→1"],
     role: "Lead Designer",
     lines: [
       "Describe to Design set out to let people describe what they wanted in plain language and have AI simply build and configure the workflow for them. This project was successfully launched in 2026.",
@@ -42,9 +44,8 @@ const ENTRIES: Entry[] = [
     title: "Unified Transform",
     role: "Lead Designer",
     lines: [
-      "Placeholder copy — a short framing of the problem and who it was for.",
-      "Placeholder copy — the approach, the key decisions, and what shipped.",
-      "Placeholder copy — outcomes, metrics, and what I would do differently.",
+      "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end.",
+      "Currently in development, targeting a Q4 2026 launch.",
     ],
     tabLeftPct: 58,
   },
@@ -322,6 +323,14 @@ function FolderPiece({
                   ))}
                 </div>
                 <div className="mt-4 flex flex-wrap items-center gap-2">
+                  {entry.meta?.map((m) => (
+                    <span
+                      key={m}
+                      className="font-mono text-[10px] tracking-[0.15em] uppercase bg-white/10 rounded-full px-2.5 py-1"
+                    >
+                      {m}
+                    </span>
+                  ))}
                   <span className="font-mono text-[10px] tracking-[0.15em] uppercase border border-white/20 rounded-full px-2.5 py-1">
                     {entry.role}
                   </span>
@@ -331,11 +340,14 @@ function FolderPiece({
                     </span>
                   )}
                 </div>
-                {entry.caseStudyUrl && (
+                {entry.caseStudyUrl ? (
                   <a
                     href={entry.caseStudyUrl}
                     target={caseStudyIsExternal ? "_blank" : undefined}
                     rel={caseStudyIsExternal ? "noopener noreferrer" : undefined}
+                    // Closed cards sit hidden behind the folder wall, so their
+                    // link must leave the tab order too — not just be unclickable.
+                    tabIndex={isActive ? 0 : -1}
                     className="mt-3 inline-block font-mono text-sm tracking-wide underline underline-offset-4 decoration-white/40 hover:decoration-white"
                     // The clipping pocket sets pointer-events: none, so re-enable
                     // it just for this link, and only while the card is open.
@@ -343,6 +355,10 @@ function FolderPiece({
                   >
                     View Case Study
                   </a>
+                ) : (
+                  <p className="mt-3 font-mono text-sm tracking-wide text-white/40">
+                    Case study coming soon
+                  </p>
                 )}
               </>
             )}
@@ -376,7 +392,23 @@ function FolderPiece({
           <motion.div
             initial={false}
             ref={tabRef}
-            className="absolute top-0 -translate-y-full w-auto inline-flex items-center whitespace-nowrap px-4 py-1 cursor-pointer select-none"
+            // The tab is the keyboard control for its folder. Focus reuses the
+            // hover treatment (inverted fill + card peek), which doubles as the
+            // visible focus indicator — an outline would be clipped away by the
+            // trapezoid clip-path.
+            role="button"
+            tabIndex={0}
+            aria-expanded={isActive}
+            aria-label={`${entry.code} ${entry.label}`}
+            onFocus={() => onEnter(entry.id)}
+            onBlur={onLeave}
+            onKeyDown={(e) => {
+              if (e.key === "Enter" || e.key === " ") {
+                e.preventDefault(); // Space would otherwise scroll the page
+                onSelect(entry.id);
+              }
+            }}
+            className="absolute top-0 -translate-y-full w-auto inline-flex items-center whitespace-nowrap px-4 py-1 cursor-pointer select-none outline-none"
             style={{
               left: tabLeft,
               height: TAB_H,
