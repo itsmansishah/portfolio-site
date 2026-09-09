@@ -287,13 +287,14 @@ function FolderPiece({
               <span className="font-mono text-[11px] tracking-[0.2em] text-white/40">{entry.label}</span>
             </div>
             {entry.kind === "about" ? (
-              // Container query, not a viewport breakpoint: the card is a
-              // fixed ~600px element inside the folder, so its columns must
-              // respond to its OWN width. On a narrow viewport a `md:` rule
-              // collapses this to one column and triples the card's height,
-              // over-ejecting it out of the drawer.
-              <div className="grid grid-cols-1 @md:grid-cols-12 gap-6 items-center pb-2">
-                <div className="@md:col-span-7 space-y-3 text-left font-mono text-[12px] leading-relaxed text-white/90">
+              <>
+                {/* Container query, not a viewport breakpoint: the card is a
+                    fixed ~600px element inside the folder, so its columns must
+                    respond to its OWN width. On a narrow viewport a `md:` rule
+                    collapses this to one column and triples the card's height,
+                    over-ejecting it out of the drawer. */}
+                <div className="grid grid-cols-1 @md:grid-cols-12 gap-6 items-center pb-2">
+                  <div className="@md:col-span-7 space-y-3 text-left font-mono text-[12px] leading-relaxed text-white/90">
                   <p>
                     I&rsquo;m Mansi <span className="text-white/50">(pronounced mahn-see)</span>.
                   </p>
@@ -311,10 +312,23 @@ function FolderPiece({
                     spots. feel free to say hi!
                   </p>
                 </div>
-                <div className="@md:col-span-5">
-                  <Portrait />
+                  <div className="@md:col-span-5">
+                    <Portrait />
+                  </div>
                 </div>
-              </div>
+                <a
+                  href="https://www.linkedin.com/in/mansishah120/"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  // Same pocket rules as the case-study link: unclickable and
+                  // out of the tab order while the card is closed.
+                  tabIndex={isActive ? 0 : -1}
+                  className="mt-4 inline-block font-mono text-sm tracking-wide underline underline-offset-4 decoration-current/40 hover:decoration-current"
+                  style={{ color: "#DBF1FE", pointerEvents: isActive ? "auto" : "none" }}
+                >
+                  say hello!
+                </a>
+              </>
             ) : (
               <>
                 <div className="space-y-2 font-mono text-[13px] leading-relaxed text-white/90">
