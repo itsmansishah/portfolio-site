@@ -4,8 +4,19 @@ export type Project = {
   blurb: string;
   meta: string[];
   role: string;
-  caseStudyUrl?: string;
+  caseStudyUrl?: string; // external (e.g. Figma prototype)
+  caseStudySlug?: string; // internal case study page
   mockSrc?: string;
+};
+
+export type Fact = { label: string; values: string[] };
+
+export type CaseStudy = {
+  slug: string;
+  title: string;
+  intro: string[];
+  facts: Fact[];
+  shots: { src?: string; label: string }[];
 };
 
 export const PROJECTS: Project[] = [
@@ -16,6 +27,7 @@ export const PROJECTS: Project[] = [
       "Describe to Design set out to let people describe what they wanted in plain language and have AI simply build and configure the workflow for them. This project was successfully launched in 2026.",
     meta: ["2026", "0→1"],
     role: "Lead Designer",
+    caseStudySlug: "describe-to-design",
   },
   {
     num: "/02",
@@ -24,6 +36,7 @@ export const PROJECTS: Project[] = [
       "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end. Currently in development, targeting a Q4 2026 launch.",
     meta: ["2026", "redesign", "UXR"],
     role: "Lead Designer",
+    caseStudySlug: "unified-transform",
   },
   {
     num: "/03",
@@ -34,6 +47,43 @@ export const PROJECTS: Project[] = [
     role: "Lead Designer · Lead Researcher",
     caseStudyUrl:
       "https://www.figma.com/proto/rZ1VDRfVbJ3xziSJcXC0K1/Case-Studies?node-id=101-8872&viewport=407%2C406%2C0.02&t=ZaXoOVmx3rNedutz-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=101%3A8872&page-id=101%3A8865",
+  },
+];
+
+// Facts render in a two-column grid, flowing in this order — so the pairs
+// land as (Company, Year), (Deliverables, Role), (Team, …).
+export const CASE_STUDIES: CaseStudy[] = [
+  {
+    slug: "describe-to-design",
+    title: "Describe to Design",
+    intro: [
+      "At Qualtrics, creating automated workflows (known internally as xFlows) is a powerful but complex experience. While these workflows allow users to automate tasks across their survey and other feedback ecosystems, configuring them requires significant manual setup and technical know-how.",
+      "As part of the Workflows team, I led design exploration for a new concept called Describe to Design (D2D), an AI-powered that lowers the barrier to workflow creation by enabling users to generate, modify, and refine workflows through natural language.",
+    ],
+    facts: [
+      { label: "Company", values: ["Qualtrics"] },
+      { label: "Year", values: ["2025"] },
+      { label: "Deliverables", values: ["Ship designs (MVP, V2)", "Define scope", "Usability testing"] },
+      { label: "Role", values: ["UX Designer"] },
+      { label: "Team", values: ["Product Manager", "Engineers", "UX Research"] },
+    ],
+    shots: [{ label: "D2D_OVERVIEW.PNG" }],
+  },
+  {
+    slug: "unified-transform",
+    title: "Unified Transform",
+    intro: [
+      "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end.",
+      "Currently in development, targeting a Q4 2026 launch.",
+    ],
+    facts: [
+      { label: "Company", values: ["Qualtrics"] },
+      { label: "Year", values: ["2026"] },
+      { label: "Deliverables", values: ["Add deliverables"] },
+      { label: "Role", values: ["Lead Designer"] },
+      { label: "Team", values: ["Add team"] },
+    ],
+    shots: [{ label: "UNIFIED_TRANSFORM_OVERVIEW.PNG" }],
   },
 ];
 
