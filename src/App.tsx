@@ -40,50 +40,65 @@ function Nav() {
 /* ── hero ────────────────────────────────────────────────────────────── */
 
 function Hero() {
-  return (
-    <header id="top" className="mx-auto max-w-[1100px] px-6 pt-10 sm:pt-16">
-      <h1 className="font-serif text-[clamp(2.5rem,8vw,3.75rem)] leading-[1.05] tracking-[-0.03em]">
-        Mansi Shah
-      </h1>
-      <p className="mt-2 text-right font-serif text-[clamp(1.75rem,6vw,3.75rem)] leading-[1.05] tracking-[-0.03em]">
-        Product Designer @ Qualtrics
-      </p>
-      <p className={`${LABEL} ml-auto mt-6 max-w-[34rem] text-right leading-relaxed`}>
-        UX designer focused on solving complex problems &amp; designing thoughtful experiences that
-        make people feel seen
-      </p>
-    </header>
-  );
-}
-
-/* ── arch portrait ───────────────────────────────────────────────────── */
-
-function ArchPortrait() {
   const [failed, setFailed] = useState(false);
 
   return (
-    <div className="relative mx-auto mt-14 max-w-[1100px] px-6">
-      {/* the thin outline arch that sits behind and wider than the photo */}
-      <div
-        aria-hidden="true"
-        className="absolute inset-x-6 bottom-0 top-0 rounded-t-[999px] border border-ink/35 border-b-0"
-      />
-      <div className="relative mx-auto w-[min(52%,420px)] overflow-hidden rounded-t-[999px]">
-        {!failed ? (
-          <img
-            src="/portrait.jpg"
-            alt="Mansi Shah"
-            className="aspect-[3/4] w-full object-cover"
-            style={{ objectPosition: "50% 22%" }}
-            onError={() => setFailed(true)}
-          />
-        ) : (
-          <div className="flex aspect-[3/4] w-full items-center justify-center bg-ink/5">
-            <span className={`${LABEL} text-ink/40`}>[ portrait.jpg ]</span>
-          </div>
-        )}
+    <header
+      id="top"
+      className="mx-auto grid max-w-[1100px] items-end gap-10 px-6 pt-10 sm:grid-cols-12 sm:pt-16"
+    >
+      {/* left: name, title, positioning line */}
+      <div className="sm:col-span-7">
+        <h1
+          className="rise font-serif text-[clamp(2.5rem,8vw,3.75rem)] leading-[1.05] tracking-[-0.03em]"
+          style={{ "--delay": "60ms" } as React.CSSProperties}
+        >
+          Mansi Shah
+        </h1>
+        <p
+          className="rise mt-2 font-serif text-[clamp(1.75rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em]"
+          style={{ "--delay": "180ms" } as React.CSSProperties}
+        >
+          Product Designer @ Qualtrics
+        </p>
+        <p
+          className={`${LABEL} rise mt-6 max-w-[34rem] leading-relaxed`}
+          style={{ "--delay": "300ms" } as React.CSSProperties}
+        >
+          UX designer focused on solving complex problems &amp; designing thoughtful experiences
+          that make people feel seen
+        </p>
       </div>
-    </div>
+
+      {/* right: arch portrait, with a concentric outline arch behind it */}
+      <div className="sm:col-span-5">
+        <div className="relative ml-auto w-[min(88%,340px)]">
+          <div
+            aria-hidden="true"
+            className="rise pointer-events-none absolute -inset-x-7 -top-7 bottom-0 rounded-t-[999px] border border-b-0 border-ink/30"
+            style={{ "--delay": "380ms" } as React.CSSProperties}
+          />
+          <div
+            className="unveil relative overflow-hidden rounded-t-[999px]"
+            style={{ "--delay": "420ms" } as React.CSSProperties}
+          >
+            {!failed ? (
+              <img
+                src="/portrait.jpg"
+                alt="Mansi Shah"
+                className="aspect-[3/4] w-full object-cover"
+                style={{ objectPosition: "50% 22%" }}
+                onError={() => setFailed(true)}
+              />
+            ) : (
+              <div className="flex aspect-[3/4] w-full items-center justify-center bg-ink/5">
+                <span className={`${LABEL} text-ink/40`}>[ portrait.jpg ]</span>
+              </div>
+            )}
+          </div>
+        </div>
+      </div>
+    </header>
   );
 }
 
@@ -257,9 +272,8 @@ export default function App() {
     <div className="min-h-screen bg-paper text-ink">
       <Nav />
       <Hero />
-      <ArchPortrait />
 
-      <div className="py-14">
+      <div className="rise py-14" style={{ "--delay": "560ms" } as React.CSSProperties}>
         <SlashRule />
       </div>
 
