@@ -58,11 +58,11 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Describe to Design",
     intro: [
       "At Qualtrics, creating automated workflows (known internally as xFlows) is a powerful but complex experience. While these workflows allow users to automate tasks across their survey and other feedback ecosystems, configuring them requires significant manual setup and technical know-how.",
-      "As part of the Workflows team, I led design exploration for a new concept called Describe to Design (D2D), an AI-powered that lowers the barrier to workflow creation by enabling users to generate, modify, and refine workflows through natural language.",
+      "As part of the Workflows team, I led design exploration for a new concept called Describe to Design (D2D), an AI-powered chat experience that lowers the barrier to workflow creation by enabling users to generate, modify, and refine workflows through natural language.",
     ],
     facts: [
       { label: "Company", values: ["Qualtrics"] },
-      { label: "Year", values: ["2025"] },
+      { label: "Year", values: ["2025 – 2026"] },
       { label: "Deliverables", values: ["Ship designs (MVP, V2)", "Define scope", "Usability testing"] },
       { label: "Role", values: ["UX Designer"] },
       { label: "Team", values: ["Product Manager", "Engineers", "UX Research"] },
