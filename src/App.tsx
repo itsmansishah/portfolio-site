@@ -57,13 +57,13 @@ function Hero() {
         </h1>
         <p
           className="rise mt-2 font-serif text-[clamp(1.75rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em]"
-          style={{ "--delay": "180ms" } as React.CSSProperties}
+          style={{ "--delay": "120ms" } as React.CSSProperties}
         >
           Product Designer @ Qualtrics
         </p>
         <p
           className={`${LABEL} rise mt-6 max-w-[34rem] leading-relaxed`}
-          style={{ "--delay": "300ms" } as React.CSSProperties}
+          style={{ "--delay": "200ms" } as React.CSSProperties}
         >
           UX designer focused on solving complex problems &amp; designing thoughtful experiences
           that make people feel seen
@@ -76,11 +76,11 @@ function Hero() {
           <div
             aria-hidden="true"
             className="rise pointer-events-none absolute -inset-x-7 -top-7 bottom-0 rounded-t-[999px] border border-b-0 border-ink/30"
-            style={{ "--delay": "380ms" } as React.CSSProperties}
+            style={{ "--delay": "240ms" } as React.CSSProperties}
           />
           <div
-            className="unveil relative overflow-hidden rounded-t-[999px]"
-            style={{ "--delay": "420ms" } as React.CSSProperties}
+            className="rise relative overflow-hidden rounded-t-[999px]"
+            style={{ "--delay": "260ms" } as React.CSSProperties}
           >
             {!failed ? (
               <img
@@ -96,6 +96,15 @@ function Hero() {
               </div>
             )}
           </div>
+
+          {/* Say hello sits over the lower-right of the portrait */}
+          <a
+            href={`mailto:${CONTACT.email}`}
+            className={`${LABEL} rise absolute bottom-5 right-4 rounded-full bg-accent px-5 py-3 text-ink shadow-md transition hover:brightness-95`}
+            style={{ "--delay": "420ms" } as React.CSSProperties}
+          >
+            Say hello
+          </a>
         </div>
       </div>
     </header>
@@ -273,7 +282,7 @@ export default function App() {
       <Nav />
       <Hero />
 
-      <div className="rise py-14" style={{ "--delay": "560ms" } as React.CSSProperties}>
+      <div className="rise py-14" style={{ "--delay": "480ms" } as React.CSSProperties}>
         <SlashRule />
       </div>
 
@@ -285,13 +294,6 @@ export default function App() {
 
       <About />
       <Footer />
-
-      <a
-        href={`mailto:${CONTACT.email}`}
-        className={`${LABEL} fixed bottom-6 right-6 z-40 rounded-full bg-accent px-5 py-3 text-ink shadow-lg transition hover:brightness-95`}
-      >
-        Say hello
-      </a>
     </div>
   );
 }

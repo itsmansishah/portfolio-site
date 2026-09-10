@@ -31,11 +31,12 @@ body {
   scroll-margin-top: 5rem;
 }
 
-/* Entrance: elements settle up into place, staggered via --delay. */
+/* Entrance: a soft fade with a slight settle upward, lightly staggered —
+   matching the reference site's load, which fades rather than slides. */
 @keyframes rise {
   from {
     opacity: 0;
-    transform: translateY(14px);
+    transform: translateY(8px);
   }
   to {
     opacity: 1;
@@ -45,31 +46,14 @@ body {
 
 .rise {
   opacity: 0;
-  animation: rise 0.75s cubic-bezier(0.22, 1, 0.36, 1) forwards;
-  animation-delay: var(--delay, 0ms);
-}
-
-/* The portrait reveals by uncovering rather than moving. */
-@keyframes unveil {
-  from {
-    clip-path: inset(100% 0 0 0);
-  }
-  to {
-    clip-path: inset(0 0 0 0);
-  }
-}
-
-.unveil {
-  animation: unveil 1.1s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+  animation: rise 0.6s cubic-bezier(0.33, 1, 0.68, 1) forwards;
   animation-delay: var(--delay, 0ms);
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .rise,
-  .unveil {
+  .rise {
     opacity: 1;
     animation: none;
-    clip-path: none;
     transform: none;
   }
 }
