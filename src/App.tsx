@@ -137,6 +137,10 @@ function ProjectRow({ project }: { project: Project }) {
             </span>
           </div>
 
+          <p className="mt-6 max-w-[46ch] font-mono text-[13px] leading-relaxed text-ink/70">
+            {project.blurb}
+          </p>
+
           {hasCaseStudy ? (
             <a
               href={project.caseStudyUrl}
@@ -144,19 +148,16 @@ function ProjectRow({ project }: { project: Project }) {
               rel="noopener noreferrer"
               className={`${LABEL} mt-6 inline-flex items-center gap-2 border-b border-ink pb-1 hover:opacity-60`}
             >
-              See project <span aria-hidden="true">→</span>
+              View case study <span aria-hidden="true">→</span>
             </a>
           ) : (
             <p className={`${LABEL} mt-6 text-ink/40`}>Case study coming soon</p>
           )}
         </div>
 
-        {/* right: mock + blurb */}
+        {/* right: mock */}
         <div className="sm:col-span-7">
           <ProjectMock project={project} />
-          <p className="mt-5 max-w-[46ch] font-mono text-[13px] leading-relaxed text-ink/70">
-            {project.blurb}
-          </p>
         </div>
       </div>
     </article>

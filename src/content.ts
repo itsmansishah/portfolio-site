@@ -27,13 +27,6 @@ export const PROJECTS: Project[] = [
   },
   {
     num: "/03",
-    name: "OXM Non Voice",
-    blurb: "Case study overview — problem, process, and outcomes. Full write-up coming soon.",
-    meta: [],
-    role: "Lead Designer",
-  },
-  {
-    num: "/04",
     name: "Pitchbook Projects",
     blurb:
       "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space as well as features around custom fields and saved lists. The case studies highlight two projects launched in 2021.",
