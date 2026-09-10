@@ -11,6 +11,7 @@ type Entry =
       code: string;
       label: string;
       title: string;
+      mockSrc?: string; // drop a file in public/ and point here to replace the placeholder
       meta?: string[]; // small filled pills (year, 0→1, …) shown before the role
       role: string;
       status?: string; // optional — omit to hide the second pill
@@ -145,6 +146,36 @@ function Portrait() {
             [ MANSI_PORTRAIT.JPG ]
           </span>
           <span className="font-mono text-[10px] tracking-[0.2em] text-white/25">[ 400×500 ]</span>
+        </div>
+      )}
+    </div>
+  );
+}
+
+// Project mock at the top of each card. Shows the real image once `mockSrc`
+// points at a file in public/, and a labelled wireframe frame until then —
+// same drop-in behaviour as the portrait.
+function MockFrame({ src, label }: { src?: string; label: string }) {
+  const [failed, setFailed] = useState(false);
+  const fileName = `${label.replace(/[^A-Za-z0-9]+/g, "_").toUpperCase()}.PNG`;
+
+  return (
+    <div className="relative aspect-[16/10] overflow-hidden bg-neutral-900 border border-white/20 rounded-sm">
+      {src && !failed ? (
+        <img
+          src={src}
+          alt={`${label} project mock`}
+          className="absolute inset-0 h-full w-full object-cover"
+          onError={() => setFailed(true)}
+        />
+      ) : (
+        <div className="absolute inset-0 flex flex-col items-center justify-center gap-2">
+          <svg width="32" height="32" viewBox="0 0 40 40" className="text-white/25" aria-hidden="true">
+            <rect x="4" y="7" width="32" height="26" rx="2" fill="none" stroke="currentColor" strokeWidth="1" />
+            <path d="M4 26l9-8 6 5 6-7 11 10" fill="none" stroke="currentColor" strokeWidth="1" />
+            <circle cx="14" cy="14" r="2.5" fill="none" stroke="currentColor" strokeWidth="1" />
+          </svg>
+          <span className="font-mono text-[10px] tracking-[0.2em] text-white/40">[ {fileName} ]</span>
         </div>
       )}
     </div>
@@ -336,6 +367,9 @@ function FolderPiece({
               </>
             ) : (
               <>
+                <div className="mb-4">
+                  <MockFrame src={entry.mockSrc} label={entry.label} />
+                </div>
                 <div className="space-y-2 font-mono text-[13px] leading-relaxed text-white/90">
                   {entry.lines.map((line) => (
                     <p key={line}>{line}</p>
