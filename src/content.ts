@@ -29,6 +29,7 @@ export const PROJECTS: Project[] = [
     meta: ["2026", "0→1"],
     role: "Lead Designer",
     caseStudySlug: "describe-to-design",
+    mockSrc: "/describe-to-design.png",
   },
   {
     num: "/02",
@@ -70,7 +71,7 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "Role", values: ["UX Designer"] },
       { label: "Team", values: ["Product Manager", "Engineers", "UX Research"] },
     ],
-    shots: [{ label: "D2D_OVERVIEW.PNG" }],
+    shots: [{ src: "/describe-to-design.png", label: "D2D_OVERVIEW.PNG" }],
   },
   {
     slug: "unified-transform",
