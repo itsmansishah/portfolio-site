@@ -38,6 +38,7 @@ export const PROJECTS: Project[] = [
     meta: ["2026", "redesign", "UXR"],
     role: "Lead Designer",
     caseStudySlug: "unified-transform",
+    mockSrc: "/unified-transform.png",
   },
   {
     num: "/03",
@@ -75,17 +76,17 @@ export const CASE_STUDIES: CaseStudy[] = [
     slug: "unified-transform",
     title: "Unified Transform",
     intro: [
-      "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end.",
-      "Currently in development, targeting a Q4 2026 launch.",
+      "At Qualtrics, transforming data fields: reformatting, renaming, mapping one system's structure to another, is a routine & essential step when ingesting data from external systems like Salesforce, Genesys, etc into the platform. This was historically split across two separate, unequal tools: Basic Transform for simple reformatting, and a proposed Advanced Transform for anything more complex, forcing users to guess which tool they needed before they'd even diagnosed their own problem.",
+      "As part of the Workflows team, I led the UX research and design for Unified Transform, a redesign that replaces both tools with a single task, letting users move seamlessly between AI-assisted, manual, and code-based transformation, with their real data visible at every step.",
     ],
     facts: [
       { label: "Company", values: ["Qualtrics"] },
       { label: "Year", values: ["2026"] },
-      { label: "Deliverables", values: ["Add deliverables"] },
-      { label: "Role", values: ["Lead Designer"] },
-      { label: "Team", values: ["Add team"] },
+      { label: "Deliverables", values: ["Define requirements", "Full redesign", "Internal testing"] },
+      { label: "Role", values: ["UX Designer & Researcher"] },
+      { label: "Team", values: ["Engineer"] },
     ],
-    shots: [{ label: "UNIFIED_TRANSFORM_OVERVIEW.PNG" }],
+    shots: [{ src: "/unified-transform.png", label: "UNIFIED_TRANSFORM_OVERVIEW.PNG" }],
   },
 ];
 

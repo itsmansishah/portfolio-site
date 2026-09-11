@@ -89,7 +89,9 @@ function ProjectMock({ project }: { project: Project }) {
       <img
         src={project.mockSrc}
         alt={`${project.name} preview`}
-        className="aspect-[16/10] w-full rounded-md border border-ink/15 object-cover"
+        // contain, not cover: these are UI mocks, so cropping the frame edges
+        // (a toolbar, a button bar) does real damage.
+        className="aspect-[16/10] w-full rounded-md border border-ink/15 bg-ink/[0.03] object-contain p-1.5"
         onError={() => setFailed(true)}
       />
     );
