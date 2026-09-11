@@ -10,34 +10,41 @@ function Hero() {
   return (
     <header
       id="top"
-      className="mx-auto grid max-w-[1100px] items-end gap-10 px-6 pt-10 sm:grid-cols-12 sm:pt-16"
+      className="mx-auto grid max-w-[1100px] items-end gap-8 px-6 pt-8 md:grid-cols-12 md:gap-10 md:pt-16"
     >
-      {/* left: name, title, positioning line */}
-      <div className="sm:col-span-7">
+      {/* name, title, positioning line */}
+      <div className="md:col-span-7">
         <h1
-          className="rise font-serif text-[clamp(2.5rem,8vw,3.75rem)] leading-[1.05] tracking-[-0.03em]"
+          className="rise font-serif text-[clamp(2.5rem,11vw,3.75rem)] leading-[1.02] tracking-[-0.03em]"
           style={delay(60)}
         >
           Mansi Shah
         </h1>
         <p
-          className="rise mt-2 font-serif text-[clamp(1.75rem,5vw,3rem)] leading-[1.05] tracking-[-0.03em]"
+          className="rise mt-2 font-serif text-[clamp(1.6rem,7vw,3rem)] leading-[1.08] tracking-[-0.03em]"
           style={delay(120)}
         >
           Product Designer @ Qualtrics
         </p>
-        <p className={`${LABEL} rise mt-6 max-w-[34rem] leading-relaxed`} style={delay(200)}>
+        {/* Wide letter-spacing reads as a wall of caps on a phone, so it
+            tightens on mobile and opens back up on larger screens. */}
+        <p
+          className="rise mt-5 max-w-[34rem] font-mono text-[11px] font-medium uppercase leading-[1.7] tracking-[0.06em] md:mt-6 md:tracking-[0.18em]"
+          style={delay(200)}
+        >
           UX designer focused on solving complex problems &amp; designing thoughtful experiences
           that make people feel seen
         </p>
       </div>
 
-      {/* right: arch portrait, with a concentric outline arch behind it */}
-      <div className="sm:col-span-5">
-        <div className="relative ml-auto w-[min(88%,340px)]">
+      {/* arch portrait with a concentric outline arch behind it */}
+      <div className="md:col-span-5">
+        {/* Inset from the right edge at every size, so the outline
+            (which extends past the photo) can't cause sideways scrolling. */}
+        <div className="relative ml-auto mr-5 mt-4 w-[min(62%,260px)] md:mr-7 md:mt-0 md:w-[min(88%,340px)]">
           <div
             aria-hidden="true"
-            className="rise pointer-events-none absolute -inset-x-7 -top-7 bottom-0 rounded-t-[999px] border border-b-0 border-ink/30"
+            className="rise pointer-events-none absolute -inset-x-5 -top-5 bottom-0 rounded-t-[999px] border border-b-0 border-ink/30 md:-inset-x-7 md:-top-7"
             style={delay(240)}
           />
           <div className="rise relative overflow-hidden rounded-t-[999px]" style={delay(260)}>
@@ -56,10 +63,11 @@ function Hero() {
             )}
           </div>
 
-          {/* Say hello sits over the lower-right of the portrait */}
+          {/* Say hello overlaps the portrait: hanging off its left edge on
+              mobile (into the open space), tucked inside it on desktop. */}
           <a
             href={`mailto:${CONTACT.email}`}
-            className={`${LABEL} rise absolute bottom-5 right-4 rounded-full bg-accent px-5 py-3 text-ink shadow-md transition hover:brightness-95`}
+            className={`${LABEL} rise absolute -left-10 bottom-6 whitespace-nowrap rounded-full bg-accent px-5 py-3 text-ink shadow-md transition hover:brightness-95 md:bottom-5 md:left-auto md:right-4`}
             style={delay(420)}
           >
             Say hello
@@ -94,22 +102,27 @@ function ProjectMock({ project }: { project: Project }) {
   );
 }
 
-const ACTION = `${LABEL} mt-6 inline-flex items-center gap-2 border-b border-ink pb-1 hover:opacity-60`;
+// pt-3 enlarges the tap area upward without moving the underline.
+const ACTION = `${LABEL} mt-3 inline-flex items-center gap-2 border-b border-ink pb-1 pt-3 hover:opacity-60`;
 
 function ProjectRow({ project }: { project: Project }) {
   return (
-    <article className="border-t border-ink/15 py-10 first:border-t-0 sm:py-14">
-      <div className="grid gap-8 sm:grid-cols-12 sm:gap-10">
-        {/* left: number, title, pills, blurb, action */}
-        <div className="sm:col-span-5">
-          <div className="flex items-baseline gap-4">
+    <article className="border-t border-ink/15 py-8 md:py-14">
+      <div className="grid gap-5 md:grid-cols-12 md:gap-10">
+        {/* Mobile: image first, like a card. Desktop: text left, mock right. */}
+        <div className="md:order-last md:col-span-7">
+          <ProjectMock project={project} />
+        </div>
+
+        <div className="md:col-span-5">
+          <div className="flex items-baseline gap-3 md:gap-4">
             <span className={`${LABEL} text-ink/40`}>{project.num}</span>
-            <h3 className="font-serif text-[clamp(1.5rem,3.5vw,2.25rem)] leading-tight tracking-[-0.02em]">
+            <h3 className="font-serif text-[clamp(1.6rem,7vw,2.25rem)] leading-tight tracking-[-0.02em]">
               {project.name}
             </h3>
           </div>
 
-          <div className="mt-4 flex flex-wrap items-center gap-x-3 gap-y-2">
+          <div className="mt-3 flex flex-wrap items-center gap-2 md:mt-4 md:gap-x-3">
             {project.meta.map((m) => (
               <span key={m} className={`${LABEL} rounded-full bg-ink/[0.07] px-2.5 py-1 text-ink/70`}>
                 {m}
@@ -120,7 +133,7 @@ function ProjectRow({ project }: { project: Project }) {
             </span>
           </div>
 
-          <p className="mt-6 max-w-[46ch] font-mono text-[13px] leading-relaxed text-ink/70">
+          <p className="mt-4 max-w-[46ch] font-mono text-[13px] leading-relaxed text-ink/70 md:mt-6">
             {project.blurb}
           </p>
 
@@ -141,11 +154,6 @@ function ProjectRow({ project }: { project: Project }) {
             <p className={`${LABEL} mt-6 text-ink/40`}>Case study coming soon</p>
           )}
         </div>
-
-        {/* right: mock */}
-        <div className="sm:col-span-7">
-          <ProjectMock project={project} />
-        </div>
       </div>
     </article>
   );
@@ -154,7 +162,7 @@ function ProjectRow({ project }: { project: Project }) {
 function Work() {
   return (
     <section id="work" className="mx-auto max-w-[1100px] px-6">
-      <p className={`${LABEL} py-12 text-center text-ink/50`}>A sample of my work</p>
+      <p className={`${LABEL} pb-5 text-ink/50 md:py-12 md:text-center`}>A sample of my work</p>
       {PROJECTS.map((p) => (
         <ProjectRow key={p.num} project={p} />
       ))}
@@ -166,13 +174,14 @@ function Work() {
 
 function About() {
   return (
-    <section id="about" className="mx-auto max-w-[1100px] px-6 py-20">
+    <section id="about" className="mx-auto max-w-[1100px] px-6 pb-14 pt-4 md:py-20">
       <p className={`${LABEL} text-ink/50`}>About me</p>
-      <div className="mt-8 grid gap-8 sm:grid-cols-12">
-        <h2 className="font-serif text-[clamp(1.75rem,4vw,2.75rem)] leading-tight tracking-[-0.02em] sm:col-span-5">
-          {ABOUT.intro}
+      <div className="mt-5 grid gap-6 md:mt-8 md:grid-cols-12 md:gap-8">
+        <h2 className="font-serif text-[clamp(1.75rem,8vw,2.75rem)] leading-[1.1] tracking-[-0.02em] md:col-span-5">
+          {/* Kept on one line so it can't split as "mahn- / see)" */}
+          {ABOUT.intro} <span className="whitespace-nowrap">{ABOUT.pronunciation}</span>
         </h2>
-        <div className="space-y-5 font-mono text-[13px] leading-relaxed text-ink/75 sm:col-span-7">
+        <div className="space-y-5 font-mono text-[13px] leading-relaxed text-ink/75 md:col-span-7">
           {ABOUT.body.map((para) => (
             <p key={para.slice(0, 24)}>{para}</p>
           ))}
@@ -187,13 +196,13 @@ export default function Home() {
     <>
       <Hero />
 
-      <div className="rise py-14" style={delay(480)}>
+      <div className="rise py-8 md:py-14" style={delay(480)}>
         <SlashRule />
       </div>
 
       <Work />
 
-      <div className="py-14">
+      <div className="py-8 md:py-14">
         <SlashRule />
       </div>
 

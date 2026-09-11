@@ -25,30 +25,28 @@ function Shot({ src, label }: { src?: string; label: string }) {
 
 export default function CaseStudy({ study }: { study: CaseStudyType }) {
   return (
-    <article className="mx-auto max-w-[1100px] px-6 pb-24 pt-6 sm:pt-10">
+    <article className="mx-auto max-w-[1100px] px-6 pb-16 pt-4 md:pb-24 md:pt-10">
       <h1
-        className="rise font-serif text-[clamp(2.75rem,10vw,6rem)] leading-[0.95] tracking-[-0.035em]"
+        className="rise font-serif text-[clamp(2.6rem,12vw,6rem)] leading-[0.98] tracking-[-0.035em]"
         style={delay(60)}
       >
         {study.title}
       </h1>
 
-      <div className="mt-14 grid gap-10 sm:grid-cols-12 sm:gap-12">
-        {/* intro copy */}
-        <div className="rise space-y-6 sm:col-span-7" style={delay(140)}>
-          {study.intro.map((para) => (
-            <p key={para.slice(0, 28)} className="font-mono text-[13px] leading-relaxed text-ink/80">
-              {para}
-            </p>
-          ))}
-        </div>
-
-        {/* facts, flowing two-up */}
-        <dl className="rise grid grid-cols-2 gap-x-10 gap-y-8 sm:col-span-5" style={delay(220)}>
+      <div className="mt-8 grid gap-8 md:mt-14 md:grid-cols-12 md:gap-12">
+        {/* Mobile: the facts come first as a scannable table, so the essentials
+            are visible before the story. Desktop: story left, facts two-up right. */}
+        <dl
+          className="rise grid grid-cols-1 md:order-last md:col-span-5 md:grid-cols-2 md:gap-x-10 md:gap-y-8"
+          style={delay(140)}
+        >
           {study.facts.map((fact) => (
-            <div key={fact.label}>
+            <div
+              key={fact.label}
+              className="grid grid-cols-[6.5rem_1fr] gap-4 border-t border-ink/15 py-3 last:border-b md:block md:border-0 md:py-0"
+            >
               <dt className={`${LABEL} text-ink/40`}>{fact.label}</dt>
-              <dd className={`${LABEL} mt-1 space-y-0.5`}>
+              <dd className={`${LABEL} space-y-0.5 md:mt-1`}>
                 {fact.values.map((v) => (
                   <div key={v}>{v}</div>
                 ))}
@@ -56,15 +54,23 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
             </div>
           ))}
         </dl>
+
+        <div className="rise space-y-6 md:col-span-7" style={delay(220)}>
+          {study.intro.map((para) => (
+            <p key={para.slice(0, 28)} className="font-mono text-[13px] leading-relaxed text-ink/80">
+              {para}
+            </p>
+          ))}
+        </div>
       </div>
 
-      <div className="rise mt-16 space-y-6" style={delay(300)}>
+      <div className="rise mt-10 space-y-4 md:mt-16 md:space-y-6" style={delay(300)}>
         {study.shots.map((shot) => (
           <Shot key={shot.label} src={shot.src} label={shot.label} />
         ))}
       </div>
 
-      <Link to="/" className={`${LABEL} mt-16 inline-flex items-center gap-2 hover:opacity-60`}>
+      <Link to="/" className={`${LABEL} mt-7 inline-flex items-center gap-2 py-3 hover:opacity-60 md:mt-14`}>
         <span aria-hidden="true">←</span> Back to work
       </Link>
     </article>

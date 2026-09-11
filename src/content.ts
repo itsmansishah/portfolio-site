@@ -88,7 +88,8 @@ export const CASE_STUDIES: CaseStudy[] = [
 ];
 
 export const ABOUT = {
-  intro: "I'm Mansi (pronounced mahn-see).",
+  intro: "I'm Mansi",
+  pronunciation: "(pronounced mahn-see).",
   body: [
     "By day, I'm a UX designer at Qualtrics, where I get to untangle complicated problems into experiences that feel simple. Outside of that, I'm equal parts restless tinkerer, designer, and random hobby collector. I find so much joy in the process of making and exploring: building interactive web experiments, knitting cozy sweaters, training for my next marathon, and frequently googling “ice cream near me.”",
     "I value living a life anchored in curiosity and quiet creativity — and I'm always up for talking design, sweaters, or good ice cream spots. feel free to say hi!",

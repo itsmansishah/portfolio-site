@@ -22,7 +22,7 @@ export default function App() {
   const study = slug ? CASE_STUDIES.find((s) => s.slug === slug) : null;
 
   return (
-    <div className="min-h-screen bg-paper text-ink">
+    <div className="min-h-screen overflow-x-clip bg-paper text-ink">
       <Nav />
       {path === "/" || path === "" ? <Home /> : study ? <CaseStudy study={study} /> : <NotFound />}
       <Footer />
