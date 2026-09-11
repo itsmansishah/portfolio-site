@@ -69,15 +69,16 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
               <h2 id="highlights" className={`${LABEL} text-ink/40`}>
                 Highlights
               </h2>
-              <ul className="mt-4 space-y-5">
-                {study.highlights.map((h) => (
-                  <li key={h.text} className="flex items-baseline gap-4 md:gap-6">
-                    {h.value && (
-                      <span className="shrink-0 font-serif text-[clamp(2.75rem,11vw,4rem)] leading-none tracking-[-0.03em]">
-                        {h.value}
-                      </span>
-                    )}
-                    <p className="font-mono text-[13px] leading-relaxed text-ink/80">{h.text}</p>
+              <ul className="mt-4 space-y-3 font-mono text-[13px] leading-relaxed text-ink/80">
+                {study.highlights.map((text) => (
+                  <li key={text} className="flex gap-3">
+                    {/* One line-height tall, so the star centres on the first line */}
+                    <span aria-hidden="true" className="flex h-[1.625em] shrink-0 items-center">
+                      <svg viewBox="0 0 10 10" className="size-2.5 fill-current">
+                        <path d="M5 0 6.1 3.9 10 5 6.1 6.1 5 10 3.9 6.1 0 5 3.9 3.9Z" />
+                      </svg>
+                    </span>
+                    {text}
                   </li>
                 ))}
               </ul>
