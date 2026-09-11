@@ -43,7 +43,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
           {study.facts.map((fact) => (
             <div
               key={fact.label}
-              className="grid grid-cols-[6.5rem_1fr] gap-4 border-t border-ink/15 py-3 last:border-b md:block md:border-0 md:py-0"
+              className="grid grid-cols-[6.5rem_1fr] gap-4 border-t border-ink/15 py-3 md:block md:border-0 md:py-0"
             >
               <dt className={`${LABEL} text-ink/40`}>{fact.label}</dt>
               <dd className={`${LABEL} space-y-0.5 md:mt-1`}>
@@ -55,12 +55,34 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
           ))}
         </dl>
 
-        <div className="rise space-y-6 md:col-span-7" style={delay(220)}>
-          {study.intro.map((para) => (
-            <p key={para.slice(0, 28)} className="font-mono text-[13px] leading-relaxed text-ink/80">
-              {para}
-            </p>
-          ))}
+        <div className="rise md:col-span-7" style={delay(220)}>
+          <div className="space-y-6">
+            {study.intro.map((para) => (
+              <p key={para.slice(0, 28)} className="font-mono text-[13px] leading-relaxed text-ink/80">
+                {para}
+              </p>
+            ))}
+          </div>
+
+          {study.highlights?.length ? (
+            <section aria-labelledby="highlights" className="mt-10 md:mt-12">
+              <h2 id="highlights" className={`${LABEL} text-ink/40`}>
+                Highlights
+              </h2>
+              <ul className="mt-4 space-y-5">
+                {study.highlights.map((h) => (
+                  <li key={h.text} className="flex items-baseline gap-4 md:gap-6">
+                    {h.value && (
+                      <span className="shrink-0 font-serif text-[clamp(2.75rem,11vw,4rem)] leading-none tracking-[-0.03em]">
+                        {h.value}
+                      </span>
+                    )}
+                    <p className="font-mono text-[13px] leading-relaxed text-ink/80">{h.text}</p>
+                  </li>
+                ))}
+              </ul>
+            </section>
+          ) : null}
         </div>
       </div>
 

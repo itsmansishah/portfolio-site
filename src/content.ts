@@ -11,10 +11,15 @@ export type Project = {
 
 export type Fact = { label: string; values: string[] };
 
+// A headline outcome shown under the intro. `value` is the optional large
+// figure (e.g. "60%"); `text` is the full statement.
+export type Highlight = { value?: string; text: string };
+
 export type CaseStudy = {
   slug: string;
   title: string;
   intro: string[];
+  highlights?: Highlight[];
   facts: Fact[];
   shots: { src?: string; label: string }[];
 };
@@ -59,6 +64,12 @@ export const CASE_STUDIES: CaseStudy[] = [
     intro: [
       "At Qualtrics, creating automated workflows (known internally as xFlows) is a powerful but complex experience. While these workflows allow users to automate tasks across their survey and other feedback ecosystems, configuring them requires significant manual setup and technical know-how.",
       "As part of the Workflows team, I led design exploration for a new concept called Describe to Design (D2D), an AI-powered chat experience that lowers the barrier to workflow creation by enabling users to generate, modify, and refine workflows through natural language.",
+    ],
+    highlights: [
+      {
+        value: "60%",
+        text: "D2D increased the number of successful workflow executions by 60%.",
+      },
     ],
     facts: [
       { label: "Company", values: ["Qualtrics"] },
