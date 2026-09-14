@@ -52,11 +52,11 @@ export const PROJECTS: Project[] = [
     mockSrc: "/pitchbook.png",
     links: [
       {
-        label: "Analyst Curated Workspaces video",
+        label: "Analyst Curated Workspaces demo",
         url: "https://drive.google.com/file/d/12XQnwmsbtSXYwcJu6Vtxtd45tnIQnUMJ/view?usp=drive_link",
       },
       {
-        label: "List Management demo video",
+        label: "List Management demo",
         url: "https://drive.google.com/file/d/1yNu2YRuTIYGydGP2auSLbb4c94L8O0tO/view?usp=drive_link",
       },
     ],
