@@ -155,6 +155,18 @@ function ProjectRow({ project }: { project: Project }) {
           ) : (
             <p className={`${LABEL} mt-6 text-ink/40`}>Case study coming soon</p>
           )}
+
+          {project.links?.length ? (
+            <ul className="flex flex-col items-start">
+              {project.links.map((link) => (
+                <li key={link.url}>
+                  <a href={link.url} target="_blank" rel="noopener noreferrer" className={ACTION}>
+                    {link.label} <span aria-hidden="true">↗</span>
+                  </a>
+                </li>
+              ))}
+            </ul>
+          ) : null}
         </div>
       </div>
     </article>

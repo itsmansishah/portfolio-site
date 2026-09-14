@@ -7,6 +7,7 @@ export type Project = {
   caseStudyUrl?: string; // external (e.g. Figma prototype)
   caseStudySlug?: string; // internal case study page
   mockSrc?: string;
+  links?: { label: string; url: string }[]; // extra external links, e.g. demo videos
 };
 
 export type Fact = { label: string; values: string[] };
@@ -45,10 +46,20 @@ export const PROJECTS: Project[] = [
     num: "/03",
     name: "Pitchbook Projects",
     blurb:
-      "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space as well as features around custom fields and saved lists. The case studies highlight two projects launched in 2021.",
+      "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space, Workspaces, and custom fields and saved lists. The case studies highlight two projects launched in 2021.",
     meta: ["2021"],
     role: "Lead Designer · Lead Researcher",
     mockSrc: "/pitchbook.png",
+    links: [
+      {
+        label: "Analyst Curated Workspaces video",
+        url: "https://drive.google.com/file/d/12XQnwmsbtSXYwcJu6Vtxtd45tnIQnUMJ/view?usp=drive_link",
+      },
+      {
+        label: "List Management demo video",
+        url: "https://drive.google.com/file/d/1yNu2YRuTIYGydGP2auSLbb4c94L8O0tO/view?usp=drive_link",
+      },
+    ],
     caseStudyUrl:
       "https://www.figma.com/proto/rZ1VDRfVbJ3xziSJcXC0K1/Case-Studies?node-id=101-8872&viewport=407%2C406%2C0.02&t=ZaXoOVmx3rNedutz-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=101%3A8872&page-id=101%3A8865",
   },
