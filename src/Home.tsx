@@ -32,8 +32,9 @@ function Hero() {
           className="rise mt-5 max-w-[34rem] font-mono text-[11px] font-medium uppercase leading-[1.7] tracking-[0.06em] md:mt-6 md:tracking-[0.18em]"
           style={delay(200)}
         >
-          UX designer focused on solving complex problems &amp; designing thoughtful experiences
-          that make people feel seen
+          Senior UX designer that enjoys building the parts of software that quietly do the hard
+          thinking for you, so using complex tools feels less like work and more like being
+          understood.
         </p>
       </div>
 
