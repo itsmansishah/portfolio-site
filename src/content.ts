@@ -48,6 +48,7 @@ export const PROJECTS: Project[] = [
       "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space as well as features around custom fields and saved lists. The case studies highlight two projects launched in 2021.",
     meta: ["2021"],
     role: "Lead Designer · Lead Researcher",
+    mockSrc: "/pitchbook.png",
     caseStudyUrl:
       "https://www.figma.com/proto/rZ1VDRfVbJ3xziSJcXC0K1/Case-Studies?node-id=101-8872&viewport=407%2C406%2C0.02&t=ZaXoOVmx3rNedutz-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=101%3A8872&page-id=101%3A8865",
   },
