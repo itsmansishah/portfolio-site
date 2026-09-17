@@ -26,7 +26,7 @@ function Hero() {
           className="rise mt-2 text-right font-serif text-display leading-[1.02] tracking-[-0.03em] dt:text-left dt:text-[clamp(1.6rem,7vw,3rem)] dt:leading-[1.08]"
           style={delay(120)}
         >
-          Product Designer @ Qualtrics
+          Senior Product Designer
         </p>
         {/* Wide letter-spacing reads as a wall of caps on a phone, so it
             tightens on mobile and opens back up on larger screens. */}
@@ -34,9 +34,16 @@ function Hero() {
           className="rise ml-auto mt-5 max-w-[34rem] text-right font-mono text-tag font-medium uppercase leading-[1.7] tracking-[0.08em] dt:ml-0 dt:mt-6 dt:max-w-[34rem] dt:text-left dt:text-label dt:tracking-[0.18em]"
           style={delay(200)}
         >
-          Senior UX designer that enjoys building the parts of software that quietly do the hard
-          thinking for you, so using complex tools feels less like work and more like being
-          understood.
+          As a UX designer, I love transforming complicated tools into intuitive experiences. I
+          believe everyday software should make life feel a little lighter, easier, and much more
+          human
+        </p>
+
+        <p
+          className={`${LABEL} rise ml-auto mt-4 text-right text-ink/50 dt:ml-0 dt:text-left`}
+          style={delay(230)}
+        >
+          Currently @ Qualtrics. Based in New York.
         </p>
       </div>
 
