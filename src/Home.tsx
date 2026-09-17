@@ -161,9 +161,7 @@ function ProjectRow({ project }: { project: Project }) {
             </h3>
           </div>
 
-          {/* Pills and the blurb are desktop detail; the phone card stays a
-              picture and a name. */}
-          <div className="mt-3 hidden flex-wrap items-center gap-2 dt:mt-4 dt:flex dt:gap-x-3">
+          <div className="mt-3 flex flex-wrap items-center gap-2 dt:mt-4 dt:gap-x-3">
             {project.meta.map((m) => (
               <span key={m} className={`${LABEL} rounded-full bg-ink/[0.07] px-2.5 py-1 text-ink/70`}>
                 {m}
@@ -174,11 +172,11 @@ function ProjectRow({ project }: { project: Project }) {
             </span>
           </div>
 
-          <p className="mt-4 hidden max-w-[46ch] font-mono text-body leading-relaxed text-ink/70 dt:mt-6 dt:block">
+          <p className="mt-4 max-w-[46ch] font-mono text-body leading-relaxed text-ink/70 dt:mt-6">
             {project.blurb}
           </p>
 
-          <div className="flex flex-col items-end dt:items-start">
+          <div className="flex flex-col items-start">
             {project.caseStudySlug ? (
             <Link to={`/work/${project.caseStudySlug}`} className={ACTION}>
               Learn more <span aria-hidden="true">→</span>
@@ -198,7 +196,7 @@ function ProjectRow({ project }: { project: Project }) {
           </div>
 
           {project.links?.length ? (
-            <ul className="flex flex-col items-end dt:items-start">
+            <ul className="flex flex-col items-start">
               {project.links.map((link) => (
                 <li key={link.url}>
                   <a href={link.url} target="_blank" rel="noopener noreferrer" className={ACTION}>
