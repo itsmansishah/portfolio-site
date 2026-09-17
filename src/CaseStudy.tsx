@@ -1,5 +1,5 @@
 import { useState } from "react";
-import type { CaseStudy as CaseStudyType } from "./content";
+import { CASE_STUDIES, type CaseStudy as CaseStudyType } from "./content";
 import { LABEL, Link, delay } from "./ui";
 
 function Shot({ src, label }: { src?: string; label: string }) {
@@ -23,7 +23,33 @@ function Shot({ src, label }: { src?: string; label: string }) {
   );
 }
 
+/** Bottom-of-page step to the neighbouring case study. */
+function StepLink({ study, dir }: { study: CaseStudyType; dir: "prev" | "next" }) {
+  const next = dir === "next";
+  return (
+    <Link
+      to={`/work/${study.slug}`}
+      className={`group py-2 ${next ? "text-right" : ""} hover:opacity-60`}
+    >
+      <span className={`${LABEL} block text-ink/40`}>
+        {next ? (
+          <>Next project <span aria-hidden="true">→</span></>
+        ) : (
+          <><span aria-hidden="true">←</span> Previous project</>
+        )}
+      </span>
+      <span className="mt-2 block font-serif text-[clamp(1.25rem,5vw,1.75rem)] leading-tight tracking-[-0.02em]">
+        {study.title}
+      </span>
+    </Link>
+  );
+}
+
 export default function CaseStudy({ study }: { study: CaseStudyType }) {
+  const i = CASE_STUDIES.findIndex((s) => s.slug === study.slug);
+  const prev = i > 0 ? CASE_STUDIES[i - 1] : null;
+  const next = i > -1 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null;
+
   return (
     <article className="mx-auto max-w-[1100px] px-6 pb-16 pt-4 md:pb-24 md:pt-10">
       <h1
@@ -96,6 +122,14 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       <Link to="/" className={`${LABEL} mt-7 inline-flex items-center gap-2 py-3 hover:opacity-60 md:mt-14`}>
         <span aria-hidden="true">←</span> Back to work
       </Link>
+
+      {prev || next ? (
+        // Each side keeps its edge whether or not the other one exists.
+        <nav className="mt-8 flex items-start justify-between gap-6 border-t border-ink/15 pt-6 md:mt-12 md:pt-8">
+          {prev ? <StepLink study={prev} dir="prev" /> : <span />}
+          {next ? <StepLink study={next} dir="next" /> : <span />}
+        </nav>
+      ) : null}
     </article>
   );
 }

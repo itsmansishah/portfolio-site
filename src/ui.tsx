@@ -103,16 +103,12 @@ export function Nav() {
         <Link to="/" className={link}>
           Mansi Shah
         </Link>
-        {/* Mobile: Work + About grouped on the right. Desktop: `contents`
-            dissolves the group so they rejoin the row and Work centres. */}
-        <div className="flex items-center gap-5 md:contents">
-          <Link to="/#work" className={link}>
-            Work
-          </Link>
-          <Link to="/#about" className={link}>
-            About<span className="hidden md:inline"> Me</span>
-          </Link>
-        </div>
+        <Link to="/#work" className={link}>
+          Work
+        </Link>
+        <Link to="/#about" className={link}>
+          About Me
+        </Link>
       </div>
     </nav>
   );
@@ -120,9 +116,8 @@ export function Nav() {
 
 function ContactRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    // Mobile: a stacked list — label over value, hairline between rows.
-    // Desktop: the right-aligned label + value rows from the reference.
-    <div className="flex flex-col items-start gap-1 border-t border-paper/15 py-4 first:border-t-0 md:flex-row md:items-baseline md:justify-end md:gap-6 md:border-0 md:py-0">
+    // Right-aligned label + value rows, as in the reference.
+    <div className="flex items-baseline justify-end gap-4 py-2 md:gap-6 md:py-0">
       <span className={`${LABEL} text-paper/40`}>{label}</span>
       {children}
     </div>
@@ -136,7 +131,7 @@ export function Footer() {
   return (
     <footer className="px-6 pb-6 md:pb-10">
       <div className="mx-auto max-w-[1100px] rounded-2xl bg-ink px-6 py-10 text-paper md:px-12 md:py-20">
-        <h2 className="font-serif text-[clamp(1.9rem,8vw,3rem)] leading-tight tracking-[-0.02em] md:text-right">
+        <h2 className="text-right font-serif text-[clamp(1.9rem,8vw,3rem)] leading-tight tracking-[-0.02em]">
           Let&rsquo;s work together!
         </h2>
 
@@ -163,7 +158,7 @@ export function Footer() {
           </ContactRow>
         </div>
 
-        <div className={`${LABEL} mt-10 space-y-1 text-paper/45 md:mt-20 md:text-right`}>
+        <div className={`${LABEL} mt-10 space-y-1 text-right text-paper/45 md:mt-20`}>
           <p>Designed by Mansi</p>
           <p>It&rsquo;s pronounced like monster</p>
           <p>&reg;{new Date().getFullYear()}</p>
