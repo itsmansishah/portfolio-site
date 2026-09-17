@@ -160,8 +160,8 @@ function ProjectRow({ project }: { project: Project }) {
             </h3>
           </div>
 
-          {/* Phone: an extra step of air under the number/name line. */}
-          <div className="mt-[max(1.25rem,5.3vw)] flex flex-wrap items-center gap-2 dt:mt-4 dt:gap-x-3">
+          {/* Phone: a little extra air either side of the pills. */}
+          <div className="mt-[max(1rem,4.27vw)] flex flex-wrap items-center gap-2 dt:mt-4 dt:gap-x-3">
             {project.meta.map((m) => (
               <span key={m} className={`${LABEL} rounded-full bg-ink/[0.07] px-2.5 py-1 text-ink/70`}>
                 {m}
@@ -172,7 +172,7 @@ function ProjectRow({ project }: { project: Project }) {
             </span>
           </div>
 
-          <p className="mt-4 max-w-[46ch] font-mono text-body leading-relaxed text-ink/70 dt:mt-6">
+          <p className="mt-[max(1.25rem,5.3vw)] max-w-[46ch] font-mono text-body leading-relaxed text-ink/70 dt:mt-6">
             {project.blurb}
           </p>
 
