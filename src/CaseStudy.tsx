@@ -38,7 +38,7 @@ function StepLink({ study, dir }: { study: CaseStudyType; dir: "prev" | "next" }
           <><span aria-hidden="true">←</span> Previous project</>
         )}
       </span>
-      <span className="mt-2 block font-serif text-[clamp(1.25rem,5vw,1.75rem)] leading-tight tracking-[-0.02em]">
+      <span className="mt-2 block font-serif text-[clamp(1.25rem,5vw,2.75rem)] leading-tight tracking-[-0.02em] dt:text-[clamp(1.25rem,5vw,1.75rem)]">
         {study.title}
       </span>
     </Link>
@@ -51,9 +51,9 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
   const next = i > -1 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null;
 
   return (
-    <article className="mx-auto max-w-[1100px] px-6 pb-16 pt-4 dt:pb-24 dt:pt-10">
+    <article className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-16 pt-[max(1rem,4vw)] dt:pb-24 dt:pt-10">
       <h1
-        className="rise font-serif text-[clamp(2.6rem,12vw,6rem)] leading-[0.98] tracking-[-0.035em]"
+        className="rise font-serif text-case leading-[0.98] tracking-[-0.035em]"
         style={delay(60)}
       >
         {study.title}
@@ -69,7 +69,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
           {study.facts.map((fact) => (
             <div
               key={fact.label}
-              className="grid grid-cols-[6.5rem_1fr] gap-4 border-t border-ink/15 py-3 dt:block dt:border-0 dt:py-0"
+              className="grid grid-cols-[max(6.5rem,26vw)_1fr] gap-4 border-t border-ink/15 py-3 dt:block dt:grid-cols-none dt:border-0 dt:py-0"
             >
               <dt className={`${LABEL} text-ink/40`}>{fact.label}</dt>
               <dd className={`${LABEL} space-y-0.5 dt:mt-1`}>
@@ -84,7 +84,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         <div className="rise dt:col-span-7" style={delay(220)}>
           <div className="space-y-6">
             {study.intro.map((para) => (
-              <p key={para.slice(0, 28)} className="font-mono text-[13px] leading-relaxed text-ink/80">
+              <p key={para.slice(0, 28)} className="font-mono text-body leading-relaxed text-ink/80">
                 {para}
               </p>
             ))}
@@ -95,12 +95,12 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
               <h2 id="highlights" className={`${LABEL} text-ink/40`}>
                 Highlights
               </h2>
-              <ul className="mt-4 space-y-3 font-mono text-[13px] leading-relaxed text-ink/80">
+              <ul className="mt-4 space-y-3 font-mono text-body leading-relaxed text-ink/80">
                 {study.highlights.map((text) => (
                   <li key={text} className="flex gap-3">
                     {/* One line-height tall, so the star centres on the first line */}
                     <span aria-hidden="true" className="flex h-[1.625em] shrink-0 items-center">
-                      <svg viewBox="0 0 10 10" className="size-2.5 fill-current">
+                      <svg viewBox="0 0 10 10" className="size-[0.8em] fill-current">
                         <path d="M5 0 6.1 3.9 10 5 6.1 6.1 5 10 3.9 6.1 0 5 3.9 3.9Z" />
                       </svg>
                     </span>

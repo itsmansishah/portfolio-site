@@ -29,6 +29,38 @@
 
   --font-serif: "Libre Caslon Condensed", "Libre Caslon Display", Georgia, serif;
   --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+
+  /* Phone type scales with the viewport rather than sitting at fixed pixel
+     sizes. A phone asking for the desktop site is handed a ~980px canvas and
+     shrinks the result to fit the glass — proportional sizes survive that,
+     fixed ones come out tiny. The caps sit above 980px worth of each step so
+     the ratios hold all the way up. */
+  --text-label: clamp(0.6875rem, 2.95vw, 2rem);
+  --text-tag: clamp(0.75rem, 3.2vw, 2.2rem);
+  --text-body: clamp(0.8125rem, 3.5vw, 2.4rem);
+  --text-display: clamp(3.25rem, 16vw, 10rem);
+  --text-case: clamp(2.6rem, 12vw, 8rem);
+  --text-link: clamp(1.5rem, 6.5vw, 4rem);
+  --text-heading: clamp(1.75rem, 8vw, 5rem);
+}
+
+:root {
+  --gutter: max(1.5rem, 6vw);
+}
+
+/* Desktop: the same steps, back to fixed sizes. Keep this in step with the
+   dt: variant above. */
+@media (min-width: 1100px), (min-width: 768px) and (any-pointer: fine) {
+  :root {
+    --gutter: 1.5rem;
+    --text-label: 0.6875rem;
+    --text-tag: 0.6875rem;
+    --text-body: 0.8125rem;
+    --text-display: 3.75rem;
+    --text-case: 6rem;
+    --text-link: clamp(1.5rem, 6.5vw, 2.5rem);
+    --text-heading: clamp(1.75rem, 8vw, 2.75rem);
+  }
 }
 
 html {

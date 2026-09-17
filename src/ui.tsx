@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
 import { CONTACT } from "./content";
 
-export const LABEL = "font-mono text-[11px] font-medium uppercase tracking-[0.18em]";
+export const LABEL = "font-mono text-label font-medium uppercase tracking-[0.18em]";
 
 export const delay = (ms: number) => ({ "--delay": `${ms}ms` }) as CSSProperties;
 
@@ -86,7 +86,7 @@ export function SlashRule() {
   return (
     <div
       aria-hidden="true"
-      className="select-none overflow-hidden whitespace-nowrap font-mono text-[13px] leading-none text-ink/25"
+      className="select-none overflow-hidden whitespace-nowrap font-mono text-body leading-none text-ink/25"
     >
       {"/ ".repeat(220)}
     </div>
@@ -99,7 +99,7 @@ export function Nav() {
 
   return (
     <nav className="sticky top-0 z-30 bg-paper/85 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-6 dt:py-2">
+      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-[var(--gutter)] dt:py-2">
         <Link to="/" className={link}>
           Mansi Shah
         </Link>
@@ -126,12 +126,12 @@ function ContactRow({ label, children }: { label: string; children: ReactNode })
 
 export function Footer() {
   const linkClass =
-    "block font-serif text-[clamp(1.5rem,6.5vw,2.5rem)] leading-tight tracking-[-0.02em] [overflow-wrap:anywhere] hover:opacity-60 dt:inline";
+    "block font-serif text-link leading-tight tracking-[-0.02em] [overflow-wrap:anywhere] hover:opacity-60 dt:inline";
 
   return (
-    <footer className="px-6 pb-6 dt:pb-10">
-      <div className="mx-auto max-w-[1100px] rounded-2xl bg-ink px-6 py-10 text-paper dt:px-12 dt:py-20">
-        <h2 className="text-right font-serif text-[clamp(1.9rem,8vw,3rem)] leading-tight tracking-[-0.02em]">
+    <footer className="px-[var(--gutter)] pb-6 dt:pb-10">
+      <div className="mx-auto max-w-[1100px] rounded-2xl bg-ink px-[var(--gutter)] py-[max(2.5rem,10vw)] text-paper dt:px-12 dt:py-20">
+        <h2 className="text-right font-serif text-heading leading-tight tracking-[-0.02em] dt:text-[clamp(1.9rem,8vw,3rem)]">
           Let&rsquo;s work together!
         </h2>
 
