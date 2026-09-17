@@ -99,7 +99,7 @@ export function Nav() {
 
   return (
     <nav className="sticky top-0 z-30 bg-paper/85 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-6 md:py-2">
+      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-6 dt:py-2">
         <Link to="/" className={link}>
           Mansi Shah
         </Link>
@@ -117,7 +117,7 @@ export function Nav() {
 function ContactRow({ label, children }: { label: string; children: ReactNode }) {
   return (
     // Right-aligned label + value rows, as in the reference.
-    <div className="flex items-baseline justify-end gap-4 py-2 md:gap-6 md:py-0">
+    <div className="flex items-baseline justify-end gap-4 py-2 dt:gap-6 dt:py-0">
       <span className={`${LABEL} text-paper/40`}>{label}</span>
       {children}
     </div>
@@ -126,16 +126,16 @@ function ContactRow({ label, children }: { label: string; children: ReactNode })
 
 export function Footer() {
   const linkClass =
-    "block font-serif text-[clamp(1.5rem,6.5vw,2.5rem)] leading-tight tracking-[-0.02em] [overflow-wrap:anywhere] hover:opacity-60 md:inline";
+    "block font-serif text-[clamp(1.5rem,6.5vw,2.5rem)] leading-tight tracking-[-0.02em] [overflow-wrap:anywhere] hover:opacity-60 dt:inline";
 
   return (
-    <footer className="px-6 pb-6 md:pb-10">
-      <div className="mx-auto max-w-[1100px] rounded-2xl bg-ink px-6 py-10 text-paper md:px-12 md:py-20">
+    <footer className="px-6 pb-6 dt:pb-10">
+      <div className="mx-auto max-w-[1100px] rounded-2xl bg-ink px-6 py-10 text-paper dt:px-12 dt:py-20">
         <h2 className="text-right font-serif text-[clamp(1.9rem,8vw,3rem)] leading-tight tracking-[-0.02em]">
           Let&rsquo;s work together!
         </h2>
 
-        <div className="mt-6 md:mt-10 md:space-y-3">
+        <div className="mt-6 dt:mt-10 dt:space-y-3">
           <ContactRow label="Mail">
             <a href={`mailto:${CONTACT.email}`} className={linkClass}>
               {CONTACT.email}
@@ -158,7 +158,7 @@ export function Footer() {
           </ContactRow>
         </div>
 
-        <div className={`${LABEL} mt-10 space-y-1 text-right text-paper/45 md:mt-20`}>
+        <div className={`${LABEL} mt-10 space-y-1 text-right text-paper/45 dt:mt-20`}>
           <p>Designed by Mansi</p>
           <p>It&rsquo;s pronounced like monster</p>
           <p>&reg;{new Date().getFullYear()}</p>

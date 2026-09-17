@@ -1,11 +1,33 @@
 @import "tailwindcss";
 
+/* Self-hosted so the condensed cut is guaranteed — it isn't on Google Fonts.
+   SIL OFL; the licence ships alongside it in /public/fonts. */
+@font-face {
+  font-family: "Libre Caslon Condensed";
+  src: url("/fonts/LibreCaslonCondensed-variable.woff2") format("woff2-variations");
+  font-weight: 400 700;
+  font-style: normal;
+  font-display: swap;
+}
+
+/* Desktop layout, rather than "any wide viewport": a phone asking for the
+   desktop site reports ~980px but has no fine pointer, and should still get
+   the phone layout. Real tablets in landscape (1100px+) get the wide one. */
+@custom-variant dt {
+  @media (min-width: 1100px) {
+    @slot;
+  }
+  @media (min-width: 768px) and (any-pointer: fine) {
+    @slot;
+  }
+}
+
 @theme {
   --color-paper: #f7f2ed;
   --color-ink: #101010;
   --color-accent: #cadd57;
 
-  --font-serif: "Libre Caslon Display", "Libre Caslon Text", Georgia, serif;
+  --font-serif: "Libre Caslon Condensed", "Libre Caslon Display", Georgia, serif;
   --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
 }
 
