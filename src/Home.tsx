@@ -150,18 +150,18 @@ function ProjectRow({ project }: { project: Project }) {
         </div>
 
         <div className="dt:col-span-5">
-          {/* Phone: number left, name right on one line, as in the reference.
-              Desktop: the serif title sits beside the number. */}
-          <div className="flex items-baseline justify-between gap-4 dt:justify-start dt:gap-4">
+          {/* The name sits beside the number at every size. */}
+          <div className="flex items-baseline gap-3 dt:gap-4">
             <span className={`${LABEL} text-ink/40`}>{project.num}</span>
-            <h3 className="text-right font-mono text-tag font-medium uppercase tracking-[0.18em] dt:text-left dt:font-serif dt:text-[clamp(1.6rem,7vw,2.25rem)] dt:font-normal dt:normal-case dt:leading-tight dt:tracking-[-0.02em]">
+            <h3 className="font-mono text-tag font-medium uppercase tracking-[0.18em] dt:font-serif dt:text-[clamp(1.6rem,7vw,2.25rem)] dt:font-normal dt:normal-case dt:leading-tight dt:tracking-[-0.02em]">
               <ProjectLink project={project} className="hover:opacity-60">
                 {project.name}
               </ProjectLink>
             </h3>
           </div>
 
-          <div className="mt-3 flex flex-wrap items-center gap-2 dt:mt-4 dt:gap-x-3">
+          {/* Phone: an extra step of air under the number/name line. */}
+          <div className="mt-[max(1.25rem,5.3vw)] flex flex-wrap items-center gap-2 dt:mt-4 dt:gap-x-3">
             {project.meta.map((m) => (
               <span key={m} className={`${LABEL} rounded-full bg-ink/[0.07] px-2.5 py-1 text-ink/70`}>
                 {m}
