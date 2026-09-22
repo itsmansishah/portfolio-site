@@ -142,8 +142,9 @@ function AssistButton() {
 /** The white options panel on the dark band. */
 function Panel({ panel }: { panel: PanelType }) {
   return (
-    <div className="rounded-[18px] bg-[#7c3aed] p-[3px] shadow-[0_0_90px_-20px_rgba(124,58,237,0.8)]">
-      <div className="rounded-[15px] bg-white px-6 py-6 text-ink dt:px-8 dt:py-7">
+    // Same gradient edge and glow as the mocks on Describe to Design.
+    <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
+      <div className="rounded-[16px] bg-white px-6 py-6 text-ink dt:px-8 dt:py-7">
         <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
           {panel.title}
         </h3>
