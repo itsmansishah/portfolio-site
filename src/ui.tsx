@@ -1,4 +1,11 @@
-import { useCallback, useEffect, useState, type CSSProperties, type ReactNode } from "react";
+import {
+  useCallback,
+  useEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+  type ReactNode,
+} from "react";
 import { CONTACT } from "./content";
 
 export const LABEL = "font-mono text-label font-medium uppercase tracking-[0.18em]";
@@ -77,6 +84,84 @@ export function Link({
     <a href={to} onClick={onClick} className={className} style={style}>
       {children}
     </a>
+  );
+}
+
+/* ── embeds ──────────────────────────────────────────────────────────── */
+
+export type Embed = { title: string; src: string; href: string; tall: boolean };
+
+/** Turns a shared Drive or Figma link into something that can sit in an
+ *  iframe. Anything else stays a plain link. */
+export function toEmbed(title: string, href: string): Embed | null {
+  const drive = href.match(/drive\.google\.com\/file\/d\/([^/?#]+)/);
+  if (drive) {
+    return { title, href, src: `https://drive.google.com/file/d/${drive[1]}/preview`, tall: false };
+  }
+
+  if (href.includes("figma.com/proto/")) {
+    const url = new URL(href);
+    url.hostname = "embed.figma.com";
+    url.searchParams.set("embed-host", "itsmemansii");
+    return { title, href, src: url.toString(), tall: true };
+  }
+
+  return null;
+}
+
+/** A plain <dialog>, so Esc, the backdrop and focus handling come for free.
+ *  The iframe mounts only while open, so nothing loads until asked for. */
+export function EmbedModal({ embed, onClose }: { embed: Embed | null; onClose: () => void }) {
+  const ref = useRef<HTMLDialogElement>(null);
+
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    if (embed && !dialog.open) dialog.showModal();
+    if (!embed && dialog.open) dialog.close();
+  }, [embed]);
+
+  useEffect(() => {
+    const dialog = ref.current;
+    if (!dialog) return;
+    dialog.addEventListener("close", onClose);
+    return () => dialog.removeEventListener("close", onClose);
+  }, [onClose]);
+
+  return (
+    <dialog
+      ref={ref}
+      // Clicks land on the dialog itself only when they miss the panel.
+      onClick={(e) => {
+        if (e.target === ref.current) ref.current?.close();
+      }}
+      className="w-[min(1100px,94vw)] rounded-2xl bg-paper p-0 text-ink backdrop:bg-ink/80"
+    >
+      <div className="flex items-center justify-between gap-4 px-5 py-4">
+        <p className={`${LABEL} truncate text-ink/50`}>{embed?.title}</p>
+        <div className="flex shrink-0 items-center gap-5">
+          {embed && (
+            <a href={embed.href} target="_blank" rel="noopener noreferrer" className={`${LABEL} hover:opacity-60`}>
+              Open <span aria-hidden="true">↗</span>
+            </a>
+          )}
+          <button type="button" onClick={() => ref.current?.close()} className={`${LABEL} hover:opacity-60`}>
+            Close <span aria-hidden="true">✕</span>
+          </button>
+        </div>
+      </div>
+
+      {embed && (
+        <iframe
+          key={embed.src}
+          src={embed.src}
+          title={embed.title}
+          allow="autoplay; encrypted-media; fullscreen"
+          allowFullScreen
+          className={`w-full border-0 bg-ink/[0.04] ${embed.tall ? "h-[min(72vh,760px)]" : "aspect-video"}`}
+        />
+      )}
+    </dialog>
   );
 }
 

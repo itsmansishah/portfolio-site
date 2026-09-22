@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { ABOUT, CONTACT, PROJECTS, type Project } from "./content";
-import { LABEL, Link, SlashRule, delay } from "./ui";
+import { EmbedModal, LABEL, Link, SlashRule, delay, toEmbed, type Embed } from "./ui";
 
 /* ── hero ────────────────────────────────────────────────────────────── */
 
@@ -122,10 +122,12 @@ const ACTION = `${LABEL} mt-3 inline-flex items-center gap-2 border-b border-ink
 function ProjectLink({
   project,
   className,
+  onEmbed,
   children,
 }: {
   project: Project;
   className?: string;
+  onEmbed: (embed: Embed) => void;
   children: React.ReactNode;
 }) {
   if (project.caseStudySlug) {
@@ -137,21 +139,62 @@ function ProjectLink({
   }
   if (project.caseStudyUrl) {
     return (
-      <a href={project.caseStudyUrl} target="_blank" rel="noopener noreferrer" className={className}>
+      <ExternalLink
+        href={project.caseStudyUrl}
+        title={`${project.name} — prototype`}
+        className={className}
+        onEmbed={onEmbed}
+      >
         {children}
-      </a>
+      </ExternalLink>
     );
   }
   return <>{children}</>;
 }
 
+/** Opens Drive and Figma links in the modal, but stays a real link: a
+ *  modified click, or anything that can't be embedded, behaves normally. */
+function ExternalLink({
+  href,
+  title,
+  className,
+  onEmbed,
+  children,
+}: {
+  href: string;
+  title: string;
+  className?: string;
+  onEmbed: (embed: Embed) => void;
+  children: React.ReactNode;
+}) {
+  return (
+    <a
+      href={href}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={className}
+      onClick={(e) => {
+        if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+        const embed = toEmbed(title, href);
+        if (!embed) return;
+        e.preventDefault();
+        onEmbed(embed);
+      }}
+    >
+      {children}
+    </a>
+  );
+}
+
 function ProjectRow({ project }: { project: Project }) {
+  const [embed, setEmbed] = useState<Embed | null>(null);
+
   return (
     <article className="border-t border-ink/15 py-[max(2rem,8vw)] dt:py-14">
       <div className="grid gap-5 dt:grid-cols-12 dt:gap-10">
         {/* Mobile: image first, like a card. Desktop: text left, mock right. */}
         <div className="dt:order-last dt:col-span-7">
-          <ProjectLink project={project} className="block transition hover:opacity-90">
+          <ProjectLink project={project} onEmbed={setEmbed} className="block transition hover:opacity-90">
             <ProjectMock project={project} />
           </ProjectLink>
         </div>
@@ -161,7 +204,7 @@ function ProjectRow({ project }: { project: Project }) {
           <div className="flex items-baseline gap-3 dt:gap-4">
             <span className={`${LABEL} text-ink/40`}>{project.num}</span>
             <h3 className="font-mono text-tag font-medium uppercase tracking-[0.18em] dt:font-serif dt:text-[clamp(1.6rem,7vw,2.25rem)] dt:font-normal dt:normal-case dt:leading-tight dt:tracking-[-0.02em]">
-              <ProjectLink project={project} className="hover:opacity-60">
+              <ProjectLink project={project} onEmbed={setEmbed} className="hover:opacity-60">
                 {project.name}
               </ProjectLink>
             </h3>
@@ -189,14 +232,14 @@ function ProjectRow({ project }: { project: Project }) {
               Learn more <span aria-hidden="true">→</span>
             </Link>
           ) : project.caseStudyUrl ? (
-            <a
+            <ExternalLink
               href={project.caseStudyUrl}
-              target="_blank"
-              rel="noopener noreferrer"
+              title={`${project.name} — prototype`}
               className={ACTION}
+              onEmbed={setEmbed}
             >
               View case study <span aria-hidden="true">→</span>
-            </a>
+            </ExternalLink>
           ) : (
               <p className={`${LABEL} mt-6 text-ink/40`}>Case study coming soon</p>
             )}
@@ -206,15 +249,22 @@ function ProjectRow({ project }: { project: Project }) {
             <ul className="flex flex-col items-start">
               {project.links.map((link) => (
                 <li key={link.url}>
-                  <a href={link.url} target="_blank" rel="noopener noreferrer" className={ACTION}>
+                  <ExternalLink
+                    href={link.url}
+                    title={link.label}
+                    className={ACTION}
+                    onEmbed={setEmbed}
+                  >
                     {link.label} <span aria-hidden="true">↗</span>
-                  </a>
+                  </ExternalLink>
                 </li>
               ))}
             </ul>
           ) : null}
         </div>
       </div>
+
+      <EmbedModal embed={embed} onClose={() => setEmbed(null)} />
     </article>
   );
 }
