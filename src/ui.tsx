@@ -116,8 +116,9 @@ export function Nav() {
 
 function ContactRow({ label, children }: { label: string; children: ReactNode }) {
   return (
-    // Right-aligned label + value rows, as in the reference.
-    <div className="flex items-baseline justify-end gap-4 py-2 dt:gap-6 dt:py-0">
+    // Phone: label stacked over its link. Desktop: the two sit on one
+    // right-aligned row, as in the reference.
+    <div className="flex flex-col items-end gap-1 py-2 dt:flex-row dt:items-baseline dt:justify-end dt:gap-6 dt:py-0">
       <span className={`${LABEL} text-paper/40`}>{label}</span>
       {children}
     </div>
