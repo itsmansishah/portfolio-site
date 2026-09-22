@@ -45,7 +45,7 @@
   --text-case: clamp(2.6rem, 12vw, 8rem);
   --text-link: clamp(1.5rem, 6.5vw, 4rem);
   --text-heading: clamp(1.75rem, 8vw, 5rem);
-  --text-section: clamp(1.35rem, 5.8vw, 3.25rem);
+  --text-section: calc(var(--text-body) * 2);
   --text-figure: clamp(2.5rem, 11vw, 7rem);
 }
 
@@ -65,7 +65,6 @@
     --text-case: 6rem;
     --text-link: clamp(1.5rem, 6.5vw, 2.5rem);
     --text-heading: clamp(1.75rem, 8vw, 2.75rem);
-    --text-section: 1.5rem;
     --text-figure: 3.25rem;
   }
 }
