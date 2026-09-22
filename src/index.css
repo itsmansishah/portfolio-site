@@ -112,7 +112,8 @@ body {
 }
 
 /* The Assist button's spin, as authored in Figma: a beat at -180, a springy
-   swing to 0 that overshoots, then a rest before it loops. */
+   swing to 0 that overshoots, then a rest. It waits at -180 until the button
+   scrolls into view, then plays once. */
 @keyframes assist-spin {
   0% {
     transform: rotate(-180deg);
@@ -132,7 +133,11 @@ body {
 }
 
 .assist-spin {
-  animation: assist-spin 2s infinite;
+  transform: rotate(-180deg);
+}
+
+.assist-spin[data-played="true"] {
+  animation: assist-spin 2s 0.25s 1 both;
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -142,7 +147,9 @@ body {
     transform: none;
   }
 
-  .assist-spin {
+  .assist-spin,
+  .assist-spin[data-played="true"] {
+    transform: none;
     animation: none;
   }
 }
