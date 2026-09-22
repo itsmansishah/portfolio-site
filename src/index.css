@@ -111,10 +111,38 @@ body {
   animation-delay: var(--delay, 0ms);
 }
 
+/* The Assist button's spin, as authored in Figma: a beat at -180, a springy
+   swing to 0 that overshoots, then a rest before it loops. */
+@keyframes assist-spin {
+  0% {
+    transform: rotate(-180deg);
+    animation-timing-function: linear;
+  }
+  5% {
+    transform: rotate(-180deg);
+    animation-timing-function: cubic-bezier(0.45, 1.45, 0.8, 1);
+  }
+  45.02% {
+    transform: rotate(0deg);
+    animation-timing-function: linear;
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+.assist-spin {
+  animation: assist-spin 2s infinite;
+}
+
 @media (prefers-reduced-motion: reduce) {
   .rise {
     opacity: 1;
     animation: none;
     transform: none;
+  }
+
+  .assist-spin {
+    animation: none;
   }
 }
