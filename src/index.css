@@ -26,9 +26,13 @@
   --color-paper: #f7f2ed;
   --color-ink: #101010;
   --color-accent: #cadd57;
+  --color-night: #0c1116; /* the dark bands on a case study */
+  --color-spark: #a8d8e8; /* the outcome figure on those bands */
 
   --font-serif: "Libre Caslon Condensed", "Libre Caslon Display", Georgia, serif;
   --font-mono: "Roboto Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  /* One weight of a grotesque, for case study section headings only. */
+  --font-sans: "Inter", ui-sans-serif, system-ui, -apple-system, sans-serif;
 
   /* Phone type scales with the viewport rather than sitting at fixed pixel
      sizes. A phone asking for the desktop site is handed a ~980px canvas and
@@ -42,6 +46,8 @@
   --text-case: clamp(2.6rem, 12vw, 8rem);
   --text-link: clamp(1.5rem, 6.5vw, 4rem);
   --text-heading: clamp(1.75rem, 8vw, 5rem);
+  --text-section: clamp(1.35rem, 5.8vw, 3.25rem);
+  --text-figure: clamp(2.5rem, 11vw, 7rem);
 }
 
 :root {
@@ -60,6 +66,8 @@
     --text-case: 6rem;
     --text-link: clamp(1.5rem, 6.5vw, 2.5rem);
     --text-heading: clamp(1.75rem, 8vw, 2.75rem);
+    --text-section: 1.5rem;
+    --text-figure: 3.25rem;
   }
 }
 

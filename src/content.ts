@@ -10,15 +10,40 @@ export type Project = {
   links?: { label: string; url: string }[]; // extra external links, e.g. demo videos
 };
 
-export type Fact = { label: string; values: string[] };
+/** One of the four cards under the case study title. */
+export type FactCard = {
+  label: string;
+  headline?: string; // e.g. "Lead UX Designer"
+  meta?: string; // e.g. "2025 – 2026"
+  body?: string;
+  emphasis?: string; // tail of `body`, set bold
+  items?: string[];
+};
+
+export type Shot = {
+  src?: string;
+  label: string;
+  /** "card" sets the mock in a glowing gradient-edged card, for dark bands. */
+  frame?: "card";
+};
+
+/** A story beat: heading, copy and a mock. "wide" centres the copy and runs
+ *  the mock full width; the others sit the mock beside it. */
+export type Section = {
+  title: string;
+  body: string[];
+  shot?: Shot;
+  layout?: "shot-right" | "shot-left" | "wide";
+};
 
 export type CaseStudy = {
   slug: string;
   title: string;
-  intro: string[];
-  highlights?: string[]; // headline outcomes, shown as starred bullets under the intro
-  facts: Fact[];
-  shots: { src?: string; label: string }[];
+  subtitle: string;
+  cards: FactCard[];
+  summary: { body: string; shot?: Shot };
+  sections?: Section[];
+  outcome?: { figure: string; caption: string; body: string };
 };
 
 export const PROJECTS: Project[] = [
@@ -71,35 +96,76 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "describe-to-design",
     title: "Describe to Design",
-    intro: [
-      "At Qualtrics, creating automated workflows (known internally as xFlows) is a powerful but complex experience. While these workflows allow users to automate tasks across their survey and other feedback ecosystems, configuring them requires significant manual setup and technical know-how.",
-      "As part of the Workflows team, I led design exploration for a new concept called Describe to Design (D2D), an AI-powered chat experience that lowers the barrier to workflow creation by enabling users to generate, modify, and refine workflows through natural language.",
+    subtitle: "Lowered the barrier to complex automation through natural language.",
+    cards: [
+      { label: "Role", headline: "Lead UX Designer", meta: "2025 – 2026" },
+      {
+        label: "Problem",
+        body: "xFlows allow users to automate tasks across their feedback ecosystems, but ",
+        emphasis: "the manual configuration required significant technical know-how.",
+      },
+      {
+        label: "Deliverables",
+        items: ["Ship designs (MVP, V2)", "Define scope", "Usability testing", "End-to-End AI Assistant"],
+      },
+      { label: "Team", items: ["Product Manager", "Engineers", "UX Research"] },
     ],
-    highlights: ["D2D increased the number of successful workflow executions by 60%."],
-    facts: [
-      { label: "Company", values: ["Qualtrics"] },
-      { label: "Year", values: ["2025 – 2026"] },
-      { label: "Deliverables", values: ["Ship designs (MVP, V2)", "Define scope", "Usability testing"] },
-      { label: "Role", values: ["UX Designer"] },
-      { label: "Team", values: ["Product Manager", "Engineers", "UX Research"] },
+    summary: {
+      body: "We transformed Qualtrics Workflows from an intimidating, manual builder into an intuitive AI collaborator and made powerful enterprise tools accessible to everyone by turning natural language into working automation.",
+      shot: { src: "/mock-prompt-bar.png", label: "PROMPT_BAR.PNG", frame: "card" },
+    },
+    sections: [
+      {
+        title: "Just describe your goal.",
+        body: [
+          "Instead of manually assembling triggers and logic click-by-click, users simply type what they want to automate in plain English.",
+        ],
+        shot: { src: "/mock-request-card.png", label: "REQUEST_CARD.PNG" },
+        layout: "shot-right",
+      },
+      {
+        title: "Review before you build.",
+        body: [
+          "A black-box AI creates anxiety.",
+          "Before generating the automation, the Qualtrics Assist engine provides a clear, stepped-out summary of your request to ensure honest error handling and accurate task configuration so there is zero guesswork and absolute control.",
+        ],
+        shot: { src: "/mock-assist-outline.png", label: "ASSIST_OUTLINE.PNG" },
+        layout: "shot-left",
+      },
+      {
+        title: "Instant deployment.",
+        body: [
+          "What used to take twenty minutes of manual configuration is now an instant visual workflow. D2D constructs the entire foundational skeleton, so users never have to stare at a blank canvas again.",
+        ],
+        shot: { src: "/mock-workflow-canvas.png", label: "WORKFLOW_CANVAS.PNG" },
+        layout: "wide",
+      },
     ],
-    shots: [{ src: "/describe-to-design.png", label: "D2D_OVERVIEW.PNG" }],
+    outcome: {
+      figure: "60% increase",
+      caption: "in successful workflow executions.",
+      body: "By lowering the barrier to entry and replacing click-by-click friction with an AI assistant, Describe to Design successfully transformed an intimidating feature into an everyday tool.",
+    },
   },
   {
     slug: "unified-transform",
     title: "Unified Transform",
-    intro: [
-      "At Qualtrics, transforming data fields: reformatting, renaming, mapping one system's structure to another, is a routine & essential step when ingesting data from external systems like Salesforce, Genesys, etc into the platform. This was historically split across two separate, unequal tools: Basic Transform for simple reformatting, and a proposed Advanced Transform for anything more complex, forcing users to guess which tool they needed before they'd even diagnosed their own problem.",
-      "As part of the Workflows team, I led the UX research and design for Unified Transform, a redesign that replaces both tools with a single task, letting users move seamlessly between AI-assisted, manual, and code-based transformation, with their real data visible at every step.",
+    subtitle: "One task for transforming data, from AI-assisted to hand-written.",
+    cards: [
+      { label: "Role", headline: "UX Designer & Researcher", meta: "2026" },
+      {
+        label: "Problem",
+        body: "Transforming data fields was split across two separate, unequal tools, ",
+        emphasis:
+          "forcing users to guess which one they needed before they had even diagnosed their own problem.",
+      },
+      { label: "Deliverables", items: ["Define requirements", "Full redesign", "Internal testing"] },
+      { label: "Team", items: ["Engineer"] },
     ],
-    facts: [
-      { label: "Company", values: ["Qualtrics"] },
-      { label: "Year", values: ["2026"] },
-      { label: "Deliverables", values: ["Define requirements", "Full redesign", "Internal testing"] },
-      { label: "Role", values: ["UX Designer & Researcher"] },
-      { label: "Team", values: ["Engineer"] },
-    ],
-    shots: [{ src: "/unified-transform.png", label: "UNIFIED_TRANSFORM_OVERVIEW.PNG" }],
+    summary: {
+      body: "As part of the Workflows team, I led the UX research and design for Unified Transform, a redesign that replaces both tools with a single task, letting users move seamlessly between AI-assisted, manual, and code-based transformation, with their real data visible at every step.",
+      shot: { src: "/unified-transform.png", label: "UNIFIED_TRANSFORM.PNG" },
+    },
   },
 ];
 

@@ -1,45 +1,158 @@
 import { useState } from "react";
-import { CASE_STUDIES, CONTACT, type CaseStudy as CaseStudyType } from "./content";
+import {
+  CASE_STUDIES,
+  CONTACT,
+  type CaseStudy as CaseStudyType,
+  type FactCard,
+  type Section as SectionType,
+  type Shot as ShotType,
+} from "./content";
 import { LABEL, Link, delay } from "./ui";
 
-function Shot({ src, label }: { src?: string; label: string }) {
+const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
+const HEADING = "font-sans text-section font-semibold leading-[1.15] tracking-[-0.01em]";
+const COPY = "font-mono text-body leading-relaxed";
+
+/** A mock. Until the export lands it holds its space as a labelled frame, so
+ *  dropping the real image in never moves the layout. */
+function Shot({
+  shot,
+  ratio = "aspect-[16/10]",
+  dark = false,
+}: {
+  shot: ShotType;
+  ratio?: string;
+  dark?: boolean;
+}) {
   const [failed, setFailed] = useState(false);
 
-  if (src && !failed) {
-    return (
+  if (shot.src && !failed) {
+    const img = (
       <img
-        src={src}
-        alt={label}
-        className="w-full rounded-md border border-ink/15"
+        src={shot.src}
+        alt={shot.label}
+        className={shot.frame === "card" ? "w-full" : `w-full rounded-xl border ${dark ? "border-paper/15" : "border-ink/15"}`}
         onError={() => setFailed(true)}
       />
     );
+
+    if (shot.frame === "card") {
+      // The gradient edge and glow live in CSS so the mock can sit straight on
+      // the dark band, the way the design has it.
+      return (
+        <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
+          <div className="rounded-[16px] bg-white px-5 py-4 dt:px-7 dt:py-6">{img}</div>
+        </div>
+      );
+    }
+
+    return img;
   }
 
   return (
-    <div className="flex aspect-[16/9] w-full items-center justify-center rounded-md border border-ink/15 bg-ink/[0.04]">
-      <span className={`${LABEL} text-ink/35`}>[ {label} ]</span>
+    <div
+      className={`flex ${ratio} w-full items-center justify-center rounded-xl border ${
+        dark ? "border-paper/15 bg-paper/5" : "border-ink/15 bg-ink/[0.04]"
+      }`}
+    >
+      <span className={`${LABEL} ${dark ? "text-paper/40" : "text-ink/35"}`}>[ {shot.label} ]</span>
     </div>
   );
 }
 
-/** Bottom-of-page step to the neighbouring case study. */
-function StepLink({ study, dir }: { study: CaseStudyType; dir: "prev" | "next" }) {
-  const next = dir === "next";
+function Card({ card }: { card: FactCard }) {
   return (
-    <Link
-      to={`/work/${study.slug}`}
-      className={`group py-2 ${next ? "text-right" : ""} hover:opacity-60`}
-    >
-      <span className={`${LABEL} block text-ink/40`}>
-        {next ? (
-          <>Next project <span aria-hidden="true">→</span></>
-        ) : (
-          <><span aria-hidden="true">←</span> Previous project</>
+    <div className="rounded-xl bg-ink/[0.045] p-4 dt:p-5">
+      <p className={`${LABEL} text-ink/40`}>{card.label}</p>
+
+      {card.headline && (
+        <p className={`${LABEL} mt-3 text-[1.25em] leading-snug`}>{card.headline}</p>
+      )}
+      {card.meta && <p className={`${LABEL} mt-2 text-ink/40`}>{card.meta}</p>}
+
+      {card.body && (
+        <p className={`${COPY} mt-3 text-ink/70`}>
+          {card.body}
+          {card.emphasis && <strong className="font-medium text-ink">{card.emphasis}</strong>}
+        </p>
+      )}
+
+      {card.items && (
+        <ul className={`${COPY} mt-3 space-y-1 text-ink/70`}>
+          {card.items.map((item) => (
+            <li key={item} className="flex gap-2">
+              <span aria-hidden="true" className="text-ink/35">
+                ·
+              </span>
+              {item}
+            </li>
+          ))}
+        </ul>
+      )}
+    </div>
+  );
+}
+
+function Section({ section }: { section: SectionType }) {
+  const copy = (
+    <div>
+      <h2 className={HEADING}>{section.title}</h2>
+      <div className="mt-4 space-y-3">
+        {section.body.map((para) => (
+          <p key={para.slice(0, 24)} className={`${COPY} text-ink/70`}>
+            {para}
+          </p>
+        ))}
+      </div>
+    </div>
+  );
+
+  if (section.layout === "wide") {
+    return (
+      <section className={`${WRAP} rise py-[max(3rem,10vw)] text-center dt:py-20`}>
+        <div className="mx-auto max-w-[44rem]">{copy}</div>
+        {section.shot && (
+          <div className="mt-8 dt:mt-12">
+            <Shot shot={section.shot} ratio="aspect-[16/9]" />
+          </div>
         )}
-      </span>
+      </section>
+    );
+  }
+
+  const shotLeft = section.layout === "shot-left";
+
+  return (
+    <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+      <div className="grid items-center gap-8 dt:grid-cols-2 dt:gap-14">
+        {/* The mock leads on a phone either way — a picture reads faster than
+            a heading when the column is this narrow. */}
+        <div className={shotLeft ? "" : "dt:order-last"}>
+          {section.shot && <Shot shot={section.shot} />}
+        </div>
+        {copy}
+      </div>
+    </section>
+  );
+}
+
+/** Bottom-of-page step: the neighbouring case study, or home. */
+function StepLink({
+  to,
+  label,
+  title,
+  align,
+}: {
+  to: string;
+  label: string;
+  title: string;
+  align: "left" | "right";
+}) {
+  return (
+    <Link to={to} className={`py-2 hover:opacity-60 ${align === "right" ? "text-right" : ""}`}>
+      <span className={`${LABEL} block text-ink/40`}>{label}</span>
       <span className="mt-2 block font-serif text-[clamp(1.25rem,5vw,2.75rem)] leading-tight tracking-[-0.02em] dt:text-[clamp(1.25rem,5vw,1.75rem)]">
-        {study.title}
+        {title}
       </span>
     </Link>
   );
@@ -51,95 +164,75 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
   const next = i > -1 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null;
 
   return (
-    <article className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-16 pt-[max(1rem,4vw)] dt:pb-24 dt:pt-10">
-      <h1
-        className="rise font-serif text-case leading-[0.98] tracking-[-0.035em]"
-        style={delay(60)}
-      >
-        {study.title}
-      </h1>
-
-      <div className="mt-8 grid gap-8 dt:mt-14 dt:grid-cols-12 dt:gap-12">
-        {/* Mobile: the facts come first as a scannable table, so the essentials
-            are visible before the story. Desktop: story left, facts two-up right. */}
-        <dl
-          className="rise grid grid-cols-1 dt:order-last dt:col-span-5 dt:grid-cols-2 dt:gap-x-10 dt:gap-y-8"
-          style={delay(140)}
+    <article className="pb-[max(3rem,10vw)] dt:pb-16">
+      <header className={`${WRAP} pt-[max(1rem,4vw)] dt:pt-10`}>
+        <h1
+          className="rise font-serif text-case leading-[0.98] tracking-[-0.035em]"
+          style={delay(60)}
         >
-          {study.facts.map((fact) => (
-            <div
-              key={fact.label}
-              className="grid grid-cols-[max(6.5rem,26vw)_1fr] gap-4 border-t border-ink/15 py-3 dt:block dt:grid-cols-none dt:border-0 dt:py-0"
-            >
-              <dt className={`${LABEL} text-ink/40`}>{fact.label}</dt>
-              <dd className={`${LABEL} space-y-0.5 dt:mt-1`}>
-                {fact.values.map((v) => (
-                  <div key={v}>{v}</div>
-                ))}
-              </dd>
-            </div>
-          ))}
-        </dl>
+          {study.title}
+        </h1>
+        <p className={`${COPY} rise mt-3 text-ink/60`} style={delay(140)}>
+          {study.subtitle}
+        </p>
+      </header>
 
-        <div className="rise dt:col-span-7" style={delay(220)}>
-          <div className="space-y-6">
-            {study.intro.map((para) => (
-              <p key={para.slice(0, 28)} className="font-mono text-body leading-relaxed text-ink/80">
-                {para}
-              </p>
-            ))}
-          </div>
-
-          {study.highlights?.length ? (
-            <section aria-labelledby="highlights" className="mt-10 dt:mt-12">
-              <h2 id="highlights" className={`${LABEL} text-ink/40`}>
-                Highlights
-              </h2>
-              <ul className="mt-4 space-y-3 font-mono text-body leading-relaxed text-ink/80">
-                {study.highlights.map((text) => (
-                  <li key={text} className="flex gap-3">
-                    {/* One line-height tall, so the star centres on the first line */}
-                    <span aria-hidden="true" className="flex h-[1.625em] shrink-0 items-center">
-                      <svg viewBox="0 0 10 10" className="size-[0.8em] fill-current">
-                        <path d="M5 0 6.1 3.9 10 5 6.1 6.1 5 10 3.9 6.1 0 5 3.9 3.9Z" />
-                      </svg>
-                    </span>
-                    {text}
-                  </li>
-                ))}
-              </ul>
-            </section>
-          ) : null}
-
-          {/* The deck itself isn't public — this opens a note asking for it. */}
-          <a
-            href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(
-              `Request to see the ${study.title} case study`,
-            )}`}
-            className={`${LABEL} mt-8 inline-flex items-center gap-2 border-b border-ink pb-1 pt-3 hover:opacity-60 dt:mt-10`}
-          >
-            Request to see full case study <span aria-hidden="true">→</span>
-          </a>
-        </div>
-      </div>
-
-      <div className="rise mt-10 space-y-4 dt:mt-16 dt:space-y-6" style={delay(300)}>
-        {study.shots.map((shot) => (
-          <Shot key={shot.label} src={shot.src} label={shot.label} />
+      <div
+        className={`${WRAP} rise mt-8 grid gap-3 dt:mt-10 dt:grid-cols-4 dt:gap-4`}
+        style={delay(200)}
+      >
+        {study.cards.map((card) => (
+          <Card key={card.label} card={card} />
         ))}
       </div>
 
-      <Link to="/" className={`${LABEL} mt-7 inline-flex items-center gap-2 py-3 hover:opacity-60 dt:mt-14`}>
-        <span aria-hidden="true">←</span> Back to work
-      </Link>
+      {/* Full-bleed dark band: the one-paragraph version of the project. */}
+      <section className="mt-[max(3rem,10vw)] bg-night py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
+        <div className={`${WRAP} grid items-center gap-10 dt:grid-cols-2 dt:gap-14`}>
+          <p className={`${COPY} text-paper/75 [line-height:2]`}>{study.summary.body}</p>
+          {study.summary.shot && <Shot shot={study.summary.shot} dark />}
+        </div>
+      </section>
 
-      {prev || next ? (
-        // Each side keeps its edge whether or not the other one exists.
-        <nav className="mt-8 flex items-start justify-between gap-6 border-t border-ink/15 pt-6 dt:mt-12 dt:pt-8">
-          {prev ? <StepLink study={prev} dir="prev" /> : <span />}
-          {next ? <StepLink study={next} dir="next" /> : <span />}
-        </nav>
-      ) : null}
+      {study.sections?.map((section) => <Section key={section.title} section={section} />)}
+
+      {study.outcome && (
+        <section className="bg-night py-[max(3rem,12vw)] text-center text-paper dt:py-24">
+          <div className={WRAP}>
+            <p className="font-serif text-figure leading-none tracking-[-0.02em] text-spark">
+              {study.outcome.figure}
+            </p>
+            <p className={`${COPY} mt-4 text-paper/70`}>{study.outcome.caption}</p>
+            <p className={`${COPY} mx-auto mt-8 max-w-[44rem] text-paper/75`}>
+              {study.outcome.body}
+            </p>
+          </div>
+        </section>
+      )}
+
+      <div className={`${WRAP} py-[max(3rem,10vw)] text-center dt:py-20`}>
+        <a
+          href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(
+            `Request to see the ${study.title} case study`,
+          )}`}
+          className={`${LABEL} inline-flex items-center gap-2 rounded-full bg-accent px-[max(1.75rem,7vw)] py-[max(0.9rem,3.5vw)] text-ink transition hover:brightness-95 dt:px-9 dt:py-4`}
+        >
+          Request the full case study <span aria-hidden="true">→</span>
+        </a>
+      </div>
+
+      <nav className={`${WRAP} flex items-start justify-between gap-6 border-t border-ink/15 pt-6 dt:pt-8`}>
+        {prev ? (
+          <StepLink to={`/work/${prev.slug}`} label="← Previous project" title={prev.title} align="left" />
+        ) : (
+          <StepLink to="/" label="Back to work" title="Home" align="left" />
+        )}
+        {next ? (
+          <StepLink to={`/work/${next.slug}`} label="Next project →" title={next.title} align="right" />
+        ) : (
+          <StepLink to="/" label="Back to work" title="Home" align="right" />
+        )}
+      </nav>
     </article>
   );
 }
