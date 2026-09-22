@@ -65,7 +65,7 @@
     --text-case: 6rem;
     --text-link: clamp(1.5rem, 6.5vw, 2.5rem);
     --text-heading: clamp(1.75rem, 8vw, 2.75rem);
-    --text-figure: 3.25rem;
+    --text-figure: 4rem;
   }
 }
 

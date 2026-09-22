@@ -11,9 +11,10 @@ import { LABEL, Link, delay } from "./ui";
 
 const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
 const HEADING = "font-sans text-section font-semibold leading-[1.15] tracking-[-0.01em]";
-// Measures cap at 70 characters, and words wrap whole rather than hyphenating.
+// Measures cap the line length, and words wrap whole rather than hyphenating.
 const COPY = "font-mono text-body leading-relaxed hyphens-none [overflow-wrap:normal]";
 const MEASURE = "max-w-[70ch]";
+const MEASURE_TIGHT = "max-w-[50ch]"; // the narrative copy
 
 /** A mock. Until the export lands it holds its space as a labelled frame, so
  *  dropping the real image in never moves the layout. */
@@ -174,12 +175,16 @@ function Card({ card }: { card: FactCard }) {
 }
 
 function Section({ section }: { section: SectionType }) {
+  const wide = section.layout === "wide";
   const copy = (
     <div>
       <h2 className={HEADING}>{section.title}</h2>
       <div className="mt-4 space-y-3">
         {section.body.map((para) => (
-          <p key={para.slice(0, 24)} className={`${COPY} ${MEASURE} text-ink/70`}>
+          <p
+            key={para.slice(0, 24)}
+            className={`${COPY} ${wide ? MEASURE : MEASURE_TIGHT} text-ink/70`}
+          >
             {para}
           </p>
         ))}
@@ -187,7 +192,7 @@ function Section({ section }: { section: SectionType }) {
     </div>
   );
 
-  if (section.layout === "wide") {
+  if (wide) {
     return (
       <section className={`${WRAP} rise py-[max(3rem,10vw)] text-center dt:py-20`}>
         <div className={`mx-auto ${MEASURE} [&_p]:mx-auto`}>{copy}</div>
@@ -269,7 +274,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       {/* Full-bleed dark band: the one-paragraph version of the project. */}
       <section className="mt-[max(3rem,10vw)] bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
         <div className={`${WRAP} grid items-center gap-10 dt:grid-cols-2 dt:gap-14`}>
-          <p className={`${COPY} ${MEASURE} text-white [line-height:2]`}>{study.summary.body}</p>
+          <p className={`${COPY} ${MEASURE_TIGHT} text-white [line-height:2]`}>{study.summary.body}</p>
           {study.summary.shot && <Shot shot={study.summary.shot} dark />}
         </div>
       </section>
@@ -279,11 +284,10 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       {study.outcome && (
         <section className="bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-center text-paper dt:py-24">
           <div className={WRAP}>
-            <p className="font-serif text-figure leading-none tracking-[-0.02em] text-spark">
-              {study.outcome.figure}
+            <p className="mx-auto max-w-[46rem] font-serif text-figure leading-[1.1] tracking-[-0.02em] text-spark">
+              {study.outcome.figure} {study.outcome.caption}
             </p>
-            <p className={`${COPY} mt-4 text-paper/70`}>{study.outcome.caption}</p>
-            <p className={`${COPY} ${MEASURE} mx-auto mt-8 text-paper/75`}>
+            <p className="mx-auto mt-8 max-w-[44rem] font-sans text-[clamp(0.95rem,3.4vw,1.15rem)] font-normal leading-relaxed text-white/80 hyphens-none dt:mt-10">
               {study.outcome.body}
             </p>
           </div>
