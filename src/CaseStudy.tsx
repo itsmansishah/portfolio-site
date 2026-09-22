@@ -47,7 +47,7 @@ function Shot({
           {shot.fab && (
             // Built here rather than exported: Figma bakes the page colour in
             // behind it, which shows as a pale square on the dark band.
-            <span className="-mr-[1%] -mt-[5%] ml-auto grid aspect-square w-[17%] place-items-center rounded-full bg-[linear-gradient(135deg,#18a0fb_0%,#3b6ef5_45%,#6d28d9_100%)] shadow-[0_10px_30px_-8px_rgba(59,110,245,0.7)]">
+            <span className="ml-auto mt-[18px] grid aspect-square w-[17%] place-items-center rounded-full bg-[linear-gradient(135deg,#18a0fb_0%,#3b6ef5_45%,#6d28d9_100%)] shadow-[0_10px_30px_-8px_rgba(59,110,245,0.7)]">
               <img src="/sparkle.svg" alt="" className="w-[46%]" />
             </span>
           )}
