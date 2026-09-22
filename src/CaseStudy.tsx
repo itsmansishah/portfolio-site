@@ -320,7 +320,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
             <p className="mx-auto max-w-[46rem] font-serif text-figure leading-[1.1] tracking-[-0.02em] text-spark">
               {study.outcome.figure} {study.outcome.caption}
             </p>
-            <p className="mx-auto mt-8 max-w-[44rem] font-sans text-[clamp(0.95rem,3.4vw,1.15rem)] font-normal leading-relaxed text-white/80 hyphens-none dt:mt-10">
+            <p className="mx-auto mt-8 max-w-[62ch] font-mono text-[clamp(0.875rem,3.2vw,1.05rem)] leading-relaxed text-white/80 hyphens-none dt:mt-10">
               {study.outcome.body}
             </p>
           </div>
