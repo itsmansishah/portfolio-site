@@ -88,13 +88,14 @@ function AssistButton() {
   }, [played]);
 
   return (
-    // The shadow stays on the wrapper so only the button spins.
-    <span className="ml-auto mt-[18px] block aspect-square w-[17%] rounded-full shadow-[0_10px_30px_-8px_rgba(59,110,245,0.7)]">
-      <span
-        ref={ref}
-        data-played={played}
-        className="assist-spin grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#18a0fb_0%,#3b6ef5_45%,#6d28d9_100%)]"
-      >
+    // The wrapper carries the travel and the glow; the inner span does the
+    // turning, so the glow rolls along without rotating.
+    <span
+      ref={ref}
+      data-played={played}
+      className="assist-roll ml-auto mt-[18px] block aspect-square w-[17%] rounded-full shadow-[0_10px_30px_-8px_rgba(59,110,245,0.7)]"
+    >
+      <span className="assist-spin grid h-full w-full place-items-center rounded-full bg-[linear-gradient(135deg,#18a0fb_0%,#3b6ef5_45%,#6d28d9_100%)]">
         <img src="/sparkle.svg" alt="" className="w-[46%]" />
       </span>
     </span>

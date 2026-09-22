@@ -111,33 +111,45 @@ body {
   animation-delay: var(--delay, 0ms);
 }
 
-/* The Assist button's spin, as authored in Figma: a beat at -180, a springy
-   swing to 0 that overshoots, then a rest. It waits at -180 until the button
-   scrolls into view, then plays once. */
+/* The Assist button rolls in from the left of the band and settles in its
+   spot, once, when it scrolls into view. Travel and spin are split across two
+   elements so the glow travels with the button without spinning with it.
+
+   The numbers are a real roll: the button is 17% of the card's width, so
+   crossing the remaining 83% is 0.83 / (pi x 0.17) = 1.55 turns — 559deg over
+   488% of its own width. */
+@keyframes assist-roll {
+  from {
+    transform: translateX(-488%);
+  }
+  to {
+    transform: none;
+  }
+}
+
 @keyframes assist-spin {
-  0% {
-    transform: rotate(-180deg);
-    animation-timing-function: linear;
+  from {
+    transform: rotate(-559deg);
   }
-  5% {
-    transform: rotate(-180deg);
-    animation-timing-function: cubic-bezier(0.45, 1.45, 0.8, 1);
-  }
-  45.02% {
-    transform: rotate(0deg);
-    animation-timing-function: linear;
-  }
-  100% {
-    transform: rotate(0deg);
+  to {
+    transform: none;
   }
 }
 
-.assist-spin {
-  transform: rotate(-180deg);
+.assist-roll {
+  transform: translateX(-488%);
 }
 
-.assist-spin[data-played="true"] {
-  animation: assist-spin 2s 0.25s 1 both;
+.assist-roll .assist-spin {
+  transform: rotate(-559deg);
+}
+
+.assist-roll[data-played="true"] {
+  animation: assist-roll 1.2s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
+}
+
+.assist-roll[data-played="true"] .assist-spin {
+  animation: assist-spin 1.2s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -147,8 +159,10 @@ body {
     transform: none;
   }
 
-  .assist-spin,
-  .assist-spin[data-played="true"] {
+  .assist-roll,
+  .assist-roll .assist-spin,
+  .assist-roll[data-played="true"],
+  .assist-roll[data-played="true"] .assist-spin {
     transform: none;
     animation: none;
   }
