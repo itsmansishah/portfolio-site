@@ -110,7 +110,10 @@ function AssistButton() {
           io.disconnect();
         }
       },
-      { threshold: 0.7 },
+      // Trimming the bottom half of the root makes this fire the moment the
+      // card's top crosses the middle of the screen — a rule that can't
+      // strand the button the way a high visibility threshold can.
+      { rootMargin: "0px 0px -50% 0px" },
     );
     io.observe(target);
     return () => io.disconnect();
