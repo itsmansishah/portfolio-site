@@ -73,6 +73,8 @@ function AssistButton() {
 
   // How far it has to travel, and how many turns that is at its size. Measured
   // rather than hard-coded, since the band runs the full width of the window.
+  // It starts half a button past the band's right edge, so it rolls in from
+  // off-screen rather than popping into view.
   useLayoutEffect(() => {
     const el = ref.current;
     if (!el || played) return;
@@ -84,7 +86,7 @@ function AssistButton() {
       if (!band) return;
 
       const rect = el.getBoundingClientRect();
-      const distance = rect.left - band.getBoundingClientRect().left;
+      const distance = band.getBoundingClientRect().right - rect.left + rect.width / 2;
       el.style.setProperty("--roll-x", `${Math.round(distance)}px`);
       el.style.setProperty("--roll-deg", `${Math.round((distance / (Math.PI * rect.width)) * 360)}deg`);
     };
