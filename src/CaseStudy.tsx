@@ -113,10 +113,11 @@ function AssistButton() {
           io.disconnect();
         }
       },
-      // Trimming the bottom half of the root makes this fire the moment the
-      // card's top crosses the middle of the screen — a rule that can't
-      // strand the button the way a high visibility threshold can.
-      { rootMargin: "0px 0px -50% 0px" },
+      // Fires as the card's top crosses 60% of the way down the screen — just
+      // short of the middle, so the roll is already underway when the card
+      // lands there. A margin rule can't strand the button the way a high
+      // visibility threshold can.
+      { rootMargin: "0px 0px -40% 0px" },
     );
     io.observe(target);
     return () => io.disconnect();
