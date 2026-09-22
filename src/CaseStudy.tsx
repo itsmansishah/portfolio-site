@@ -102,7 +102,7 @@ function AssistButton() {
 
     // Watch the card, not the button: the button waits off-screen, so it
     // never intersects the viewport and would never start.
-    const target = el.parentElement ?? el;
+    const target = el.previousElementSibling ?? el.parentElement ?? el;
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -110,7 +110,7 @@ function AssistButton() {
           io.disconnect();
         }
       },
-      { threshold: 0.4 },
+      { threshold: 0.6 },
     );
     io.observe(target);
     return () => io.disconnect();
