@@ -225,19 +225,26 @@ function Section({ section }: { section: SectionType }) {
 /** The ask: opens a note requesting the deck for this project. */
 function RequestLink({
   study,
+  variant = "pill",
   className = "",
   style,
 }: {
   study: CaseStudyType;
+  variant?: "pill" | "link";
   className?: string;
   style?: CSSProperties;
 }) {
+  const chrome =
+    variant === "pill"
+      ? "rounded-full bg-accent px-[max(1.75rem,7vw)] py-[max(0.9rem,3.5vw)] text-ink hover:brightness-95 dt:px-9 dt:py-4"
+      : "border-b border-ink pb-1 pt-3 hover:opacity-60";
+
   return (
     <a
       href={`mailto:${CONTACT.email}?subject=${encodeURIComponent(
         `Request to see the ${study.title} case study`,
       )}`}
-      className={`${LABEL} inline-flex items-center gap-2 rounded-full bg-accent text-ink transition hover:brightness-95 ${className}`}
+      className={`${LABEL} inline-flex items-center gap-2 transition ${chrome} ${className}`}
       style={style}
     >
       Request the full case study <span aria-hidden="true">→</span>
@@ -285,11 +292,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
           {study.subtitle}
         </p>
 
-        <RequestLink
-          study={study}
-          className="rise mt-5 px-[max(1.25rem,5vw)] py-[max(0.7rem,2.8vw)] dt:px-6 dt:py-3"
-          style={delay(180)}
-        />
+        <RequestLink study={study} variant="link" className="rise mt-2" style={delay(180)} />
       </header>
 
       <div
@@ -325,10 +328,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       )}
 
       <div className={`${WRAP} py-[max(3rem,10vw)] text-center dt:py-20`}>
-        <RequestLink
-          study={study}
-          className="px-[max(1.75rem,7vw)] py-[max(0.9rem,3.5vw)] dt:px-9 dt:py-4"
-        />
+        <RequestLink study={study} />
       </div>
 
       <nav className={`${WRAP} flex items-start justify-between gap-6 border-t border-ink/15 pt-6 dt:pt-8`}>
