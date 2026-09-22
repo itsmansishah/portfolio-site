@@ -14,7 +14,7 @@ export type Project = {
 export type FactCard = {
   label: string;
   headline?: string; // e.g. "Lead UX Designer"
-  meta?: string; // e.g. "2025 – 2026"
+  meta?: string; // e.g. "2025 – 2026 · Qualtrics"
   body?: string;
   emphasis?: string; // tail of `body`, set bold
   items?: string[];
@@ -101,7 +101,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Describe to Design",
     subtitle: "Lowered the barrier to complex automation through natural language.",
     cards: [
-      { label: "Role", headline: "Lead UX Designer", meta: "2025 – 2026" },
+      { label: "Role", headline: "Lead UX Designer", meta: "2025 – 2026 · Qualtrics" },
       {
         label: "Problem",
         body: "xFlows allow users to automate tasks across their feedback ecosystems, but ",
@@ -155,7 +155,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     title: "Unified Transform",
     subtitle: "One task for transforming data, from AI-assisted to hand-written.",
     cards: [
-      { label: "Role", headline: "UX Designer & Researcher", meta: "2026" },
+      { label: "Role", headline: "UX Designer & Researcher", meta: "2026 · Qualtrics" },
       {
         label: "Problem",
         body: "Transforming data fields was split across two separate, unequal tools, ",

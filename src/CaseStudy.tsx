@@ -146,7 +146,7 @@ function Card({ card }: { card: FactCard }) {
       {card.headline && (
         // Sized off the label step rather than with LABEL, so the two
         // font-size utilities can't fight over which one wins.
-        <p className="mt-3 font-mono text-[calc(var(--text-label)*1.55)] font-medium uppercase leading-snug tracking-[0.08em]">
+        <p className="mt-3 font-mono text-[calc(var(--text-label)*1.9)] font-medium uppercase leading-snug tracking-[0.06em]">
           {card.headline}
         </p>
       )}
@@ -162,10 +162,13 @@ function Card({ card }: { card: FactCard }) {
       {card.items && (
         <ul className={`${COPY} mt-3 space-y-1 text-ink/70`}>
           {card.items.map((item) => (
-            <li key={item} className="flex gap-2">
-              <span aria-hidden="true" className="text-ink/35">
-                ·
-              </span>
+            <li key={item} className="flex gap-2.5">
+              {/* A drawn dot rather than the mid-dot glyph, which all but
+                  disappears at this size. */}
+              <span
+                aria-hidden="true"
+                className="mt-[0.5em] size-[5px] shrink-0 rounded-full bg-ink/55"
+              />
               {item}
             </li>
           ))}
