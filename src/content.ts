@@ -39,12 +39,26 @@ export type Section = {
   layout?: "shot-right" | "shot-left" | "wide";
 };
 
+/** The white panel that can sit on the right of the dark band, in place of
+ *  a mock: a heading over a short list of options. */
+export type Panel = {
+  title: string;
+  subtitle?: string;
+  rows: { title: string; body: string }[];
+};
+
 export type CaseStudy = {
   slug: string;
   title: string;
   subtitle: string;
   cards: FactCard[];
-  summary: { body: string; shot?: Shot };
+  summary: {
+    kicker?: string;
+    body: string;
+    list?: string[];
+    shot?: Shot;
+    panel?: Panel;
+  };
   sections?: Section[];
   outcome?: { figure: string; caption: string; body: string };
 };
@@ -166,8 +180,21 @@ export const CASE_STUDIES: CaseStudy[] = [
       { label: "Team", items: ["Engineer"] },
     ],
     summary: {
-      body: "As part of the Workflows team, I led the UX research and design for Unified Transform, a redesign that replaces both tools with a single task, letting users move seamlessly between AI-assisted, manual, and code-based transformation, with their real data visible at every step.",
-      shot: { src: "/unified-transform.png", label: "UNIFIED_TRANSFORM.PNG" },
+      kicker: "All in one",
+      body: "Unifying Basic, Advanced Transform, and code transform will...",
+      list: ["reduce user confusion", "more flexibility", "greater scalability"],
+      panel: {
+        title: "How do you want to set up your transformations?",
+        subtitle: "One entry point. Every method lands in the same workspace.",
+        rows: [
+          {
+            title: "Transform with AI",
+            body: "Describe what you need — get a reviewable rule list with live preview.",
+          },
+          { title: "Transform manually", body: "Map fields yourself using the data mapper." },
+          { title: "Code transform", body: "Write Python for complex, multi-step logic." },
+        ],
+      },
     },
   },
 ];

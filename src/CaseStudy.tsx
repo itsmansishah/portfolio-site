@@ -4,6 +4,7 @@ import {
   CONTACT,
   type CaseStudy as CaseStudyType,
   type FactCard,
+  type Panel as PanelType,
   type Section as SectionType,
   type Shot as ShotType,
 } from "./content";
@@ -135,6 +136,29 @@ function AssistButton() {
         <img src="/sparkle.svg" alt="" className="w-[46%]" />
       </span>
     </span>
+  );
+}
+
+/** The white options panel on the dark band. */
+function Panel({ panel }: { panel: PanelType }) {
+  return (
+    <div className="rounded-[18px] bg-[#7c3aed] p-[3px] shadow-[0_0_90px_-20px_rgba(124,58,237,0.8)]">
+      <div className="rounded-[15px] bg-white px-6 py-6 text-ink dt:px-8 dt:py-7">
+        <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
+          {panel.title}
+        </h3>
+        {panel.subtitle && <p className={`${COPY} mt-2 text-ink/60`}>{panel.subtitle}</p>}
+
+        <dl className="mt-5">
+          {panel.rows.map((row) => (
+            <div key={row.title} className="border-b border-ink/10 pb-4 pt-4 first:pt-0">
+              <dt className="font-mono text-body font-medium">{row.title}</dt>
+              <dd className={`${COPY} mt-1 text-ink/60`}>{row.body}</dd>
+            </div>
+          ))}
+        </dl>
+      </div>
+    </div>
   );
 }
 
@@ -310,8 +334,28 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       {/* Full-bleed dark band: the one-paragraph version of the project. */}
       <section className="mt-[max(3rem,10vw)] bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
         <div className={`${WRAP} grid items-center gap-10 dt:grid-cols-2 dt:gap-14`}>
-          <p className={`${COPY} ${MEASURE_TIGHT} text-white [line-height:2]`}>{study.summary.body}</p>
-          {study.summary.shot && <Shot shot={study.summary.shot} dark />}
+          <div className={MEASURE_TIGHT}>
+            {study.summary.kicker && (
+              <p className={`${LABEL} mb-5 text-spark`}>{study.summary.kicker}</p>
+            )}
+            <p className={`${COPY} text-white [line-height:2]`}>{study.summary.body}</p>
+            {study.summary.list && (
+              <ol className={`${COPY} mt-2 space-y-1 text-white [line-height:2]`}>
+                {study.summary.list.map((item, i) => (
+                  <li key={item} className="flex gap-3">
+                    <span className="text-white/50">{i + 1}.</span>
+                    {item}
+                  </li>
+                ))}
+              </ol>
+            )}
+          </div>
+
+          {study.summary.panel ? (
+            <Panel panel={study.summary.panel} />
+          ) : (
+            study.summary.shot && <Shot shot={study.summary.shot} dark />
+          )}
         </div>
       </section>
 
