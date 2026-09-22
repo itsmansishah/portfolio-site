@@ -111,16 +111,15 @@ body {
   animation-delay: var(--delay, 0ms);
 }
 
-/* The Assist button rolls in from the left of the band and settles in its
-   spot, once, when it scrolls into view. Travel and spin are split across two
-   elements so the glow travels with the button without spinning with it.
-
-   The numbers are a real roll: the button is 17% of the card's width, so
-   crossing the remaining 83% is 0.83 / (pi x 0.17) = 1.55 turns — 559deg over
-   488% of its own width. */
+/* The Assist button rolls in from the far left of the dark band and settles
+   in its spot, once, when it scrolls into view. Travel and spin are split
+   across two elements so the glow travels with the button without spinning
+   with it. The distance is the gap between the band's left edge and the
+   button's resting place, measured in JS; the turn count is that distance
+   over the button's circumference, so it reads as a real roll at any size. */
 @keyframes assist-roll {
   from {
-    transform: translateX(-488%);
+    transform: translateX(calc(-1 * var(--roll-x, 0px)));
   }
   to {
     transform: none;
@@ -129,7 +128,7 @@ body {
 
 @keyframes assist-spin {
   from {
-    transform: rotate(-559deg);
+    transform: rotate(calc(-1 * var(--roll-deg, 0deg)));
   }
   to {
     transform: none;
@@ -137,19 +136,19 @@ body {
 }
 
 .assist-roll {
-  transform: translateX(-488%);
+  transform: translateX(calc(-1 * var(--roll-x, 0px)));
 }
 
 .assist-roll .assist-spin {
-  transform: rotate(-559deg);
+  transform: rotate(calc(-1 * var(--roll-deg, 0deg)));
 }
 
 .assist-roll[data-played="true"] {
-  animation: assist-roll 1.2s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: assist-roll 1.6s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 .assist-roll[data-played="true"] .assist-spin {
-  animation: assist-spin 1.2s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
+  animation: assist-spin 1.6s 0.25s both cubic-bezier(0.22, 0.61, 0.36, 1);
 }
 
 @media (prefers-reduced-motion: reduce) {

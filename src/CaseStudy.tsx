@@ -1,4 +1,4 @@
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useLayoutEffect, useRef, useState } from "react";
 import {
   CASE_STUDIES,
   CONTACT,
@@ -65,10 +65,34 @@ function Shot({
   );
 }
 
-/** The Assist button, which plays its spin once as it comes into view. */
+/** The Assist button, which rolls in from the left of the band once it comes
+ *  into view. */
 function AssistButton() {
   const ref = useRef<HTMLSpanElement>(null);
   const [played, setPlayed] = useState(false);
+
+  // How far it has to travel, and how many turns that is at its size. Measured
+  // rather than hard-coded, since the band runs the full width of the window.
+  useLayoutEffect(() => {
+    const el = ref.current;
+    if (!el || played) return;
+
+    const measure = () => {
+      // Clear the offset first so the rect reads the resting position.
+      el.style.setProperty("--roll-x", "0px");
+      const band = el.closest("section");
+      if (!band) return;
+
+      const rect = el.getBoundingClientRect();
+      const distance = rect.left - band.getBoundingClientRect().left;
+      el.style.setProperty("--roll-x", `${Math.round(distance)}px`);
+      el.style.setProperty("--roll-deg", `${Math.round((distance / (Math.PI * rect.width)) * 360)}deg`);
+    };
+
+    measure();
+    window.addEventListener("resize", measure);
+    return () => window.removeEventListener("resize", measure);
+  }, [played]);
 
   useEffect(() => {
     const el = ref.current;
