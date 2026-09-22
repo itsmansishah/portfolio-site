@@ -31,7 +31,7 @@ function Shot({
       <img
         src={shot.src}
         alt={shot.label}
-        className={shot.frame === "card" ? "w-full" : `w-full rounded-xl border ${dark ? "border-paper/15" : "border-ink/15"}`}
+        className="w-full"
         onError={() => setFailed(true)}
       />
     );
@@ -40,8 +40,17 @@ function Shot({
       // The gradient edge and glow live in CSS so the mock can sit straight on
       // the dark band, the way the design has it.
       return (
-        <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
-          <div className="rounded-[16px] bg-white px-5 py-4 dt:px-7 dt:py-6">{img}</div>
+        <div>
+          <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
+            <div className="rounded-[16px] bg-white px-5 py-4 dt:px-7 dt:py-6">{img}</div>
+          </div>
+          {shot.fab && (
+            // Built here rather than exported: Figma bakes the page colour in
+            // behind it, which shows as a pale square on the dark band.
+            <span className="-mr-[1%] -mt-[5%] ml-auto grid aspect-square w-[17%] place-items-center rounded-full bg-[linear-gradient(135deg,#18a0fb_0%,#3b6ef5_45%,#6d28d9_100%)] shadow-[0_10px_30px_-8px_rgba(59,110,245,0.7)]">
+              <img src="/sparkle.svg" alt="" className="w-[46%]" />
+            </span>
+          )}
         </div>
       );
     }
@@ -187,7 +196,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       </div>
 
       {/* Full-bleed dark band: the one-paragraph version of the project. */}
-      <section className="mt-[max(3rem,10vw)] bg-night py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
+      <section className="mt-[max(3rem,10vw)] bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
         <div className={`${WRAP} grid items-center gap-10 dt:grid-cols-2 dt:gap-14`}>
           <p className={`${COPY} text-paper/75 [line-height:2]`}>{study.summary.body}</p>
           {study.summary.shot && <Shot shot={study.summary.shot} dark />}
@@ -197,7 +206,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       {study.sections?.map((section) => <Section key={section.title} section={section} />)}
 
       {study.outcome && (
-        <section className="bg-night py-[max(3rem,12vw)] text-center text-paper dt:py-24">
+        <section className="bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-center text-paper dt:py-24">
           <div className={WRAP}>
             <p className="font-serif text-figure leading-none tracking-[-0.02em] text-spark">
               {study.outcome.figure}

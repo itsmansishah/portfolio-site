@@ -23,8 +23,11 @@ export type FactCard = {
 export type Shot = {
   src?: string;
   label: string;
-  /** "card" sets the mock in a glowing gradient-edged card, for dark bands. */
+  /** "card" sets the mock in the glowing gradient card from the design —
+   *  CSS, because Figma bakes a page-coloured background into its exports. */
   frame?: "card";
+  /** Adds the Assist button tucked under the card's right edge. */
+  fab?: boolean;
 };
 
 /** A story beat: heading, copy and a mock. "wide" centres the copy and runs
@@ -112,7 +115,7 @@ export const CASE_STUDIES: CaseStudy[] = [
     ],
     summary: {
       body: "We transformed Qualtrics Workflows from an intimidating, manual builder into an intuitive AI collaborator and made powerful enterprise tools accessible to everyone by turning natural language into working automation.",
-      shot: { src: "/mock-prompt-bar.png", label: "PROMPT_BAR.PNG", frame: "card" },
+      shot: { src: "/mock-prompt-bar.png", label: "PROMPT_BAR.PNG", frame: "card", fab: true },
     },
     sections: [
       {
