@@ -135,7 +135,9 @@ export function EmbedModal({ embed, onClose }: { embed: Embed | null; onClose: (
       onClick={(e) => {
         if (e.target === ref.current) ref.current?.close();
       }}
-      className="w-[min(1100px,94vw)] rounded-2xl bg-paper p-0 text-ink backdrop:bg-ink/80"
+      // m-auto because the reset zeroes the margin a <dialog> centres itself
+      // with, which pins it to the top-left corner.
+      className="m-auto max-h-[92vh] w-[min(1100px,94vw)] overflow-hidden rounded-2xl bg-paper p-0 text-ink backdrop:bg-ink/80"
     >
       <div className="flex items-center justify-between gap-4 px-5 py-4">
         <p className={`${LABEL} truncate text-ink/50`}>{embed?.title}</p>
