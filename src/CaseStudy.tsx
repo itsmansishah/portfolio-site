@@ -324,7 +324,9 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       </header>
 
       <div
-        className={`${WRAP} rise mt-8 grid gap-3 dt:mt-10 dt:grid-cols-4 dt:gap-4`}
+        // Proportional like the rest of the phone layout, so the air holds up
+        // when a phone renders the page on a wider canvas.
+        className={`${WRAP} rise mt-[max(34px,9vw)] grid gap-[max(14px,3.7vw)] dt:mt-10 dt:grid-cols-4 dt:gap-4`}
         style={delay(200)}
       >
         {study.cards.map((card) => (
@@ -334,14 +336,16 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
 
       {/* Full-bleed dark band: the one-paragraph version of the project. */}
       <section className="mt-[max(3rem,10vw)] bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
-        <div className={`${WRAP} grid items-center gap-10 dt:grid-cols-2 dt:gap-14`}>
-          <div className={MEASURE_TIGHT}>
+        <div className={`${WRAP} grid items-center gap-[max(3.5rem,14vw)] dt:grid-cols-2 dt:gap-14`}>
+          <div>
             {study.summary.kicker && (
               <p className={`${LABEL} mb-5 text-spark`}>{study.summary.kicker}</p>
             )}
-            <p className={`${COPY} text-white [line-height:2]`}>{study.summary.body}</p>
+            <p className={`${COPY} ${MEASURE_TIGHT} text-white [line-height:2]`}>
+              {study.summary.body}
+            </p>
             {study.summary.list && (
-              <ol className={`${COPY} mt-2 space-y-1 text-white [line-height:2]`}>
+              <ol className={`${COPY} ${MEASURE_TIGHT} mt-2 space-y-1 text-white [line-height:2]`}>
                 {study.summary.list.map((item, i) => (
                   <li key={item} className="flex gap-3">
                     <span className="text-white/50">{i + 1}.</span>
@@ -368,7 +372,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
             <p className="mx-auto max-w-[46rem] font-serif text-figure leading-[1.1] tracking-[-0.02em] text-spark">
               {study.outcome.figure} {study.outcome.caption}
             </p>
-            <p className="mx-auto mt-8 max-w-[62ch] font-mono text-[clamp(0.875rem,3.2vw,1.05rem)] leading-relaxed text-white/80 hyphens-none dt:mt-10">
+            <p className="mx-auto mt-8 max-w-[62ch] font-mono text-[clamp(0.95rem,4vw,1.15rem)] leading-relaxed text-white/80 hyphens-none dt:mt-10">
               {study.outcome.body}
             </p>
           </div>
