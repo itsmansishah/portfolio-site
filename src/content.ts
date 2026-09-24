@@ -30,21 +30,47 @@ export type Shot = {
   fab?: boolean;
 };
 
-/** A story beat: heading, copy and a mock. "wide" centres the copy and runs
- *  the mock full width; the others sit the mock beside it. */
-export type Section = {
-  title: string;
-  body: string[];
-  shot?: Shot;
-  layout?: "shot-right" | "shot-left" | "wide";
-};
-
-/** The white panel that can sit on the right of the dark band, in place of
- *  a mock: a heading over a short list of options. */
+/** The white panel of options: a heading over a short list of methods. */
 export type Panel = {
   title: string;
   subtitle?: string;
   rows: { title: string; body: string }[];
+};
+
+/** A mocked data table, drawn in markup rather than exported. */
+export type Preview = {
+  label: string;
+  columns: string[];
+  rows: string[][];
+  chip?: string;
+};
+
+/** A story beat. It carries a mock, a panel, a preview table or a set of
+ *  numbered cards — whichever the section needs. */
+export type Section = {
+  title: string;
+  kicker?: string;
+  subtitle?: string;
+  body?: string[];
+  shot?: Shot;
+  panel?: Panel;
+  preview?: Preview;
+  cards?: { num: string; title: string; body: string }[];
+  layout?: "shot-right" | "shot-left" | "wide";
+};
+
+/** The dark band of where a project stands, as a dated run of steps. */
+export type Timeline = {
+  kicker: string;
+  title: string;
+  steps: { when: string; title: string; body: string }[];
+};
+
+/** Closing notes on what the work taught. */
+export type Reflection = {
+  kicker: string;
+  title: string;
+  cards: { label: string; title: string; body: string }[];
 };
 
 export type CaseStudy = {
@@ -61,6 +87,8 @@ export type CaseStudy = {
   };
   sections?: Section[];
   outcome?: { figure: string; caption: string; body: string };
+  timeline?: Timeline;
+  reflection?: Reflection;
 };
 
 export const PROJECTS: Project[] = [
@@ -167,21 +195,29 @@ export const CASE_STUDIES: CaseStudy[] = [
   {
     slug: "unified-transform",
     title: "Unified Transform",
-    subtitle: "One task for transforming data, from AI-assisted to hand-written.",
+    subtitle:
+      "Replacing two unequal tools with one — built on research that predicted the confusion before it ever shipped.",
     cards: [
-      { label: "Role", headline: "UX Designer & Researcher", meta: "2026 · Qualtrics" },
+      { label: "Role", headline: "Lead UX Research & Design", meta: "2026 · Qualtrics" },
       {
         label: "Problem",
-        body: "Transforming data fields was split across two separate, unequal tools, ",
-        emphasis:
-          "forcing users to guess which one they needed before they had even diagnosed their own problem.",
+        body: "Basic Transform's success created demand for complex, multi-field transforms — ",
+        emphasis: "the default plan was a second, unequal tool.",
       },
-      { label: "Deliverables", items: ["Define requirements", "Full redesign", "Internal testing"] },
-      { label: "Team", items: ["Engineer"] },
+      {
+        label: "Deliverables",
+        items: [
+          "Prototype research",
+          "Design principles",
+          "Unified entry modal",
+          "Split-pane workspace",
+        ],
+      },
+      { label: "Team", items: ["Product Manager", "Engineering", "UX Research (Leah Zhu-Ireland)"] },
     ],
     summary: {
       kicker: "All in one",
-      body: "Unifying Basic, Advanced Transform, and code transform will...",
+      body: "Why unify Basic, Advanced Transform, and code transform",
       list: ["reduce user confusion", "more flexibility", "greater scalability"],
       panel: {
         title: "How do you want to set up your transformations?",
@@ -195,6 +231,113 @@ export const CASE_STUDIES: CaseStudy[] = [
           { title: "Code transform", body: "Write Python for complex, multi-step logic." },
         ],
       },
+    },
+    sections: [
+      {
+        title: "Basic Transform",
+        body: [
+          "When I joined Qualtrics in 2022, I owned Basic Transform — a task built to close a real gap: users ingesting data had no simple way to reshape it in-flight.",
+          "It shipped, and it worked. That success surfaced a harder problem: users wanted more complex, multi-field transformations. The default instinct from the team was to build a second, separate task, Advanced Transform.",
+        ],
+        shot: { label: "IMG COMING SOON" },
+        layout: "shot-right",
+      },
+      {
+        title: "One entry point, one workspace.",
+        subtitle:
+          "Every path — AI, manual, or code — starts at the same modal and lands in the same split-pane workspace.",
+        panel: {
+          title: "How do you want to set up your transformations?",
+          subtitle: "Choose a method — you can always start over if you change your mind.",
+          rows: [
+            {
+              title: "Transform with AI",
+              body: "Describe what you need. AI generates a reviewable rule list with live preview.",
+            },
+            { title: "Transform manually", body: "Map fields manually using the data mapper." },
+            { title: "Code transform", body: "Write Python for complex multi-step logic." },
+          ],
+        },
+      },
+      {
+        kicker: "Live preview",
+        title: "See it work before you commit.",
+        body: [
+          "Your real rows update next to every rule you write. No sample file to upload, no separate validation step — just your data, live, including the edge cases that usually slip through.",
+        ],
+        preview: {
+          label: "Live preview",
+          columns: ["full_name", "AccountID", "created_at", "needs_review"],
+          rows: [
+            ["Mansi Shah", "91228440", "2025-01-03", "no"],
+            ["Tracy Sherwin", "21439885", "2025-10-15", "yes"],
+            ["Jorge Lopez", "10233904", "2025-03-21", "no"],
+          ],
+          chip: "catherine zeta-jones → Catherine Zeta-Jones",
+        },
+        layout: "shot-left",
+      },
+      {
+        title: "Built to be the only tool you reach for.",
+        cards: [
+          {
+            num: "01",
+            title: "No wrong door",
+            body: "Start manual, fall back to AI, or the reverse — without leaving the task.",
+          },
+          {
+            num: "02",
+            title: "One source of truth",
+            body: "A single transformation list, whether a rule came from AI, manual mapping, or code.",
+          },
+          {
+            num: "03",
+            title: "Progressive power",
+            body: "Three entry points — AI, manual, code — with the AI-generated formula always visible.",
+          },
+          {
+            num: "04",
+            title: "Always visible data",
+            body: "A live preview sits permanently beside the rule list, not validated after the fact.",
+          },
+        ],
+      },
+    ],
+    timeline: {
+      kicker: "Where it stands",
+      title: "In development, targeting Q4 2026",
+      steps: [
+        { when: "Dec 2025", title: "Prototype research", body: "AI-assisted transformation study" },
+        {
+          when: "Late '25 – mid '26",
+          title: "Making the case",
+          body: "Fighting to get it prioritized",
+        },
+        { when: "May 2026", title: "Design lifecycle", body: "Mockups, A/B comparisons, handoff" },
+        { when: "Now", title: "In build", body: "Moving through engineering" },
+        { when: "Q4 2026", title: "Target launch", body: "Replaces Basic + Advanced" },
+      ],
+    },
+    reflection: {
+      kicker: "Reflection",
+      title: "What this project sharpened.",
+      cards: [
+        {
+          label: "01 — Advocating for research",
+          title: "Research is an argument-winning tool, not a phase.",
+          body: "I turned the disagreement into a testable question — run the study before the direction is locked, not after.",
+        },
+        {
+          label: "02 — Pushing back, on the record",
+          title: "Naming a specific problem beats naming a bad feeling.",
+          body: "The capability-gap concern held up because it was concrete, and because I stayed with it through the fight that followed.",
+        },
+        {
+          label: "03 — Thinking systematically",
+          title: "The tell was structural, not visual.",
+          body: "Seeing it meant stepping back from screens to ask what mental model the system was actually asking people to hold.",
+        },
+      ],
     },
   },
 ];

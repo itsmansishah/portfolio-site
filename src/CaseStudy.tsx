@@ -5,7 +5,10 @@ import {
   type CaseStudy as CaseStudyType,
   type FactCard,
   type Panel as PanelType,
+  type Preview as PreviewType,
+  type Reflection as ReflectionType,
   type Section as SectionType,
+  type Timeline as TimelineType,
   type Shot as ShotType,
 } from "./content";
 import { LABEL, Link, delay } from "./ui";
@@ -220,10 +223,75 @@ function Card({ card }: { card: FactCard }) {
   );
 }
 
+/** The mocked data table for the live-preview beat. */
+function PreviewTable({ preview }: { preview: PreviewType }) {
+  return (
+    <div className="rounded-2xl bg-white px-5 py-5 shadow-[0_24px_60px_-40px_rgba(16,16,16,0.5)] dt:px-6 dt:py-6">
+      <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
+
+      {/* Four columns of mono can't fit a phone, so the table scrolls inside
+          the card rather than stretching the page. */}
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full min-w-[26rem] border-collapse text-left font-mono text-[0.8em]">
+          <thead>
+            <tr className="text-ink/45">
+              {preview.columns.map((column) => (
+                <th key={column} className="border-b border-ink/10 pb-2 pr-3 font-normal">
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {preview.rows.map((row) => (
+              <tr key={row.join()} className="text-ink/75">
+                {row.map((cell) => (
+                  <td key={cell} className="border-b border-ink/10 py-2 pr-3">
+                    {cell}
+                  </td>
+                ))}
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      {preview.chip && (
+        <p
+          className={`${LABEL} mt-4 inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-ink/15 px-3 py-1.5 text-ink/55`}
+        >
+          {preview.chip}
+        </p>
+      )}
+    </div>
+  );
+}
+
+/** The options panel as it appears on the paper background. */
+function MethodCard({ panel }: { panel: PanelType }) {
+  return (
+    <div className="rounded-2xl bg-white px-6 py-8 text-center shadow-[0_24px_60px_-45px_rgba(16,16,16,0.6)] dt:px-10 dt:py-10">
+      <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
+        {panel.title}
+      </h3>
+      {panel.subtitle && <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>}
+
+      <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
+        {panel.rows.map((row) => (
+          <div key={row.title} className="rounded-xl bg-ink/[0.045] px-4 py-4">
+            <p className="font-mono text-body font-medium">{row.title}</p>
+            <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function Section({ section }: { section: SectionType }) {
   const wide = section.layout === "wide";
   const heading = <h2 className={HEADING}>{section.title}</h2>;
-  const body = (
+  const body = section.body?.length ? (
     <div className="space-y-3">
       {section.body.map((para) => (
         <p
@@ -234,7 +302,40 @@ function Section({ section }: { section: SectionType }) {
         </p>
       ))}
     </div>
-  );
+  ) : null;
+
+  // A heading over numbered cards — the principles behind the work.
+  if (section.cards?.length) {
+    return (
+      <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+        {heading}
+        <div className="mt-6 grid gap-3 dt:mt-8 dt:grid-cols-4 dt:gap-4">
+          {section.cards.map((card) => (
+            <div key={card.num} className="rounded-xl bg-ink/[0.045] px-5 py-5">
+              <p className={`${LABEL} text-[#6d28d9]`}>{card.num}</p>
+              <p className="mt-3 font-serif text-[calc(var(--text-body)*1.45)] leading-snug tracking-[-0.01em]">
+                {card.title}
+              </p>
+              <p className={`${COPY} mt-3 text-ink/60`}>{card.body}</p>
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  // A centred heading over the entry-point panel.
+  if (section.panel) {
+    return (
+      <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+        {heading}
+        {section.subtitle && <p className={`${COPY} mt-3 text-ink/60`}>{section.subtitle}</p>}
+        <div className="mt-6 dt:mt-8">
+          <MethodCard panel={section.panel} />
+        </div>
+      </section>
+    );
+  }
 
   if (wide) {
     // Phone: heading, mock, then the copy — the picture carries the point and
@@ -260,14 +361,66 @@ function Section({ section }: { section: SectionType }) {
     <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
       <div className="grid items-center gap-8 dt:grid-cols-2 dt:gap-14">
         {/* The mock leads on a phone either way — a picture reads faster than
-            a heading when the column is this narrow. */}
-        <div className={shotLeft ? "" : "dt:order-last"}>
-          {section.shot && <Shot shot={section.shot} />}
+            a heading when the column is this narrow. min-w-0 keeps a grid item
+            from stretching to its content, which the preview table would. */}
+        <div className={`min-w-0 ${shotLeft ? "" : "dt:order-last"}`}>
+          {section.preview ? (
+            <PreviewTable preview={section.preview} />
+          ) : (
+            section.shot && <Shot shot={section.shot} />
+          )}
         </div>
         <div>
+          {section.kicker && <p className={`${LABEL} mb-3 text-[#6d28d9]`}>{section.kicker}</p>}
           {heading}
           <div className="mt-4">{body}</div>
         </div>
+      </div>
+    </section>
+  );
+}
+
+/** The dark band of where the work stands, as a run of dated steps. */
+function TimelineBand({ timeline }: { timeline: TimelineType }) {
+  return (
+    <section className="bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:py-24">
+      <div className={WRAP}>
+        <p className={`${LABEL} text-spark`}>{timeline.kicker}</p>
+        <h2 className={`${HEADING} mt-4`}>{timeline.title}</h2>
+
+        <ol className="mt-8 grid gap-6 dt:mt-10 dt:grid-cols-5 dt:gap-5">
+          {timeline.steps.map((step) => (
+            <li key={step.title} className="border-t border-spark/60 pt-4">
+              <p className={`${LABEL} text-paper/50`}>{step.when}</p>
+              <p className="mt-2 font-serif text-[calc(var(--text-body)*1.45)] leading-snug">
+                {step.title}
+              </p>
+              <p className={`${COPY} mt-2 text-paper/60`}>{step.body}</p>
+            </li>
+          ))}
+        </ol>
+      </div>
+    </section>
+  );
+}
+
+/** Closing notes on what the work taught. */
+function ReflectionBlock({ reflection }: { reflection: ReflectionType }) {
+  return (
+    <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+      <p className={`${LABEL} text-[#6d28d9]`}>{reflection.kicker}</p>
+      <h2 className={`${HEADING} mt-4`}>{reflection.title}</h2>
+
+      <div className="mt-6 grid gap-3 dt:mt-8 dt:grid-cols-3 dt:gap-4">
+        {reflection.cards.map((card) => (
+          <div key={card.label} className="rounded-xl bg-ink/[0.045] px-5 py-5">
+            <p className={`${LABEL} text-[#6d28d9]`}>{card.label}</p>
+            <p className="mt-3 font-serif text-[calc(var(--text-body)*1.45)] leading-snug tracking-[-0.01em]">
+              {card.title}
+            </p>
+            <p className={`${COPY} mt-3 text-ink/60`}>{card.body}</p>
+          </div>
+        ))}
       </div>
     </section>
   );
@@ -388,6 +541,10 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
       </section>
 
       {study.sections?.map((section) => <Section key={section.title} section={section} />)}
+
+      {study.timeline && <TimelineBand timeline={study.timeline} />}
+
+      {study.reflection && <ReflectionBlock reflection={study.reflection} />}
 
       {study.outcome && (
         <section className="bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-center text-paper dt:py-24">
