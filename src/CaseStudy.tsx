@@ -107,6 +107,18 @@ function AssistButton() {
     // Watch the card, not the button: the button waits off-screen, so it
     // never intersects the viewport and would never start.
     const target = el.previousElementSibling ?? el.parentElement ?? el;
+
+    // Desktop fires as the card's top crosses 60% of the way down the screen,
+    // so the roll is already underway when the card lands mid-screen. On a
+    // phone the band is much taller relative to the screen, so wait until the
+    // prompt card itself is properly in view.
+    const wide = window.matchMedia(
+      "(min-width: 1100px), (min-width: 768px) and (any-pointer: fine)",
+    ).matches;
+    const options: IntersectionObserverInit = wide
+      ? { rootMargin: "0px 0px -40% 0px" }
+      : { threshold: 0.8 };
+
     const io = new IntersectionObserver(
       ([entry]) => {
         if (entry.isIntersecting) {
@@ -114,11 +126,7 @@ function AssistButton() {
           io.disconnect();
         }
       },
-      // Fires as the card's top crosses 60% of the way down the screen — just
-      // short of the middle, so the roll is already underway when the card
-      // lands there. A margin rule can't strand the button the way a high
-      // visibility threshold can.
-      { rootMargin: "0px 0px -40% 0px" },
+      options,
     );
     io.observe(target);
     return () => io.disconnect();
@@ -165,7 +173,7 @@ function Panel({ panel }: { panel: PanelType }) {
 
 function Card({ card }: { card: FactCard }) {
   return (
-    <div className="rounded-xl bg-ink/[0.045] p-4 dt:p-5">
+    <div className="rounded-xl bg-ink/[0.045] pb-[max(18px,4.8vw)] pl-[max(18px,4.8vw)] pr-[max(16px,4.27vw)] pt-[max(18px,4.8vw)] dt:p-5">
       <p className={`${LABEL} text-ink/40`}>{card.label}</p>
 
       {card.headline && (
@@ -205,31 +213,34 @@ function Card({ card }: { card: FactCard }) {
 
 function Section({ section }: { section: SectionType }) {
   const wide = section.layout === "wide";
-  const copy = (
-    <div>
-      <h2 className={HEADING}>{section.title}</h2>
-      <div className="mt-4 space-y-3">
-        {section.body.map((para) => (
-          <p
-            key={para.slice(0, 24)}
-            className={`${COPY} ${wide ? MEASURE : MEASURE_TIGHT} text-ink/70`}
-          >
-            {para}
-          </p>
-        ))}
-      </div>
+  const heading = <h2 className={HEADING}>{section.title}</h2>;
+  const body = (
+    <div className="space-y-3">
+      {section.body.map((para) => (
+        <p
+          key={para.slice(0, 24)}
+          className={`${COPY} ${wide ? MEASURE : MEASURE_TIGHT} text-ink/70`}
+        >
+          {para}
+        </p>
+      ))}
     </div>
   );
 
   if (wide) {
+    // Phone: heading, mock, then the copy — the picture carries the point and
+    // the paragraph reads as its caption. Desktop keeps copy above the mock.
     return (
-      <section className={`${WRAP} rise py-[max(3rem,10vw)] text-center dt:py-20`}>
-        <div className={`mx-auto ${MEASURE} [&_p]:mx-auto`}>{copy}</div>
+      <section className={`${WRAP} rise flex flex-col py-[max(3rem,10vw)] text-center dt:py-20`}>
+        <div className={`mx-auto ${MEASURE}`}>{heading}</div>
         {section.shot && (
-          <div className="mt-8 dt:mt-12">
+          <div className="order-2 mt-8 dt:order-3 dt:mt-12">
             <Shot shot={section.shot} ratio="aspect-[16/9]" />
           </div>
         )}
+        <div className={`order-3 mx-auto mt-8 ${MEASURE} [&_p]:mx-auto dt:order-2 dt:mt-4`}>
+          {body}
+        </div>
       </section>
     );
   }
@@ -244,7 +255,10 @@ function Section({ section }: { section: SectionType }) {
         <div className={shotLeft ? "" : "dt:order-last"}>
           {section.shot && <Shot shot={section.shot} />}
         </div>
-        {copy}
+        <div>
+          {heading}
+          <div className="mt-4">{body}</div>
+        </div>
       </div>
     </section>
   );
@@ -372,7 +386,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
             <p className="mx-auto max-w-[46rem] font-serif text-figure leading-[1.1] tracking-[-0.02em] text-spark">
               {study.outcome.figure} {study.outcome.caption}
             </p>
-            <p className="mx-auto mt-8 max-w-[62ch] font-mono text-[clamp(0.95rem,4vw,1.15rem)] leading-relaxed text-white/80 hyphens-none dt:mt-10">
+            <p className="mx-auto mt-8 max-w-[62ch] font-mono text-[clamp(0.95rem,4.2vw,2.6rem)] leading-relaxed text-white/80 hyphens-none dt:mt-10 dt:text-[1.15rem]">
               {study.outcome.body}
             </p>
           </div>
