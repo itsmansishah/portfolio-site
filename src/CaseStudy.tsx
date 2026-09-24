@@ -106,18 +106,27 @@ function AssistButton() {
 
     // Watch the card, not the button: the button waits off-screen, so it
     // never intersects the viewport and would never start.
-    const target = el.previousElementSibling ?? el.parentElement ?? el;
+    const card = el.previousElementSibling ?? el.parentElement ?? el;
+    const band = el.closest("section");
 
     // Desktop fires as the card's top crosses 60% of the way down the screen,
-    // so the roll is already underway when the card lands mid-screen. On a
-    // phone the band is much taller relative to the screen, so wait until the
-    // prompt card itself is properly in view.
+    // so the roll is already underway when the card lands mid-screen.
     const wide = window.matchMedia(
       "(min-width: 1100px), (min-width: 768px) and (any-pointer: fine)",
     ).matches;
+
+    // On a phone it waits for the whole band. Where the band is taller than
+    // the screen it can never be 100% visible, so the bar becomes "as much of
+    // it as the screen can hold" — otherwise the roll would never fire.
+    const bandHeight = band?.getBoundingClientRect().height ?? 0;
+    const fullyInView = bandHeight
+      ? Math.min(0.95, (window.innerHeight / bandHeight) * 0.9)
+      : 0.8;
+
+    const target = wide ? card : (band ?? card);
     const options: IntersectionObserverInit = wide
       ? { rootMargin: "0px 0px -40% 0px" }
-      : { threshold: 0.8 };
+      : { threshold: fullyInView };
 
     const io = new IntersectionObserver(
       ([entry]) => {

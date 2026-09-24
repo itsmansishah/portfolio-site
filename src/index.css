@@ -145,11 +145,20 @@ body {
 /* Both tracks share the curve, which carries a little past the resting spot
    and settles back — so the turn stays in step with the travel. */
 .assist-roll[data-played="true"] {
-  animation: assist-roll 1.5s 0.35s both cubic-bezier(0.34, 1.45, 0.64, 1);
+  animation: assist-roll 2.1s 0.35s both cubic-bezier(0.34, 1.45, 0.64, 1);
 }
 
 .assist-roll[data-played="true"] .assist-spin {
-  animation: assist-spin 1.5s 0.35s both cubic-bezier(0.34, 1.45, 0.64, 1);
+  animation: assist-spin 2.1s 0.35s both cubic-bezier(0.34, 1.45, 0.64, 1);
+}
+
+/* The phone roll is slower; a laptop shows the whole band at once, so it can
+   move at a brisker pace there. */
+@media (min-width: 1100px), (min-width: 768px) and (any-pointer: fine) {
+  .assist-roll[data-played="true"],
+  .assist-roll[data-played="true"] .assist-spin {
+    animation-duration: 1.5s;
+  }
 }
 
 @media (prefers-reduced-motion: reduce) {
