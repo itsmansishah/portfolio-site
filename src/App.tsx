@@ -1,5 +1,6 @@
 import CaseStudy from "./CaseStudy";
 import Home from "./Home";
+import RacesPage from "./races/RacesPage";
 import { CASE_STUDIES } from "./content";
 import { Footer, LABEL, Link, Nav, usePath } from "./ui";
 
@@ -24,7 +25,15 @@ export default function App() {
   return (
     <div className="min-h-screen overflow-x-clip bg-paper text-ink">
       <Nav />
-      {path === "/" || path === "" ? <Home /> : study ? <CaseStudy study={study} /> : <NotFound />}
+      {path === "/" || path === "" ? (
+        <Home />
+      ) : path.replace(/\/$/, "") === "/races" ? (
+        <RacesPage />
+      ) : study ? (
+        <CaseStudy study={study} />
+      ) : (
+        <NotFound />
+      )}
       <Footer />
     </div>
   );
