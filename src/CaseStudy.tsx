@@ -322,8 +322,13 @@ function MethodCard({ panel }: { panel: PanelType }) {
   );
 }
 
-function Section({ section }: { section: SectionType }) {
+function Section({ section, lead = false }: { section: SectionType; lead?: boolean }) {
   const wide = section.layout === "wide";
+  // Separate top and bottom rather than `py`, so the lead section's extra
+  // headroom after the dark band can't collide with the shared rhythm.
+  const pad = `${
+    lead ? "pt-[max(5rem,16vw)] dt:pt-32" : "pt-[max(3.5rem,11vw)] dt:pt-24"
+  } pb-[max(3.5rem,11vw)] dt:pb-24`;
   const heading = <h2 className={HEADING}>{section.title}</h2>;
   const body = section.body?.length ? (
     <div className="space-y-3">
@@ -341,7 +346,7 @@ function Section({ section }: { section: SectionType }) {
   // A heading over numbered cards — the principles behind the work.
   if (section.cards?.length) {
     return (
-      <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+      <section className={`${WRAP} ${pad} rise`}>
         {heading}
         <div className="mt-6 grid gap-3 dt:mt-8 dt:grid-cols-4 dt:gap-4">
           {section.cards.map((card) => (
@@ -361,7 +366,7 @@ function Section({ section }: { section: SectionType }) {
   // A centred heading over the entry-point panel.
   if (section.panel) {
     return (
-      <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+      <section className={`${WRAP} ${pad} rise`}>
         {heading}
         {section.subtitle && (
           <p className={`${COPY} mt-3 text-ink/60`}>{section.subtitle}</p>
@@ -378,7 +383,7 @@ function Section({ section }: { section: SectionType }) {
     // the paragraph reads as its caption. Desktop keeps copy above the mock.
     return (
       <section
-        className={`${WRAP} rise flex flex-col py-[max(3rem,10vw)] text-center dt:py-20`}
+        className={`${WRAP} ${pad} rise flex flex-col text-center`}
       >
         <div className={`mx-auto ${MEASURE}`}>{heading}</div>
         {section.shot && (
@@ -398,7 +403,7 @@ function Section({ section }: { section: SectionType }) {
   const shotLeft = section.layout === "shot-left";
 
   return (
-    <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+    <section className={`${WRAP} ${pad} rise`}>
       <div className="grid items-center gap-8 dt:grid-cols-2 dt:gap-14">
         {/* The mock leads on a phone either way — a picture reads faster than
             a heading when the column is this narrow. min-w-0 keeps a grid item
@@ -449,7 +454,7 @@ function TimelineBand({ timeline }: { timeline: TimelineType }) {
 /** Closing notes on what the work taught. */
 function ReflectionBlock({ reflection }: { reflection: ReflectionType }) {
   return (
-    <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
+    <section className={`${WRAP} rise py-[max(3.5rem,11vw)] dt:py-24`}>
       <p className={`${LABEL} text-[#6d28d9]`}>{reflection.kicker}</p>
       <h2 className={`${HEADING} mt-4`}>{reflection.title}</h2>
 
@@ -602,8 +607,8 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         </div>
       </section>
 
-      {study.sections?.map((section) => (
-        <Section key={section.title} section={section} />
+      {study.sections?.map((section, i) => (
+        <Section key={section.title} section={section} lead={i === 0} />
       ))}
 
       {study.timeline && <TimelineBand timeline={study.timeline} />}
@@ -623,7 +628,7 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         </section>
       )}
 
-      <div className={`${WRAP} py-[max(3rem,10vw)] text-center dt:py-20`}>
+      <div className={`${WRAP} py-[max(3.5rem,11vw)] text-center dt:py-24`}>
         <RequestLink study={study} />
       </div>
 
