@@ -240,7 +240,7 @@ export const CASE_STUDIES: CaseStudy[] = [
           "It shipped, and it worked. That success surfaced a harder problem: users wanted more complex, multi-field transformations. The default instinct from the team was to build a second, separate task, Advanced Transform.",
         ],
         shot: { src: "/basic-transform.png", label: "BASIC_TRANSFORM.PNG", frame: "card" },
-        layout: "shot-right",
+        layout: "shot-left",
       },
       {
         title: "One entry point, one workspace.",

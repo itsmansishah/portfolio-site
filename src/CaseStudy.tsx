@@ -270,19 +270,22 @@ function PreviewTable({ preview }: { preview: PreviewType }) {
 /** The options panel as it appears on the paper background. */
 function MethodCard({ panel }: { panel: PanelType }) {
   return (
-    <div className="rounded-2xl bg-white px-6 py-8 text-center shadow-[0_24px_60px_-45px_rgba(16,16,16,0.6)] dt:px-10 dt:py-10">
-      <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
-        {panel.title}
-      </h3>
-      {panel.subtitle && <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>}
+    // The same gradient edge and glow the mocks carry.
+    <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
+      <div className="rounded-[16px] bg-white px-6 py-8 text-center dt:px-10 dt:py-10">
+        <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
+          {panel.title}
+        </h3>
+        {panel.subtitle && <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>}
 
-      <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
-        {panel.rows.map((row) => (
-          <div key={row.title} className="rounded-xl bg-ink/[0.045] px-4 py-4">
-            <p className="font-mono text-body font-medium">{row.title}</p>
-            <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
-          </div>
-        ))}
+        <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
+          {panel.rows.map((row) => (
+            <div key={row.title} className="rounded-xl bg-ink/[0.045] px-4 py-4">
+              <p className="font-mono text-body font-medium">{row.title}</p>
+              <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   );
