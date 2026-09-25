@@ -23,9 +23,10 @@ export type FactCard = {
 export type Shot = {
   src?: string;
   label: string;
-  /** "card" sets the mock in the glowing gradient card from the design —
-   *  CSS, because Figma bakes a page-coloured background into its exports. */
-  frame?: "card";
+  /** How the mock is dressed: "card" is the glowing gradient card from the
+   *  design (CSS, because Figma bakes a page-coloured background into its
+   *  exports); "outline" is the quiet grey rule the home page mocks use. */
+  frame?: "card" | "outline";
   /** Adds the Assist button tucked under the card's right edge. */
   fab?: boolean;
 };
@@ -239,7 +240,7 @@ export const CASE_STUDIES: CaseStudy[] = [
           "When I joined Qualtrics in 2022, I owned Basic Transform — a task built to close a real gap: users ingesting data had no simple way to reshape it in-flight.",
           "It shipped, and it worked. That success surfaced a harder problem: users wanted more complex, multi-field transformations. The default instinct from the team was to build a second, separate task, Advanced Transform.",
         ],
-        shot: { src: "/basic-transform.png", label: "BASIC_TRANSFORM.PNG" },
+        shot: { src: "/basic-transform.png", label: "BASIC_TRANSFORM.PNG", frame: "outline" },
         layout: "shot-left",
       },
       {

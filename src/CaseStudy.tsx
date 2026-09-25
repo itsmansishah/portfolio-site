@@ -46,7 +46,9 @@ function Shot({
       <img
         src={shot.src}
         alt={shot.label}
-        className="w-full"
+        className={`w-full ${
+          shot.frame === "outline" ? "rounded-md border border-ink/15 bg-ink/[0.03] p-1.5" : ""
+        }`}
         onError={() => setFailed(true)}
       />
     );
@@ -246,7 +248,7 @@ function Card({ card }: { card: FactCard }) {
 /** The mocked data table for the live-preview beat. */
 function PreviewTable({ preview }: { preview: PreviewType }) {
   return (
-    <div className="rounded-2xl bg-white px-5 py-5 shadow-[0_24px_60px_-40px_rgba(16,16,16,0.5)] dt:px-6 dt:py-6">
+    <div className="rounded-2xl border border-ink/15 bg-white px-5 py-5 shadow-[0_24px_60px_-40px_rgba(16,16,16,0.5)] dt:px-6 dt:py-6">
       <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
 
       {/* Four columns of mono can't fit a phone, so the table scrolls inside
@@ -293,7 +295,7 @@ function PreviewTable({ preview }: { preview: PreviewType }) {
 /** The options panel as it appears on the paper background. */
 function MethodCard({ panel }: { panel: PanelType }) {
   return (
-    <div className="rounded-2xl bg-white px-6 py-8 text-center shadow-[0_24px_60px_-45px_rgba(16,16,16,0.6)] dt:px-10 dt:py-10">
+    <div className="rounded-2xl border border-ink/15 bg-white px-6 py-8 text-center shadow-[0_24px_60px_-45px_rgba(16,16,16,0.6)] dt:px-10 dt:py-10">
       <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
         {panel.title}
       </h3>
