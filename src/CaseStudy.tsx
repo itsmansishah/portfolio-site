@@ -1,4 +1,10 @@
-import { useEffect, useLayoutEffect, useRef, useState, type CSSProperties } from "react";
+import {
+  useEffect,
+  useLayoutEffect,
+  useRef,
+  useState,
+  type CSSProperties,
+} from "react";
 import {
   CASE_STUDIES,
   CONTACT,
@@ -14,9 +20,11 @@ import {
 import { LABEL, Link, delay } from "./ui";
 
 const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
-const HEADING = "font-sans text-section font-semibold leading-[1.15] tracking-[-0.01em]";
+const HEADING =
+  "font-sans text-section font-semibold leading-[1.15] tracking-[-0.01em]";
 // Measures cap the line length, and words wrap whole rather than hyphenating.
-const COPY = "font-mono text-body leading-relaxed hyphens-none [overflow-wrap:normal]";
+const COPY =
+  "font-mono text-body leading-relaxed hyphens-none [overflow-wrap:normal]";
 const MEASURE = "max-w-[70ch]";
 const MEASURE_TIGHT = "max-w-[50ch]"; // the narrative copy
 
@@ -49,7 +57,9 @@ function Shot({
       return (
         <div>
           <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
-            <div className="rounded-[16px] bg-white px-5 py-4 dt:px-7 dt:py-6">{img}</div>
+            <div className="rounded-[16px] bg-white px-5 py-4 dt:px-7 dt:py-6">
+              {img}
+            </div>
           </div>
           {/* Built here rather than exported: Figma bakes the page colour in
               behind it, which shows as a pale square on the dark band. */}
@@ -67,7 +77,9 @@ function Shot({
         dark ? "border-paper/15 bg-paper/5" : "border-ink/15 bg-ink/[0.04]"
       }`}
     >
-      <span className={`${LABEL} ${dark ? "text-paper/40" : "text-ink/35"}`}>[ {shot.label} ]</span>
+      <span className={`${LABEL} ${dark ? "text-paper/40" : "text-ink/35"}`}>
+        [ {shot.label} ]
+      </span>
     </div>
   );
 }
@@ -93,9 +105,13 @@ function AssistButton() {
       if (!band) return;
 
       const rect = el.getBoundingClientRect();
-      const distance = band.getBoundingClientRect().right - rect.left + rect.width / 2;
+      const distance =
+        band.getBoundingClientRect().right - rect.left + rect.width / 2;
       el.style.setProperty("--roll-x", `${Math.round(distance)}px`);
-      el.style.setProperty("--roll-deg", `${Math.round((distance / (Math.PI * rect.width)) * 360)}deg`);
+      el.style.setProperty(
+        "--roll-deg",
+        `${Math.round((distance / (Math.PI * rect.width)) * 360)}deg`,
+      );
     };
 
     measure();
@@ -131,15 +147,12 @@ function AssistButton() {
       ? { rootMargin: "0px 0px -40% 0px" }
       : { threshold: fullyInView };
 
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) {
-          setPlayed(true);
-          io.disconnect();
-        }
-      },
-      options,
-    );
+    const io = new IntersectionObserver(([entry]) => {
+      if (entry.isIntersecting) {
+        setPlayed(true);
+        io.disconnect();
+      }
+    }, options);
     io.observe(target);
     return () => io.disconnect();
   }, [played]);
@@ -168,11 +181,16 @@ function Panel({ panel }: { panel: PanelType }) {
         <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
           {panel.title}
         </h3>
-        {panel.subtitle && <p className={`${COPY} mt-2 text-ink/60`}>{panel.subtitle}</p>}
+        {panel.subtitle && (
+          <p className={`${COPY} mt-2 text-ink/60`}>{panel.subtitle}</p>
+        )}
 
         <dl className="mt-5">
           {panel.rows.map((row) => (
-            <div key={row.title} className="border-b border-ink/10 pb-4 pt-4 first:pt-0">
+            <div
+              key={row.title}
+              className="border-b border-ink/10 pb-4 pt-4 first:pt-0"
+            >
               <dt className="font-mono text-body font-medium">{row.title}</dt>
               <dd className={`${COPY} mt-1 text-ink/60`}>{row.body}</dd>
             </div>
@@ -200,7 +218,9 @@ function Card({ card }: { card: FactCard }) {
       {card.body && (
         <p className={`${COPY} mt-3 text-ink/70`}>
           {card.body}
-          {card.emphasis && <strong className="font-medium text-ink">{card.emphasis}</strong>}
+          {card.emphasis && (
+            <strong className="font-medium text-ink">{card.emphasis}</strong>
+          )}
         </p>
       )}
 
@@ -226,43 +246,49 @@ function Card({ card }: { card: FactCard }) {
 /** The mocked data table for the live-preview beat. */
 function PreviewTable({ preview }: { preview: PreviewType }) {
   return (
-    <div className="rounded-2xl bg-white px-5 py-5 shadow-[0_24px_60px_-40px_rgba(16,16,16,0.5)] dt:px-6 dt:py-6">
-      <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
+    // The gradient edge and glow the mocks carry.
+    <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
+      <div className="rounded-[16px] bg-white px-5 py-5 dt:px-6 dt:py-6">
+        <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
 
-      {/* Four columns of mono can't fit a phone, so the table scrolls inside
+        {/* Four columns of mono can't fit a phone, so the table scrolls inside
           the card rather than stretching the page. */}
-      <div className="mt-4 overflow-x-auto">
-        <table className="w-full min-w-[26rem] border-collapse text-left font-mono text-[0.8em]">
-          <thead>
-            <tr className="text-ink/45">
-              {preview.columns.map((column) => (
-                <th key={column} className="border-b border-ink/10 pb-2 pr-3 font-normal">
-                  {column}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody>
-            {preview.rows.map((row) => (
-              <tr key={row.join()} className="text-ink/75">
-                {row.map((cell) => (
-                  <td key={cell} className="border-b border-ink/10 py-2 pr-3">
-                    {cell}
-                  </td>
+        <div className="mt-4 overflow-x-auto">
+          <table className="w-full min-w-[26rem] border-collapse text-left font-mono text-[0.8em]">
+            <thead>
+              <tr className="text-ink/45">
+                {preview.columns.map((column) => (
+                  <th
+                    key={column}
+                    className="border-b border-ink/10 pb-2 pr-3 font-normal"
+                  >
+                    {column}
+                  </th>
                 ))}
               </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+            </thead>
+            <tbody>
+              {preview.rows.map((row) => (
+                <tr key={row.join()} className="text-ink/75">
+                  {row.map((cell) => (
+                    <td key={cell} className="border-b border-ink/10 py-2 pr-3">
+                      {cell}
+                    </td>
+                  ))}
+                </tr>
+              ))}
+            </tbody>
+          </table>
+        </div>
 
-      {preview.chip && (
-        <p
-          className={`${LABEL} mt-4 inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-ink/15 px-3 py-1.5 text-ink/55`}
-        >
-          {preview.chip}
-        </p>
-      )}
+        {preview.chip && (
+          <p
+            className={`${LABEL} mt-4 inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-ink/15 px-3 py-1.5 text-ink/55`}
+          >
+            {preview.chip}
+          </p>
+        )}
+      </div>
     </div>
   );
 }
@@ -276,11 +302,16 @@ function MethodCard({ panel }: { panel: PanelType }) {
         <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
           {panel.title}
         </h3>
-        {panel.subtitle && <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>}
+        {panel.subtitle && (
+          <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>
+        )}
 
         <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
           {panel.rows.map((row) => (
-            <div key={row.title} className="rounded-xl bg-ink/[0.045] px-4 py-4">
+            <div
+              key={row.title}
+              className="rounded-xl bg-ink/[0.045] px-4 py-4"
+            >
               <p className="font-mono text-body font-medium">{row.title}</p>
               <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
             </div>
@@ -332,7 +363,9 @@ function Section({ section }: { section: SectionType }) {
     return (
       <section className={`${WRAP} rise py-[max(3rem,10vw)] dt:py-20`}>
         {heading}
-        {section.subtitle && <p className={`${COPY} mt-3 text-ink/60`}>{section.subtitle}</p>}
+        {section.subtitle && (
+          <p className={`${COPY} mt-3 text-ink/60`}>{section.subtitle}</p>
+        )}
         <div className="mt-6 dt:mt-8">
           <MethodCard panel={section.panel} />
         </div>
@@ -344,14 +377,18 @@ function Section({ section }: { section: SectionType }) {
     // Phone: heading, mock, then the copy — the picture carries the point and
     // the paragraph reads as its caption. Desktop keeps copy above the mock.
     return (
-      <section className={`${WRAP} rise flex flex-col py-[max(3rem,10vw)] text-center dt:py-20`}>
+      <section
+        className={`${WRAP} rise flex flex-col py-[max(3rem,10vw)] text-center dt:py-20`}
+      >
         <div className={`mx-auto ${MEASURE}`}>{heading}</div>
         {section.shot && (
           <div className="order-2 mt-8 dt:order-3 dt:mt-12">
             <Shot shot={section.shot} ratio="aspect-[16/9]" />
           </div>
         )}
-        <div className={`order-3 mx-auto mt-8 ${MEASURE} [&_p]:mx-auto dt:order-2 dt:mt-4`}>
+        <div
+          className={`order-3 mx-auto mt-8 ${MEASURE} [&_p]:mx-auto dt:order-2 dt:mt-4`}
+        >
           {body}
         </div>
       </section>
@@ -374,7 +411,9 @@ function Section({ section }: { section: SectionType }) {
           )}
         </div>
         <div>
-          {section.kicker && <p className={`${LABEL} mb-3 text-[#6d28d9]`}>{section.kicker}</p>}
+          {section.kicker && (
+            <p className={`${LABEL} mb-3 text-[#6d28d9]`}>{section.kicker}</p>
+          )}
           {heading}
           <div className="mt-4">{body}</div>
         </div>
@@ -472,7 +511,10 @@ function StepLink({
   align: "left" | "right";
 }) {
   return (
-    <Link to={to} className={`py-2 hover:opacity-60 ${align === "right" ? "text-right" : ""}`}>
+    <Link
+      to={to}
+      className={`py-2 hover:opacity-60 ${align === "right" ? "text-right" : ""}`}
+    >
       <span className={`${LABEL} block text-ink/40`}>{label}</span>
       <span className="mt-2 block font-serif text-[clamp(1.25rem,5vw,2.75rem)] leading-tight tracking-[-0.02em] dt:text-[clamp(1.25rem,5vw,1.75rem)]">
         {title}
@@ -484,7 +526,8 @@ function StepLink({
 export default function CaseStudy({ study }: { study: CaseStudyType }) {
   const i = CASE_STUDIES.findIndex((s) => s.slug === study.slug);
   const prev = i > 0 ? CASE_STUDIES[i - 1] : null;
-  const next = i > -1 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null;
+  const next =
+    i > -1 && i < CASE_STUDIES.length - 1 ? CASE_STUDIES[i + 1] : null;
 
   return (
     <article className="pb-[max(3rem,10vw)] dt:pb-16">
@@ -495,11 +538,19 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         >
           {study.title}
         </h1>
-        <p className={`${COPY} ${MEASURE} rise mt-3 text-ink/60`} style={delay(140)}>
+        <p
+          className={`${COPY} ${MEASURE} rise mt-3 text-ink/60`}
+          style={delay(140)}
+        >
           {study.subtitle}
         </p>
 
-        <RequestLink study={study} variant="link" className="rise mt-2" style={delay(180)} />
+        <RequestLink
+          study={study}
+          variant="link"
+          className="rise mt-2"
+          style={delay(180)}
+        />
       </header>
 
       <div
@@ -515,16 +566,24 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
 
       {/* Full-bleed dark band: the one-paragraph version of the project. */}
       <section className="mt-[max(3rem,10vw)] bg-[linear-gradient(180deg,#23333f_0%,#151e25_45%,#06080b_100%)] py-[max(3rem,12vw)] text-paper dt:mt-20 dt:py-24">
-        <div className={`${WRAP} grid items-center gap-[max(3.5rem,14vw)] dt:grid-cols-2 dt:gap-14`}>
+        <div
+          className={`${WRAP} grid items-center gap-[max(3.5rem,14vw)] dt:grid-cols-2 dt:gap-14`}
+        >
           <div>
             {study.summary.kicker && (
-              <p className={`${LABEL} mb-5 text-spark`}>{study.summary.kicker}</p>
+              <p className={`${LABEL} mb-5 text-spark`}>
+                {study.summary.kicker}
+              </p>
             )}
-            <p className={`${COPY} ${MEASURE_TIGHT} text-white [line-height:2]`}>
+            <p
+              className={`${COPY} ${MEASURE_TIGHT} text-white [line-height:2]`}
+            >
               {study.summary.body}
             </p>
             {study.summary.list && (
-              <ol className={`${COPY} ${MEASURE_TIGHT} mt-2 space-y-1 text-white [line-height:2]`}>
+              <ol
+                className={`${COPY} ${MEASURE_TIGHT} mt-2 space-y-1 text-white [line-height:2]`}
+              >
                 {study.summary.list.map((item, i) => (
                   <li key={item} className="flex gap-3">
                     <span className="text-white/50">{i + 1}.</span>
@@ -543,7 +602,9 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         </div>
       </section>
 
-      {study.sections?.map((section) => <Section key={section.title} section={section} />)}
+      {study.sections?.map((section) => (
+        <Section key={section.title} section={section} />
+      ))}
 
       {study.timeline && <TimelineBand timeline={study.timeline} />}
 
@@ -566,14 +627,26 @@ export default function CaseStudy({ study }: { study: CaseStudyType }) {
         <RequestLink study={study} />
       </div>
 
-      <nav className={`${WRAP} flex items-start justify-between gap-6 border-t border-ink/15 pt-6 dt:pt-8`}>
+      <nav
+        className={`${WRAP} flex items-start justify-between gap-6 border-t border-ink/15 pt-6 dt:pt-8`}
+      >
         {prev ? (
-          <StepLink to={`/work/${prev.slug}`} label="← Previous project" title={prev.title} align="left" />
+          <StepLink
+            to={`/work/${prev.slug}`}
+            label="← Previous project"
+            title={prev.title}
+            align="left"
+          />
         ) : (
           <StepLink to="/" label="Back to work" title="Home" align="left" />
         )}
         {next ? (
-          <StepLink to={`/work/${next.slug}`} label="Next project →" title={next.title} align="right" />
+          <StepLink
+            to={`/work/${next.slug}`}
+            label="Next project →"
+            title={next.title}
+            align="right"
+          />
         ) : (
           <StepLink to="/" label="Back to work" title="Home" align="right" />
         )}

@@ -260,7 +260,6 @@ export const CASE_STUDIES: CaseStudy[] = [
         },
       },
       {
-        kicker: "Live preview",
         title: "See it work before you commit.",
         body: [
           "Your real rows update next to every rule you write. No sample file to upload, no separate validation step — just your data, live, including the edge cases that usually slip through.",
