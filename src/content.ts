@@ -239,7 +239,7 @@ export const CASE_STUDIES: CaseStudy[] = [
           "When I joined Qualtrics in 2022, I owned Basic Transform — a task built to close a real gap: users ingesting data had no simple way to reshape it in-flight.",
           "It shipped, and it worked. That success surfaced a harder problem: users wanted more complex, multi-field transformations. The default instinct from the team was to build a second, separate task, Advanced Transform.",
         ],
-        shot: { label: "IMG COMING SOON" },
+        shot: { src: "/basic-transform.png", label: "BASIC_TRANSFORM.PNG" },
         layout: "shot-right",
       },
       {
