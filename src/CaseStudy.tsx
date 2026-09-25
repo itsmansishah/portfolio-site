@@ -246,49 +246,46 @@ function Card({ card }: { card: FactCard }) {
 /** The mocked data table for the live-preview beat. */
 function PreviewTable({ preview }: { preview: PreviewType }) {
   return (
-    // The gradient edge and glow the mocks carry.
-    <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
-      <div className="rounded-[16px] bg-white px-5 py-5 dt:px-6 dt:py-6">
-        <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
+    <div className="rounded-2xl bg-white px-5 py-5 shadow-[0_24px_60px_-40px_rgba(16,16,16,0.5)] dt:px-6 dt:py-6">
+      <p className={`${LABEL} text-ink/35`}>{preview.label}</p>
 
-        {/* Four columns of mono can't fit a phone, so the table scrolls inside
+      {/* Four columns of mono can't fit a phone, so the table scrolls inside
           the card rather than stretching the page. */}
-        <div className="mt-4 overflow-x-auto">
-          <table className="w-full min-w-[26rem] border-collapse text-left font-mono text-[0.8em]">
-            <thead>
-              <tr className="text-ink/45">
-                {preview.columns.map((column) => (
-                  <th
-                    key={column}
-                    className="border-b border-ink/10 pb-2 pr-3 font-normal"
-                  >
-                    {column}
-                  </th>
+      <div className="mt-4 overflow-x-auto">
+        <table className="w-full min-w-[26rem] border-collapse text-left font-mono text-[0.8em]">
+          <thead>
+            <tr className="text-ink/45">
+              {preview.columns.map((column) => (
+                <th
+                  key={column}
+                  className="border-b border-ink/10 pb-2 pr-3 font-normal"
+                >
+                  {column}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {preview.rows.map((row) => (
+              <tr key={row.join()} className="text-ink/75">
+                {row.map((cell) => (
+                  <td key={cell} className="border-b border-ink/10 py-2 pr-3">
+                    {cell}
+                  </td>
                 ))}
               </tr>
-            </thead>
-            <tbody>
-              {preview.rows.map((row) => (
-                <tr key={row.join()} className="text-ink/75">
-                  {row.map((cell) => (
-                    <td key={cell} className="border-b border-ink/10 py-2 pr-3">
-                      {cell}
-                    </td>
-                  ))}
-                </tr>
-              ))}
-            </tbody>
-          </table>
-        </div>
-
-        {preview.chip && (
-          <p
-            className={`${LABEL} mt-4 inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-ink/15 px-3 py-1.5 text-ink/55`}
-          >
-            {preview.chip}
-          </p>
-        )}
+            ))}
+          </tbody>
+        </table>
       </div>
+
+      {preview.chip && (
+        <p
+          className={`${LABEL} mt-4 inline-block max-w-full overflow-hidden text-ellipsis whitespace-nowrap rounded-full border border-ink/15 px-3 py-1.5 text-ink/55`}
+        >
+          {preview.chip}
+        </p>
+      )}
     </div>
   );
 }
@@ -296,33 +293,33 @@ function PreviewTable({ preview }: { preview: PreviewType }) {
 /** The options panel as it appears on the paper background. */
 function MethodCard({ panel }: { panel: PanelType }) {
   return (
-    // The same gradient edge and glow the mocks carry.
-    <div className="rounded-[18px] bg-[linear-gradient(135deg,#34d399,#38bdf8,#6d28d9)] p-[2px] shadow-[0_0_90px_-12px_rgba(96,165,250,0.65)]">
-      <div className="rounded-[16px] bg-white px-6 py-8 text-center dt:px-10 dt:py-10">
-        <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
-          {panel.title}
-        </h3>
-        {panel.subtitle && (
-          <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>
-        )}
+    <div className="rounded-2xl bg-white px-6 py-8 text-center shadow-[0_24px_60px_-45px_rgba(16,16,16,0.6)] dt:px-10 dt:py-10">
+      <h3 className="font-serif text-[calc(var(--text-body)*1.65)] leading-snug tracking-[-0.01em]">
+        {panel.title}
+      </h3>
+      {panel.subtitle && (
+        <p className={`${COPY} mt-2 text-ink/55`}>{panel.subtitle}</p>
+      )}
 
-        <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
-          {panel.rows.map((row) => (
-            <div
-              key={row.title}
-              className="rounded-xl bg-ink/[0.045] px-4 py-4"
-            >
-              <p className="font-mono text-body font-medium">{row.title}</p>
-              <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
-            </div>
-          ))}
-        </div>
+      <div className="mt-6 grid gap-3 text-left dt:grid-cols-3">
+        {panel.rows.map((row) => (
+          <div key={row.title} className="rounded-xl bg-ink/[0.045] px-4 py-4">
+            <p className="font-mono text-body font-medium">{row.title}</p>
+            <p className={`${COPY} mt-1.5 text-ink/55`}>{row.body}</p>
+          </div>
+        ))}
       </div>
     </div>
   );
 }
 
-function Section({ section, lead = false }: { section: SectionType; lead?: boolean }) {
+function Section({
+  section,
+  lead = false,
+}: {
+  section: SectionType;
+  lead?: boolean;
+}) {
   const wide = section.layout === "wide";
   // Separate top and bottom rather than `py`, so the lead section's extra
   // headroom after the dark band can't collide with the shared rhythm.
@@ -382,9 +379,7 @@ function Section({ section, lead = false }: { section: SectionType; lead?: boole
     // Phone: heading, mock, then the copy — the picture carries the point and
     // the paragraph reads as its caption. Desktop keeps copy above the mock.
     return (
-      <section
-        className={`${WRAP} ${pad} rise flex flex-col text-center`}
-      >
+      <section className={`${WRAP} ${pad} rise flex flex-col text-center`}>
         <div className={`mx-auto ${MEASURE}`}>{heading}</div>
         {section.shot && (
           <div className="order-2 mt-8 dt:order-3 dt:mt-12">
