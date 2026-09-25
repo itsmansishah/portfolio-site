@@ -166,7 +166,7 @@ function Line({ label, value, strong }: { label: string; value: string | number;
     <li className={`flex items-end gap-2 ${strong ? "text-[15px] font-extrabold" : ""}`}>
       <span className="shrink-0">{label}</span>
       <span className="mr-leader" />
-      <span className="shrink-0 text-right">{value}</span>
+      <span className="min-w-0 text-right">{value}</span>
     </li>
   );
 }
@@ -404,16 +404,14 @@ function Receipt({ race, number, total }: { race: Race; number: number; total: n
         <div className="mr-dash my-5" />
 
         {/* title */}
-        <div className="flex items-start justify-between gap-4">
+        {/* Phones: city and date sit under the race name, so a long name can't run into them. */}
+        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
           <div className="min-w-0">
             <h2 className="text-[20px] font-extrabold leading-[1.1] sm:text-[24px]" style={{ textWrap: "balance" }}>
               <Scramble text={race.name} />
             </h2>
-            <p className="mr-c-ink2 mt-1.5 text-[11px] tracking-wider sm:text-xs">
-              {race.type === "half" ? "HALF MARATHON" : "FULL MARATHON"}
-            </p>
           </div>
-          <div className="shrink-0 text-right">
+          <div className="sm:shrink-0 sm:text-right">
             <p className="text-[13px] font-extrabold leading-[1.1] sm:text-[15px]">
               <Scramble text={race.location} />
             </p>
@@ -493,7 +491,82 @@ const printerFeed = (t: number) => {
   return (i + (1 - (1 - p) ** 3)) / PRINT_STEPS;
 };
 
-function ReceiptPrinter({ race, number, total }: { race: Race; number: number; total: number }) {
+function IntroReceipt({ races }: { races: Race[] }) {
+  const km = races.filter((r) => r.status === "completed").reduce((a, r) => a + r.distanceKm, 0);
+  const steps: [string, string, string][] = [
+    ["01", "PICK A RACE", "IT PRINTS HERE"],
+    ["02", "TRACE THE ROUTE", "KM BY KM"],
+    ["03", "USE ← →", "FLIP RECEIPTS"],
+  ];
+  return (
+    <article className="mr-c-ink" style={{ filter: "drop-shadow(0 18px 22px rgba(0,0,0,.13)) drop-shadow(0 2px 2px rgba(0,0,0,.06))" }}>
+      <div className="mr-bg-paper px-5 pb-7 pt-8 sm:px-8">
+        <div className="flex items-center justify-between">
+          <Footprints size={26} strokeWidth={2.2} aria-hidden />
+          <div className="text-right">
+            <div className="text-[14px] font-bold">Race Receipt</div>
+            <div className="mr-c-ink2 text-[10px] tracking-wider">No. 00/{pad(races.length)}</div>
+          </div>
+        </div>
+        <div className="mr-dash my-5" />
+
+        <h2 className="text-[24px] font-extrabold leading-[1.1] sm:text-[28px]" style={{ textWrap: "balance" }}>
+          <Scramble text="SELECT A RACE TO VIEW DETAILS!" />
+        </h2>
+        <p className="mr-c-ink2 mt-3 text-[11px] tracking-wider">
+          <span className="lg:hidden">↑ TAP A RACE ABOVE</span>
+          <span className="hidden lg:inline">← PICK A CARD ON THE LEFT</span>
+        </p>
+
+        <div className="mr-bg-panel mt-6 rounded-2xl p-4">
+          <Pill>HOW IT WORKS</Pill>
+          <ul className="mt-4 space-y-2.5 text-[12px]">
+            {steps.map(([num, label, value]) => (
+              // Arrow keys only mean something with a keyboard, so step 03 is desktop-only.
+              <li key={num} className={`items-end gap-2 ${num === "03" ? "hidden lg:flex" : "flex"}`}>
+                <span className="mr-c-ink2 shrink-0">{num}</span>
+                <span className="shrink-0 font-bold">{label}</span>
+                <span className="mr-leader" />
+                <span className="min-w-0 text-right">{value}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+
+        <div className="mr-dash my-6" />
+        <ul className="space-y-2 text-[12px]">
+          <Line label="RACES ON FILE" value={races.length} />
+          <Line label="PRINTED" value={races.filter((r) => r.status === "completed").length} />
+          <Line label="PENDING" value={races.filter((r) => r.status === "upcoming").length} />
+        </ul>
+        <div className="my-3 border-t-[3px] border-double" style={{ borderColor: "var(--mr-ink)" }} />
+        <ul>
+          <Line strong label="TOTAL" value={`${fmtKm(km)} KM`} />
+        </ul>
+
+        <div className="mt-7">
+          <Barcode code={`00${pad(races.length)}-SELECT`} faded />
+        </div>
+        <p className="mr-c-ink2 mt-4 text-center text-[10px] tracking-[0.2em]">
+          AWAITING SELECTION<span className="mr-blink">█</span>
+        </p>
+      </div>
+      <div className="mr-zz" />
+    </article>
+  );
+}
+
+function ReceiptPrinter({
+  race,
+  races,
+  number,
+  total,
+}: {
+  race: Race | null;
+  races: Race[];
+  number: number;
+  total: number;
+}) {
   const reduce = useReducedMotion();
   return (
     <div className="w-full max-w-[470px]">
@@ -503,12 +576,12 @@ function ReceiptPrinter({ race, number, total }: { race: Race; number: number; t
       <div className="relative -mt-3.5 mx-3" style={{ clipPath: "inset(0 -60px -120px -60px)" }}>
         <AnimatePresence mode="wait" initial={false}>
           <motion.div
-            key={race.id}
+            key={race?.id ?? "intro"}
             initial={reduce ? { opacity: 0 } : { y: "-100%" }}
             animate={reduce ? { opacity: 1 } : { y: 0, transition: { duration: PRINT_SECONDS, ease: printerFeed } }}
             exit={reduce ? { opacity: 0 } : { y: 16, rotate: -1.2, opacity: 0, transition: { duration: 0.22, ease: "easeIn" } }}
           >
-            <Receipt race={race} number={number} total={total} />
+            {race ? <Receipt race={race} number={number} total={total} /> : <IntroReceipt races={races} />}
           </motion.div>
         </AnimatePresence>
       </div>
@@ -547,9 +620,10 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
             <span className="mr-bg-fg mr-c-bg inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-[0.15em]">
               <Printer size={11} strokeWidth={2.5} /> PENDING
             </span>
-            <div className="mt-2.5 text-[17px] font-extrabold leading-tight">{race.name}</div>
-            <div className="mr-c-muted mt-1 text-[11px] tracking-wider" suppressHydrationWarning>
-              {MONTHS[m - 1]} {pad(d)} · T-{days} DAYS{race.targetTime ? ` · GOAL ${race.targetTime}` : ""}
+            <div className="mt-2.5 text-[22px] font-extrabold leading-none">{race.short}</div>
+            <div className="mr-c-muted mt-1.5 text-[10px] tracking-[0.15em]" suppressHydrationWarning>
+              {shortKm(race.distanceKm)}KM · {MONTHS[m - 1]} {pad(d)} · T-{days} DAYS
+              {race.targetTime ? ` · GOAL ${race.targetTime}` : ""}
             </div>
           </div>
         </div>
@@ -562,8 +636,8 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
             </span>
           </div>
           <RouteSketch points={race.route} className="mx-auto my-3 h-24 w-24" />
-          <div className="text-center text-[22px] font-extrabold leading-none">{shortKm(race.distanceKm)}KM</div>
-          <div className="mr-c-muted mt-1.5 text-center text-[10px] tracking-[0.15em]">{race.short}</div>
+          <div className="text-center text-[22px] font-extrabold leading-none">{race.short}</div>
+          <div className="mr-c-muted mt-1.5 text-center text-[10px] tracking-[0.15em]">{shortKm(race.distanceKm)}KM</div>
         </>
       )}
     </button>
@@ -645,11 +719,13 @@ export default function MarathonReceipts({
   ledger?: LedgerTotals;
   defaultId?: string;
 }) {
-  const initial = defaultId ?? [...races].reverse().find((r) => r.status === "completed")?.id ?? races[0]?.id;
-  const [activeId, setActiveId] = useState(initial);
+  // Newest first on screen; receipt numbers still count up in the order the races were run.
+  const sorted = useMemo(() => [...races].sort((a, b) => b.date.localeCompare(a.date)), [races]);
+  const [activeId, setActiveId] = useState<string | null>(defaultId ?? null);
   const now = useNow(true);
-  const index = Math.max(0, races.findIndex((r) => r.id === activeId));
-  const active = races[index];
+  const index = sorted.findIndex((r) => r.id === activeId);
+  const active = index === -1 ? null : sorted[index];
+  const number = active ? races.filter((r) => r.date <= active.date).length : 0;
   const completed = races.filter((r) => r.status === "completed");
   const pending = races.length - completed.length;
   const km = completed.reduce((a, r) => a + r.distanceKm, 0);
@@ -657,14 +733,15 @@ export default function MarathonReceipts({
   useEffect(() => {
     const onKey = (e: KeyboardEvent) => {
       if (e.target instanceof HTMLElement && e.target.closest("input,textarea,select,[contenteditable]")) return;
-      if (e.key === "ArrowRight") setActiveId(races[(index + 1) % races.length].id);
-      if (e.key === "ArrowLeft") setActiveId(races[(index - 1 + races.length) % races.length].id);
+      const n = sorted.length;
+      if (e.key === "ArrowRight") setActiveId(sorted[(index + 1) % n].id);
+      if (e.key === "ArrowLeft") setActiveId(sorted[index === -1 ? n - 1 : (index - 1 + n) % n].id);
     };
     window.addEventListener("keydown", onKey);
     return () => window.removeEventListener("keydown", onKey);
-  }, [index, races]);
+  }, [index, sorted]);
 
-  if (!active) return null;
+  if (!sorted.length) return null;
 
   return (
     <div className="mr-root">
@@ -680,7 +757,7 @@ export default function MarathonReceipts({
             </p>
 
             <div className="mt-8 hidden grid-cols-2 gap-3 lg:grid">
-              {races.map((r) => (
+              {sorted.map((r) => (
                 <RaceCard key={r.id} race={r} active={r.id === activeId} onSelect={() => setActiveId(r.id)} now={now} />
               ))}
             </div>
@@ -696,7 +773,7 @@ export default function MarathonReceipts({
             style={{ top: "var(--mr-sticky-top, 0px)", background: "color-mix(in srgb, var(--mr-bg) 90%, transparent)", backdropFilter: "blur(8px)" }}
           >
             <div className="mr-noscroll flex gap-2 overflow-x-auto">
-              {races.map((r) => (
+              {sorted.map((r) => (
                 <Chip key={r.id} race={r} active={r.id === activeId} onSelect={() => setActiveId(r.id)} />
               ))}
             </div>
@@ -704,7 +781,7 @@ export default function MarathonReceipts({
 
           {/* active receipt */}
           <main className="mt-4 flex justify-center lg:mt-0">
-            <ReceiptPrinter race={active} number={index + 1} total={races.length} />
+            <ReceiptPrinter race={active} races={races} number={number} total={races.length} />
           </main>
 
           <Ledger races={races} totals={ledger} className="mt-12 lg:hidden" />
