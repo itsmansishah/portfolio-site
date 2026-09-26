@@ -287,7 +287,7 @@ function About() {
   return (
     <section id="about" className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-14 pt-4 dt:py-20">
       <p className={`${LABEL} text-ink/50`}>About me</p>
-      <div className="mt-5 grid gap-6 dt:mt-8 dt:grid-cols-12 dt:gap-8">
+      <div className="mt-5 grid gap-[max(2.25rem,9vw)] dt:mt-8 dt:grid-cols-12 dt:gap-8">
         <h2 className="font-serif text-heading leading-[1.1] tracking-[-0.02em] dt:col-span-5">
           {/* Kept on one line so it can't split as "mahn- / see)" */}
           {ABOUT.intro} <span className="whitespace-nowrap">{ABOUT.pronunciation}</span>
@@ -298,7 +298,7 @@ function About() {
           ))}
           {/* Padding rather than margin: the parent's space-y already sets a
               margin here, and the two would fight. */}
-          <p className="flex flex-wrap items-baseline gap-x-6 gap-y-1 pt-[10px]">
+          <p className="flex flex-wrap items-baseline gap-x-6 gap-y-1 pt-[max(1.5rem,6vw)] dt:pt-[10px]">
             <span className={`${LABEL} text-ink/40`}>Side Quests</span>
             <Link to="/races" className={`${LABEL} inline-flex items-center gap-2 text-ink hover:opacity-60`}>
               Race Receipts <span aria-hidden="true">→</span>
