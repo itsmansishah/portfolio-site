@@ -17,12 +17,12 @@ export default function RacesPage() {
 
   return (
     <div style={{ "--mr-sticky-top": `${navHeight}px` } as CSSProperties}>
-      <div className="mx-auto max-w-[1100px] px-[var(--gutter)] pt-6">
+      <MarathonReceipts />
+      <div className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-14 dt:pb-20">
         <Link to="/#about" className={`${LABEL} inline-flex items-center gap-2 hover:opacity-60`}>
           <span aria-hidden="true">←</span> Back to about
         </Link>
       </div>
-      <MarathonReceipts />
     </div>
   );
 }
