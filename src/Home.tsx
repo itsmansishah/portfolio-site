@@ -296,7 +296,9 @@ function About() {
           {ABOUT.body.map((para) => (
             <p key={para.slice(0, 24)}>{para}</p>
           ))}
-          <p className="flex flex-wrap items-baseline gap-x-6 gap-y-1">
+          {/* Padding rather than margin: the parent's space-y already sets a
+              margin here, and the two would fight. */}
+          <p className="flex flex-wrap items-baseline gap-x-6 gap-y-1 pt-[10px]">
             <span className={`${LABEL} text-ink/40`}>Side Quests</span>
             <Link to="/races" className={`${LABEL} inline-flex items-center gap-2 text-ink hover:opacity-60`}>
               Race Receipts <span aria-hidden="true">→</span>
