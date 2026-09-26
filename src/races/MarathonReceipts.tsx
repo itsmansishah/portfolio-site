@@ -6,7 +6,15 @@ import { MARATHONS, LEDGER, type LedgerTotals, type Point, type Race } from "./m
 /* ───────────────────────── styles (tuned to the site's paper and mono) ───────────────────────── */
 
 const CSS = `
+/* One unit for every size on this page. On the site's desktop layout (the dt:
+   variant) it is 1px. Everywhere else it scales with the screen, the way the
+   site's phone type does: 1px on a 390px-wide phone, and bigger on the ~980px
+   canvas a phone gets when it asks for the desktop site. Tailwind's spacing and
+   the card radius follow it, so padding and gaps scale with the text. */
 .mr-root{
+  --mr-u:calc(100vw / 390);
+  --spacing:calc(4 * var(--mr-u));
+  --radius-2xl:calc(16 * var(--mr-u));
   --mr-bg:var(--color-paper,#f7f2ed); --mr-fg:#101010; --mr-muted:#7a736b; --mr-tile:#ede6de; --mr-line:#c9c0b5;
   --mr-paper:#fffdf9; --mr-panel:#f4efe9; --mr-ink:#101010; --mr-ink-2:#6f6a64; --mr-ink-3:#bdb6ad;
   --mr-slot:#141413;
@@ -14,16 +22,19 @@ const CSS = `
   font-variant-numeric:tabular-nums;
   color:var(--mr-fg); background:var(--mr-bg);
 }
+@media (min-width: 1100px), (min-width: 768px) and (any-pointer: fine){
+  .mr-root{ --mr-u:1px; }
+}
 .mr-c-fg{color:var(--mr-fg)} .mr-c-muted{color:var(--mr-muted)} .mr-c-bg{color:var(--mr-bg)}
 .mr-c-ink{color:var(--mr-ink)} .mr-c-ink2{color:var(--mr-ink-2)} .mr-c-ink3{color:var(--mr-ink-3)} .mr-c-paper{color:var(--mr-paper)}
 .mr-bg-paper{background:var(--mr-paper)} .mr-bg-panel{background:var(--mr-panel)} .mr-bg-ink{background:var(--mr-ink)}
 .mr-bg-tile{background:var(--mr-tile)} .mr-bg-fg{background:var(--mr-fg)} .mr-bg-slot{background:var(--mr-slot)}
-.mr-dash{height:1.5px;background:repeating-linear-gradient(90deg,var(--mr-ink-3) 0 7px,transparent 7px 12px)}
-.mr-dash-page{height:1.5px;background:repeating-linear-gradient(90deg,var(--mr-line) 0 7px,transparent 7px 12px)}
-.mr-leader{flex:1;min-width:12px;border-bottom:1.5px dotted currentColor;opacity:.35;transform:translateY(-4px)}
-.mr-zz{height:12px;background:
-  linear-gradient(135deg,var(--mr-paper) 50%,transparent 50%) 0 0/12px 12px repeat-x,
-  linear-gradient(-135deg,var(--mr-paper) 50%,transparent 50%) 0 0/12px 12px repeat-x}
+.mr-dash{height:calc(1.5 * var(--mr-u));background:repeating-linear-gradient(90deg,var(--mr-ink-3) 0 calc(7 * var(--mr-u)),transparent calc(7 * var(--mr-u)) calc(12 * var(--mr-u)))}
+.mr-dash-page{height:calc(1.5 * var(--mr-u));background:repeating-linear-gradient(90deg,var(--mr-line) 0 calc(7 * var(--mr-u)),transparent calc(7 * var(--mr-u)) calc(12 * var(--mr-u)))}
+.mr-leader{flex:1;min-width:calc(12 * var(--mr-u));border-bottom:calc(1.5 * var(--mr-u)) dotted currentColor;opacity:.35;transform:translateY(calc(-4 * var(--mr-u)))}
+.mr-zz{height:calc(12 * var(--mr-u));background:
+  linear-gradient(135deg,var(--mr-paper) 50%,transparent 50%) 0 0/calc(12 * var(--mr-u)) calc(12 * var(--mr-u)) repeat-x,
+  linear-gradient(-135deg,var(--mr-paper) 50%,transparent 50%) 0 0/calc(12 * var(--mr-u)) calc(12 * var(--mr-u)) repeat-x}
 .mr-pending{background:repeating-linear-gradient(-45deg,transparent 0 7px,color-mix(in srgb,var(--mr-fg) 5%,transparent) 7px 8px);
   border:1.5px dashed var(--mr-line)}
 .mr-noscroll{scrollbar-width:none} .mr-noscroll::-webkit-scrollbar{display:none}
@@ -130,15 +141,15 @@ function RouteSketch({ points, dashed, className }: { points: Point[]; dashed?: 
   return (
     <svg viewBox="0 0 100 100" className={className} aria-hidden>
       <path d={d} fill="none" stroke="currentColor" strokeWidth="1.6" strokeLinejoin="round" strokeLinecap="round"
-        vectorEffect="non-scaling-stroke" strokeDasharray={dashed ? "3 4" : undefined} />
+        strokeDasharray={dashed ? "3 4" : undefined} />
     </svg>
   );
 }
 
 function Pill({ icon: Icon, children }: { icon?: LucideIcon; children: ReactNode }) {
   return (
-    <span className="mr-bg-paper mr-c-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[11px] font-bold tracking-wider">
-      {Icon && <Icon size={12} strokeWidth={2.5} />}
+    <span className="mr-bg-paper mr-c-ink inline-flex items-center gap-1.5 rounded-full px-3 py-1.5 text-[calc(11*var(--mr-u))] font-bold tracking-wider">
+      {Icon && <Icon size={12} className="size-[calc(12*var(--mr-u))]" strokeWidth={2.5} />}
       {children}
     </span>
   );
@@ -153,17 +164,17 @@ function Barcode({ code, faded }: { code: string; faded?: boolean }) {
     <div className={`flex flex-col items-center gap-2 ${faded ? "opacity-30" : ""}`}>
       <div className="flex h-12 max-w-full overflow-hidden" aria-hidden>
         {bars.map((b, i) => (
-          <span key={i} className="mr-bg-ink shrink-0" style={{ width: b.w, marginRight: b.gap }} />
+          <span key={i} className="mr-bg-ink shrink-0" style={{ width: `calc(${b.w} * var(--mr-u))`, marginRight: `calc(${b.gap} * var(--mr-u))` }} />
         ))}
       </div>
-      <span className="text-[10px] tracking-[0.35em]">{code}</span>
+      <span className="text-[calc(10*var(--mr-u))] tracking-[0.35em]">{code}</span>
     </div>
   );
 }
 
 function Line({ label, value, strong }: { label: string; value: string | number; strong?: boolean }) {
   return (
-    <li className={`flex items-end gap-2 ${strong ? "text-[15px] font-extrabold" : ""}`}>
+    <li className={`flex items-end gap-2 ${strong ? "text-[calc(15*var(--mr-u))] font-extrabold" : ""}`}>
       <span className="shrink-0">{label}</span>
       <span className="mr-leader" />
       <span className="min-w-0 text-right">{value}</span>
@@ -238,7 +249,7 @@ function RouteLine({ race, printing }: { race: Race; printing: boolean }) {
     <div className="mr-bg-panel mt-5 rounded-2xl p-4">
       <div className="flex items-center justify-between">
         <Pill icon={Route}>ROUTE</Pill>
-        <span className="mr-c-ink2 text-[10px] tracking-wider">
+        <span className="mr-c-ink2 text-[calc(10*var(--mr-u))] tracking-wider">
           {printing ? (
             <>
               PRINTING IN PROGRESS<span className="mr-blink">█</span>
@@ -302,7 +313,7 @@ function RouteLine({ race, printing }: { race: Race; printing: boolean }) {
           </>
         )}
       </svg>
-      <div className="mr-c-ink2 mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[10px] tracking-wider">
+      <div className="mr-c-ink2 mt-2 flex flex-wrap gap-x-4 gap-y-1 text-[calc(10*var(--mr-u))] tracking-wider">
         <span className="flex items-center gap-1.5">
           <span className="mr-bg-ink inline-block h-2 w-2 rounded-full" /> START
         </span>
@@ -320,8 +331,8 @@ function RouteLine({ race, printing }: { race: Race; printing: boolean }) {
 function Stat({ label, value, align }: { label: string; value: string; align: string }) {
   return (
     <div className={align}>
-      <div className="mr-c-ink2 text-[10px] tracking-[0.12em] sm:text-[11px]">{label}</div>
-      <div className="mt-1 text-[15px] font-extrabold sm:text-[17px]">
+      <div className="mr-c-ink2 text-[calc(10*var(--mr-u))] tracking-[0.12em] dt:text-[calc(11*var(--mr-u))]">{label}</div>
+      <div className="mt-1 text-[calc(15*var(--mr-u))] font-extrabold dt:text-[calc(17*var(--mr-u))]">
         <Scramble text={value} />
       </div>
     </div>
@@ -337,17 +348,17 @@ function Countdown({ race }: { race: Race }) {
     [Math.floor((left % 36e5) / 6e4), "MIN"],
     [Math.floor((left % 6e4) / 1e3), "SEC"],
   ];
-  if (left === 0) return <div className="py-2 text-center text-[20px] font-extrabold">RACE DAY · AWAITING RESULTS</div>;
+  if (left === 0) return <div className="py-2 text-center text-[calc(20*var(--mr-u))] font-extrabold">RACE DAY · AWAITING RESULTS</div>;
   return (
     <div>
-      <div className="mr-c-ink2 flex items-center justify-center gap-1.5 text-[10px] tracking-[0.2em]">
-        <Timer size={12} strokeWidth={2.5} /> T-MINUS TO START
+      <div className="mr-c-ink2 flex items-center justify-center gap-1.5 text-[calc(10*var(--mr-u))] tracking-[0.2em]">
+        <Timer size={12} className="size-[calc(12*var(--mr-u))]" strokeWidth={2.5} /> T-MINUS TO START
       </div>
       <div className="mt-2 grid grid-cols-4 text-center" suppressHydrationWarning>
         {parts.map(([v, unit]) => (
           <div key={unit}>
-            <div className="text-[28px] font-extrabold leading-none sm:text-[34px]">{pad(v)}</div>
-            <div className="mr-c-ink2 mt-1.5 text-[10px] tracking-[0.2em]">{unit}</div>
+            <div className="text-[calc(28*var(--mr-u))] font-extrabold leading-none dt:text-[calc(34*var(--mr-u))]">{pad(v)}</div>
+            <div className="mr-c-ink2 mt-1.5 text-[calc(10*var(--mr-u))] tracking-[0.2em]">{unit}</div>
           </div>
         ))}
       </div>
@@ -390,13 +401,13 @@ function Receipt({ race, number, total }: { race: Race; number: number; total: n
 
   return (
     <article className="mr-c-ink" style={{ filter: "drop-shadow(0 18px 22px rgba(0,0,0,.13)) drop-shadow(0 2px 2px rgba(0,0,0,.06))" }}>
-      <div className="mr-bg-paper px-5 pb-7 pt-8 sm:px-8">
+      <div className="mr-bg-paper px-5 pb-7 pt-8 dt:px-8">
         {/* header */}
         <div className="flex items-center justify-between">
-          <Footprints size={26} strokeWidth={2.2} aria-hidden />
+          <Footprints size={26} className="size-[calc(26*var(--mr-u))]" strokeWidth={2.2} aria-hidden />
           <div className="text-right">
-            <div className="text-[14px] font-bold">Race Receipt</div>
-            <div className="mr-c-ink2 text-[10px] tracking-wider">
+            <div className="text-[calc(14*var(--mr-u))] font-bold">Race Receipt</div>
+            <div className="mr-c-ink2 text-[calc(10*var(--mr-u))] tracking-wider">
               No. {pad(number)}/{pad(total)}
             </div>
           </div>
@@ -405,29 +416,29 @@ function Receipt({ race, number, total }: { race: Race; number: number; total: n
 
         {/* title */}
         {/* Phones: city and date sit under the race name, so a long name can't run into them. */}
-        <div className="flex flex-col gap-2.5 sm:flex-row sm:items-start sm:justify-between sm:gap-4">
+        <div className="flex flex-col gap-2.5 dt:flex-row dt:items-start dt:justify-between dt:gap-4">
           <div className="min-w-0">
-            <h2 className="text-[20px] font-extrabold leading-[1.1] sm:text-[24px]" style={{ textWrap: "balance" }}>
+            <h2 className="text-[calc(20*var(--mr-u))] font-extrabold leading-[1.1] dt:text-[calc(24*var(--mr-u))]" style={{ textWrap: "balance" }}>
               <Scramble text={race.name} />
             </h2>
           </div>
-          <div className="sm:shrink-0 sm:text-right">
-            <p className="text-[13px] font-extrabold leading-[1.1] sm:text-[15px]">
+          <div className="dt:shrink-0 dt:text-right">
+            <p className="text-[calc(13*var(--mr-u))] font-extrabold leading-[1.1] dt:text-[calc(15*var(--mr-u))]">
               <Scramble text={race.location} />
             </p>
-            <p className="mr-c-ink2 mt-1.5 text-[11px] tracking-wider sm:text-xs">{fmtDate(race.date)}</p>
+            <p className="mr-c-ink2 mt-1.5 text-[calc(11*var(--mr-u))] tracking-wider dt:text-[calc(12*var(--mr-u))]">{fmtDate(race.date)}</p>
           </div>
         </div>
 
         {/* status */}
         <div className="mt-4">
           {upcoming ? (
-            <span className="inline-flex items-center gap-2 rounded-full border-[1.5px] border-dashed px-3 py-1 text-[10px] font-bold tracking-[0.15em]" style={{ borderColor: "var(--mr-ink)" }}>
+            <span className="inline-flex items-center gap-2 rounded-full border-[calc(1.5*var(--mr-u))] border-dashed px-3 py-1 text-[calc(10*var(--mr-u))] font-bold tracking-[0.15em]" style={{ borderColor: "var(--mr-ink)" }}>
               <span className="mr-bg-ink mr-pulse h-1.5 w-1.5 rounded-full" /> STATUS: UPCOMING / IN PROGRESS
             </span>
           ) : (
-            <span className="mr-bg-ink mr-c-paper inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[10px] font-bold tracking-[0.15em]">
-              <CircleCheck size={12} strokeWidth={2.5} /> FINISHED{race.duration ? ` · ${race.duration}` : ""}
+            <span className="mr-bg-ink mr-c-paper inline-flex items-center gap-1.5 rounded-full px-3 py-1 text-[calc(10*var(--mr-u))] font-bold tracking-[0.15em]">
+              <CircleCheck size={12} className="size-[calc(12*var(--mr-u))]" strokeWidth={2.5} /> FINISHED{race.duration ? ` · ${race.duration}` : ""}
             </span>
           )}
         </div>
@@ -449,17 +460,17 @@ function Receipt({ race, number, total }: { race: Race; number: number; total: n
         <div className="mr-dash my-6" />
 
         {/* itemised */}
-        <ul className="space-y-2 text-[12px]">
+        <ul className="space-y-2 text-[calc(12*var(--mr-u))]">
           {items.map(([k, v]) => (
             <Line key={k} label={k} value={String(v)} />
           ))}
         </ul>
-        <div className="my-3 border-t-[3px] border-double" style={{ borderColor: "var(--mr-ink)" }} />
+        <div className="my-3 border-t-[calc(3*var(--mr-u))] border-double" style={{ borderColor: "var(--mr-ink)" }} />
         <ul>
           <Line strong label={upcoming ? "GOAL" : "TOTAL"} value={(upcoming ? race.targetTime : race.duration) ?? DASH} />
         </ul>
 
-        <p className="mt-7 text-center text-[12px] font-bold uppercase leading-relaxed tracking-wide">
+        <p className="mt-7 text-center text-[calc(12*var(--mr-u))] font-bold uppercase leading-relaxed tracking-wide">
           * * *<br />
           {race.quote}
           <br />* * *
@@ -468,7 +479,7 @@ function Receipt({ race, number, total }: { race: Race; number: number; total: n
         <div className="mt-7">
           <Barcode code={code} faded={upcoming} />
         </div>
-        <p className="mr-c-ink2 mt-4 text-center text-[10px] tracking-[0.2em]">
+        <p className="mr-c-ink2 mt-4 text-center text-[calc(10*var(--mr-u))] tracking-[0.2em]">
           {upcoming ? "RECEIPT PRINTS AT THE FINISH LINE" : "THANK YOU FOR RUNNING"}
         </p>
       </div>
@@ -500,30 +511,30 @@ function IntroReceipt({ races }: { races: Race[] }) {
   ];
   return (
     <article className="mr-c-ink" style={{ filter: "drop-shadow(0 18px 22px rgba(0,0,0,.13)) drop-shadow(0 2px 2px rgba(0,0,0,.06))" }}>
-      <div className="mr-bg-paper px-5 pb-7 pt-8 sm:px-8">
+      <div className="mr-bg-paper px-5 pb-7 pt-8 dt:px-8">
         <div className="flex items-center justify-between">
-          <Footprints size={26} strokeWidth={2.2} aria-hidden />
+          <Footprints size={26} className="size-[calc(26*var(--mr-u))]" strokeWidth={2.2} aria-hidden />
           <div className="text-right">
-            <div className="text-[14px] font-bold">Race Receipt</div>
-            <div className="mr-c-ink2 text-[10px] tracking-wider">No. 00/{pad(races.length)}</div>
+            <div className="text-[calc(14*var(--mr-u))] font-bold">Race Receipt</div>
+            <div className="mr-c-ink2 text-[calc(10*var(--mr-u))] tracking-wider">No. 00/{pad(races.length)}</div>
           </div>
         </div>
         <div className="mr-dash my-5" />
 
-        <h2 className="text-[24px] font-extrabold leading-[1.1] sm:text-[28px]" style={{ textWrap: "balance" }}>
+        <h2 className="text-[calc(24*var(--mr-u))] font-extrabold leading-[1.1] dt:text-[calc(28*var(--mr-u))]" style={{ textWrap: "balance" }}>
           <Scramble text="SELECT A RACE TO VIEW DETAILS!" />
         </h2>
-        <p className="mr-c-ink2 mt-3 text-[11px] tracking-wider">
-          <span className="lg:hidden">↑ TAP A RACE ABOVE</span>
-          <span className="hidden lg:inline">← PICK A CARD ON THE LEFT</span>
+        <p className="mr-c-ink2 mt-3 text-[calc(11*var(--mr-u))] tracking-wider">
+          <span className="dt:lg:hidden">↑ TAP A RACE ABOVE</span>
+          <span className="hidden dt:lg:inline">← PICK A CARD ON THE LEFT</span>
         </p>
 
         <div className="mr-bg-panel mt-6 rounded-2xl p-4">
           <Pill>HOW IT WORKS</Pill>
-          <ul className="mt-4 space-y-2.5 text-[12px]">
+          <ul className="mt-4 space-y-2.5 text-[calc(12*var(--mr-u))]">
             {steps.map(([num, label, value]) => (
               // Arrow keys only mean something with a keyboard, so step 03 is desktop-only.
-              <li key={num} className={`items-end gap-2 ${num === "03" ? "hidden lg:flex" : "flex"}`}>
+              <li key={num} className={`items-end gap-2 ${num === "03" ? "hidden dt:lg:flex" : "flex"}`}>
                 <span className="mr-c-ink2 shrink-0">{num}</span>
                 <span className="shrink-0 font-bold">{label}</span>
                 <span className="mr-leader" />
@@ -534,12 +545,12 @@ function IntroReceipt({ races }: { races: Race[] }) {
         </div>
 
         <div className="mr-dash my-6" />
-        <ul className="space-y-2 text-[12px]">
+        <ul className="space-y-2 text-[calc(12*var(--mr-u))]">
           <Line label="RACES ON FILE" value={races.length} />
           <Line label="PRINTED" value={races.filter((r) => r.status === "completed").length} />
           <Line label="PENDING" value={races.filter((r) => r.status === "upcoming").length} />
         </ul>
-        <div className="my-3 border-t-[3px] border-double" style={{ borderColor: "var(--mr-ink)" }} />
+        <div className="my-3 border-t-[calc(3*var(--mr-u))] border-double" style={{ borderColor: "var(--mr-ink)" }} />
         <ul>
           <Line strong label="TOTAL" value={`${fmtKm(km)} KM`} />
         </ul>
@@ -547,7 +558,7 @@ function IntroReceipt({ races }: { races: Race[] }) {
         <div className="mt-7">
           <Barcode code={`00${pad(races.length)}-SELECT`} faded />
         </div>
-        <p className="mr-c-ink2 mt-4 text-center text-[10px] tracking-[0.2em]">
+        <p className="mr-c-ink2 mt-4 text-center text-[calc(10*var(--mr-u))] tracking-[0.2em]">
           AWAITING SELECTION<span className="mr-blink">█</span>
         </p>
       </div>
@@ -569,9 +580,9 @@ function ReceiptPrinter({
 }) {
   const reduce = useReducedMotion();
   return (
-    <div className="w-full max-w-[470px]">
+    <div className="w-full max-w-[calc(470*var(--mr-u))]">
       <div className="mr-bg-slot relative z-20 h-7 rounded-full shadow-[0_6px_14px_rgba(0,0,0,.25)]">
-        <div className="absolute inset-x-6 top-1/2 h-[3px] -translate-y-1/2 rounded-full bg-black/70" />
+        <div className="absolute inset-x-6 top-1/2 h-[calc(3*var(--mr-u))] -translate-y-1/2 rounded-full bg-black/70" />
       </div>
       <div className="relative -mt-3.5 mx-3" style={{ clipPath: "inset(0 -60px -120px -60px)" }}>
         <AnimatePresence mode="wait" initial={false}>
@@ -608,7 +619,7 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
       {active && (
         <motion.span
           layoutId="mr-card-ring"
-          className="pointer-events-none absolute -inset-[3px] rounded-[19px] border-2"
+          className="pointer-events-none absolute -inset-[calc(3*var(--mr-u))] rounded-[calc(19*var(--mr-u))] border-2"
           style={{ borderColor: "var(--mr-fg)" }}
           transition={{ type: "spring", stiffness: 520, damping: 42 }}
         />
@@ -617,11 +628,11 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
         <div className="flex items-center gap-4">
           <RouteSketch points={race.route} dashed className="mr-c-muted h-24 w-24 shrink-0" />
           <div className="min-w-0 flex-1">
-            <span className="mr-bg-fg mr-c-bg inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[10px] font-bold tracking-[0.15em]">
-              <Printer size={11} strokeWidth={2.5} /> PENDING
+            <span className="mr-bg-fg mr-c-bg inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[calc(10*var(--mr-u))] font-bold tracking-[0.15em]">
+              <Printer size={11} className="size-[calc(11*var(--mr-u))]" strokeWidth={2.5} /> PENDING
             </span>
-            <div className="mt-2.5 text-[22px] font-extrabold leading-none">{race.short}</div>
-            <div className="mr-c-muted mt-1.5 text-[10px] tracking-[0.15em]" suppressHydrationWarning>
+            <div className="mt-2.5 text-[calc(22*var(--mr-u))] font-extrabold leading-none">{race.short}</div>
+            <div className="mr-c-muted mt-1.5 text-[calc(10*var(--mr-u))] tracking-[0.15em]" suppressHydrationWarning>
               {shortKm(race.distanceKm)}KM · {MONTHS[m - 1]} {pad(d)} · T-{days} DAYS
               {race.targetTime ? ` · GOAL ${race.targetTime}` : ""}
             </div>
@@ -629,15 +640,15 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
         </div>
       ) : (
         <>
-          <div className="mr-c-muted flex justify-between text-[11px] tracking-wider">
+          <div className="mr-c-muted flex justify-between text-[calc(11*var(--mr-u))] tracking-wider">
             <span>{y}</span>
             <span>
               {MONTHS[m - 1]} {pad(d)}
             </span>
           </div>
           <RouteSketch points={race.route} className="mx-auto my-3 h-24 w-24" />
-          <div className="text-center text-[22px] font-extrabold leading-none">{race.short}</div>
-          <div className="mr-c-muted mt-1.5 text-center text-[10px] tracking-[0.15em]">{shortKm(race.distanceKm)}KM</div>
+          <div className="text-center text-[calc(22*var(--mr-u))] font-extrabold leading-none">{race.short}</div>
+          <div className="mr-c-muted mt-1.5 text-center text-[calc(10*var(--mr-u))] tracking-[0.15em]">{shortKm(race.distanceKm)}KM</div>
         </>
       )}
     </button>
@@ -660,8 +671,8 @@ function Chip({ race, active, onSelect }: { race: Race; active: boolean; onSelec
       type="button"
       onClick={onSelect}
       aria-pressed={active}
-      className={`relative shrink-0 rounded-full px-3.5 py-2 text-[11px] font-bold tracking-wider ${
-        upcoming ? "border-[1.5px] border-dashed" : "mr-bg-tile"
+      className={`relative shrink-0 rounded-full px-3.5 py-2 text-[calc(11*var(--mr-u))] font-bold tracking-wider ${
+        upcoming ? "border-[calc(1.5*var(--mr-u))] border-dashed" : "mr-bg-tile"
       }`}
       style={upcoming ? { borderColor: "var(--mr-line)" } : undefined}
     >
@@ -696,9 +707,9 @@ function Ledger({ races, totals = {}, className = "" }: { races: Race[]; totals?
   if (next) rows.push(["NEXT START", `${next.short} ${fmtDate(next.date)}`]);
   return (
     <section className={className}>
-      <div className="mr-c-muted text-[10px] tracking-[0.25em]">LEDGER</div>
+      <div className="mr-c-muted text-[calc(10*var(--mr-u))] tracking-[0.25em]">LEDGER</div>
       <div className="mr-dash-page my-3" />
-      <ul className="space-y-2 text-[12px]">
+      <ul className="space-y-2 text-[calc(12*var(--mr-u))]">
         {rows.map(([k, v]) => (
           <Line key={k} label={k} value={v} />
         ))}
@@ -747,29 +758,29 @@ export default function MarathonReceipts({
     <div className="mr-root">
       <style>{CSS}</style>
       <LayoutGroup>
-        <div className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-16 pt-8 lg:grid lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] lg:gap-14 lg:pt-14">
+        <div className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-16 pt-8 dt:lg:grid dt:lg:grid-cols-[minmax(0,400px)_minmax(0,1fr)] dt:lg:gap-14 dt:lg:pt-14">
           {/* index */}
-          <aside className="lg:sticky lg:self-start" style={{ top: "calc(var(--mr-sticky-top, 0px) + 1.5rem)" }}>
-            <p className="mr-c-muted text-[11px] tracking-[0.2em]">MARATHON RECEIPT ARCHIVE • {races.length} ISSUED</p>
-            <h1 className="mt-3 font-serif text-[clamp(2.5rem,8vw,4rem)] leading-[1.05] tracking-[-0.03em]">Race Receipts</h1>
-            <p className="mr-c-muted mt-4 text-[11px] tracking-wider">
+          <aside className="dt:lg:sticky dt:lg:self-start" style={{ top: "calc(var(--mr-sticky-top, 0px) + 1.5rem)" }}>
+            <p className="mr-c-muted text-[calc(11*var(--mr-u))] tracking-[0.2em]">MARATHON RECEIPT ARCHIVE • {races.length} ISSUED</p>
+            <h1 className="mt-3 font-serif text-[calc(44*var(--mr-u))] dt:text-[4rem] leading-[1.05] tracking-[-0.03em]">Race Receipts</h1>
+            <p className="mr-c-muted mt-4 text-[calc(11*var(--mr-u))] tracking-wider">
               {completed.length} PRINTED · {pending} PENDING · {fmtKm(km)} KM RACED
             </p>
 
-            <div className="mt-8 hidden grid-cols-2 gap-3 lg:grid">
+            <div className="mt-8 hidden grid-cols-2 gap-3 dt:lg:grid">
               {sorted.map((r) => (
                 <RaceCard key={r.id} race={r} active={r.id === activeId} onSelect={() => setActiveId(r.id)} now={now} />
               ))}
             </div>
 
-            <Ledger races={races} totals={ledger} className="mt-8 hidden lg:block" />
-            <p className="mr-c-muted mt-3 hidden text-[10px] tracking-[0.2em] lg:block">← → TO FLIP RECEIPTS</p>
+            <Ledger races={races} totals={ledger} className="mt-8 hidden dt:lg:block" />
+            <p className="mr-c-muted mt-3 hidden text-[calc(10*var(--mr-u))] tracking-[0.2em] dt:lg:block">← → TO FLIP RECEIPTS</p>
           </aside>
 
           {/* mobile chips */}
           <nav
             aria-label="Races"
-            className="sticky z-20 -mx-[var(--gutter)] mt-6 px-[var(--gutter)] py-3 lg:hidden"
+            className="sticky z-20 -mx-[var(--gutter)] mt-6 px-[var(--gutter)] py-3 dt:lg:hidden"
             style={{ top: "var(--mr-sticky-top, 0px)", background: "color-mix(in srgb, var(--mr-bg) 90%, transparent)", backdropFilter: "blur(8px)" }}
           >
             <div className="mr-noscroll flex gap-2 overflow-x-auto">
@@ -780,11 +791,11 @@ export default function MarathonReceipts({
           </nav>
 
           {/* active receipt */}
-          <main className="mt-4 flex justify-center lg:mt-0">
+          <main className="mt-4 flex justify-center dt:lg:mt-0">
             <ReceiptPrinter race={active} races={races} number={number} total={races.length} />
           </main>
 
-          <Ledger races={races} totals={ledger} className="mt-12 lg:hidden" />
+          <Ledger races={races} totals={ledger} className="mt-12 dt:lg:hidden" />
         </div>
       </LayoutGroup>
     </div>
