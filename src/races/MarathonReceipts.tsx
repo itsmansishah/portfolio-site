@@ -548,7 +548,9 @@ function IntroReceipt({ races }: { races: Race[] }) {
         <ul className="space-y-2 text-[calc(12*var(--mr-u))]">
           <Line label="RACES ON FILE" value={races.length} />
           <Line label="PRINTED" value={races.filter((r) => r.status === "completed").length} />
-          <Line label="PENDING" value={races.filter((r) => r.status === "upcoming").length} />
+          {races.some((r) => r.status === "upcoming") && (
+            <Line label="PENDING" value={races.filter((r) => r.status === "upcoming").length} />
+          )}
         </ul>
         <div className="my-3 border-t-[calc(3*var(--mr-u))] border-double" style={{ borderColor: "var(--mr-ink)" }} />
         <ul>
@@ -602,7 +604,19 @@ function ReceiptPrinter({
 
 /* ───────────────────────── index (cards, chips, ledger) ───────────────────────── */
 
-function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean; onSelect: () => void; now: number }) {
+function RaceCard({
+  race,
+  active,
+  wide,
+  onSelect,
+  now,
+}: {
+  race: Race;
+  active: boolean;
+  wide: boolean;
+  onSelect: () => void;
+  now: number;
+}) {
   const { y, m, d } = parseDate(race.date);
   const upcoming = race.status === "upcoming";
   const days = Math.max(0, Math.ceil((raceStart(race) - now) / 864e5));
@@ -613,8 +627,8 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
       onClick={onSelect}
       aria-pressed={active}
       className={`relative rounded-2xl p-4 text-left transition-transform hover:-translate-y-0.5 ${
-        upcoming ? "mr-pending col-span-2" : "mr-bg-tile"
-      }`}
+        upcoming ? "mr-pending" : "mr-bg-tile"
+      } ${wide ? "col-span-2" : ""}`}
     >
       {active && (
         <motion.span
@@ -636,6 +650,17 @@ function RaceCard({ race, active, onSelect, now }: { race: Race; active: boolean
               {shortKm(race.distanceKm)}KM · {MONTHS[m - 1]} {pad(d)} · T-{days} DAYS
               {race.targetTime ? ` · GOAL ${race.targetTime}` : ""}
             </div>
+          </div>
+        </div>
+      ) : wide ? (
+        <div className="flex items-center gap-4">
+          <RouteSketch points={race.route} className="h-24 w-24 shrink-0" />
+          <div className="min-w-0 flex-1">
+            <div className="mr-c-muted text-[calc(11*var(--mr-u))] tracking-wider">
+              {y} · {MONTHS[m - 1]} {pad(d)}
+            </div>
+            <div className="mt-2.5 text-[calc(22*var(--mr-u))] font-extrabold leading-none">{race.short}</div>
+            <div className="mr-c-muted mt-1.5 text-[calc(10*var(--mr-u))] tracking-[0.15em]">{shortKm(race.distanceKm)}KM</div>
           </div>
         </div>
       ) : (
@@ -764,12 +789,20 @@ export default function MarathonReceipts({
             <p className="mr-c-muted text-[calc(11*var(--mr-u))] tracking-[0.2em]">MARATHON RECEIPT ARCHIVE • {races.length} ISSUED</p>
             <h1 className="mt-3 font-serif text-[calc(44*var(--mr-u))] dt:text-[4rem] leading-[1.05] tracking-[-0.03em]">Race Receipts</h1>
             <p className="mr-c-muted mt-4 text-[calc(11*var(--mr-u))] tracking-wider">
-              {completed.length} PRINTED · {pending} PENDING · {fmtKm(km)} KM RACED
+              {completed.length} PRINTED{pending ? ` · ${pending} PENDING` : ""} · {fmtKm(km)} KM RACED
             </p>
 
             <div className="mt-8 hidden grid-cols-2 gap-3 dt:lg:grid">
-              {sorted.map((r) => (
-                <RaceCard key={r.id} race={r} active={r.id === activeId} onSelect={() => setActiveId(r.id)} now={now} />
+              {/* Two columns: with an odd count, the newest race takes a full row so none sits alone. */}
+              {sorted.map((r, i) => (
+                <RaceCard
+                  key={r.id}
+                  race={r}
+                  active={r.id === activeId}
+                  wide={i === 0 && sorted.length % 2 === 1}
+                  onSelect={() => setActiveId(r.id)}
+                  now={now}
+                />
               ))}
             </div>
 
