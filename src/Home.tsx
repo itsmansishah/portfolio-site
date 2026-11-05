@@ -43,8 +43,7 @@ function Hero() {
           className={`${LABEL} rise ml-auto mt-4 text-right text-ink/50 dt:ml-0 dt:text-left`}
           style={delay(230)}
         >
-          {/* Its own line on a phone, one line on desktop. */}
-          Currently @ Qualtrics. <span className="block dt:inline">Based in New York.</span>
+          Based in New York
         </p>
       </div>
 
