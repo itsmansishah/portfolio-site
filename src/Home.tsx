@@ -283,14 +283,24 @@ function Work() {
 
 /* ── about ───────────────────────────────────────────────────────────── */
 
+// "(pronounced mon-see)" splits into "(pronounced" and "mon-see)" so the
+// second half can hold together on its own line.
+const splitAt = ABOUT.pronunciation.lastIndexOf(" ");
+const pronunciationLead = ABOUT.pronunciation.slice(0, splitAt);
+const pronunciationTail = ABOUT.pronunciation.slice(splitAt + 1);
+
 function About() {
   return (
     <section id="about" className="mx-auto max-w-[1100px] px-[var(--gutter)] pb-14 pt-4 dt:py-20">
       <p className={`${LABEL} text-ink/50`}>About me</p>
       <div className="mt-5 grid gap-[max(2.25rem,9vw)] dt:mt-8 dt:grid-cols-12 dt:gap-8">
         <h2 className="font-serif text-heading leading-[1.1] tracking-[-0.02em] dt:col-span-5">
-          {/* Kept on one line so it can't split as "mahn- / see)" */}
-          {ABOUT.intro} <span className="whitespace-nowrap">{ABOUT.pronunciation}</span>
+          {/* The pronunciation can wrap onto its own line, but never splits at
+              its hyphen into "mon- / see)" — only the last word is held
+              together, so a narrow column breaks before it instead of
+              running into the column alongside. */}
+          {ABOUT.intro} {pronunciationLead}{" "}
+          <span className="whitespace-nowrap">{pronunciationTail}</span>
         </h2>
         <div className="space-y-5 font-mono text-body leading-relaxed text-ink/75 dt:col-span-7">
           {ABOUT.body.map((para) => (
