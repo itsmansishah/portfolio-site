@@ -14,6 +14,8 @@ export type Project = {
   caseStudySlug?: string; // internal case study page
   href?: string; // internal page that isn't a case study (e.g. /races)
   mockSrc?: string;
+  /** A silent looping clip in place of the still mock. */
+  videoSrc?: string;
   links?: { label: string; url: string }[]; // extra external links, e.g. demo videos
 };
 
@@ -165,6 +167,7 @@ export const PROJECTS: Project[] = [
     year: "Interactive",
     category: "Side Quests",
     href: "/races",
+    videoSrc: "/race-receipts.webm",
   },
 ];
 

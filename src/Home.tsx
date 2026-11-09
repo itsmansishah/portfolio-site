@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ABOUT, CATEGORIES, CONTACT, PROJECTS, type Category, type Project } from "./content";
 import { EmbedModal, LABEL, Link, delay, toEmbed, useHash, type Embed } from "./ui";
 
@@ -45,12 +45,70 @@ function Hero() {
 
 /* ── work ────────────────────────────────────────────────────────────── */
 
+/** The same box as the still mocks, with a silent clip inside it. It doesn't
+ *  fetch until the card is near the viewport, and it stops once the card
+ *  leaves — a looping video the reader can't see is just battery. */
+function ProjectClip({
+  src,
+  title,
+  onError,
+}: {
+  src: string;
+  title: string;
+  onError: () => void;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Reduced motion: load a frame to look at, and leave it alone.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.preload = "metadata";
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) void el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      // A codec the browser can't decode errors out, and the card falls back
+      // to the placeholder rather than showing an empty frame.
+      onError={onError}
+      aria-label={`${title} preview`}
+      muted
+      loop
+      playsInline
+      preload="none"
+      className="aspect-[16/10] w-full rounded-lg border border-ink/15 bg-ink/[0.03] object-contain p-1.5"
+    />
+  );
+}
+
 function ProjectMock({ project }: { project: Project }) {
   const [failed, setFailed] = useState(false);
   // With no mock yet, the placeholder drops the extension: a filename that
   // doesn't exist anywhere reads as a broken image rather than a gap.
   const slug = project.name.replace(/[^A-Za-z0-9]+/g, "_").toUpperCase();
-  const fileName = project.mockSrc ? `${slug}.PNG` : slug;
+  const fileName = project.mockSrc ? `${slug}.PNG` : project.videoSrc ? `${slug}.WEBM` : slug;
+
+  if (project.videoSrc && !failed) {
+    return (
+      <ProjectClip src={project.videoSrc} title={project.name} onError={() => setFailed(true)} />
+    );
+  }
 
   if (project.mockSrc && !failed) {
     return (
