@@ -17,7 +17,7 @@ import {
   type Timeline as TimelineType,
   type Shot as ShotType,
 } from "./content";
-import { LABEL, Link, delay } from "./ui";
+import { LABEL, LazyClip, Link, delay } from "./ui";
 
 const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
 const HEADING =
@@ -443,6 +443,14 @@ function TimelineBand({ timeline }: { timeline: TimelineType }) {
             </li>
           ))}
         </ol>
+
+        {timeline.video && (
+          <LazyClip
+            src={timeline.video}
+            title={timeline.title}
+            className="mt-[max(2rem,8vw)] aspect-[16/9] w-full rounded-xl border border-white/15 object-cover dt:mt-14"
+          />
+        )}
       </div>
     </section>
   );

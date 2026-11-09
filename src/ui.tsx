@@ -204,6 +204,61 @@ export function EmbedModal({ embed, onClose }: { embed: Embed | null; onClose: (
   );
 }
 
+/* ── clips ───────────────────────────────────────────────────────────── */
+
+/** A silent looping clip that doesn't fetch until it is near the viewport,
+ *  and stops once it leaves — a video nobody can see is just battery. */
+export function LazyClip({
+  src,
+  title,
+  className,
+  onError,
+}: {
+  src: string;
+  title: string;
+  className?: string;
+  onError?: () => void;
+}) {
+  const ref = useRef<HTMLVideoElement>(null);
+
+  useEffect(() => {
+    const el = ref.current;
+    if (!el) return;
+
+    // Reduced motion: load a frame to look at, and leave it alone.
+    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
+      el.preload = "metadata";
+      return;
+    }
+
+    const io = new IntersectionObserver(
+      ([entry]) => {
+        if (entry.isIntersecting) void el.play().catch(() => {});
+        else el.pause();
+      },
+      { threshold: 0.25 },
+    );
+    io.observe(el);
+    return () => io.disconnect();
+  }, []);
+
+  return (
+    <video
+      ref={ref}
+      src={src}
+      // A codec the browser can't decode errors out, so the caller can fall
+      // back rather than leaving an empty frame.
+      onError={onError}
+      aria-label={`${title} preview`}
+      muted
+      loop
+      playsInline
+      preload="none"
+      className={className}
+    />
+  );
+}
+
 /* ── shared chrome ───────────────────────────────────────────────────── */
 
 export function SlashRule() {

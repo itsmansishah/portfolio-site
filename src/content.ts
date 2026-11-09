@@ -78,6 +78,8 @@ export type Timeline = {
   kicker: string;
   title: string;
   steps: { when: string; title: string; body: string }[];
+  /** A silent 16:9 clip, closing the band under the steps. */
+  video?: string;
 };
 
 /** Closing notes on what the work taught. */
@@ -353,6 +355,7 @@ export const CASE_STUDIES: CaseStudy[] = [
         { when: "Now", title: "In build", body: "Moving through engineering" },
         { when: "Q4 2026", title: "Target launch", body: "Replaces Basic + Advanced" },
       ],
+      video: "/unified-transform.mp4",
     },
     reflection: {
       kicker: "Reflection",

@@ -1,6 +1,16 @@
-import { useEffect, useRef, useState } from "react";
+import { useState } from "react";
 import { ABOUT, CATEGORIES, CONTACT, PROJECTS, type Category, type Project } from "./content";
-import { EmbedModal, LABEL, Link, SlashRule, delay, toEmbed, useHash, type Embed } from "./ui";
+import {
+  EmbedModal,
+  LABEL,
+  LazyClip,
+  Link,
+  SlashRule,
+  delay,
+  toEmbed,
+  useHash,
+  type Embed,
+} from "./ui";
 
 const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
 
@@ -45,9 +55,7 @@ function Hero() {
 
 /* ── work ────────────────────────────────────────────────────────────── */
 
-/** The same box as the still mocks, with a silent clip inside it. It doesn't
- *  fetch until the card is near the viewport, and it stops once the card
- *  leaves — a looping video the reader can't see is just battery. */
+/** The still mocks' box, with a clip inside it. */
 function ProjectClip({
   src,
   title,
@@ -57,41 +65,11 @@ function ProjectClip({
   title: string;
   onError: () => void;
 }) {
-  const ref = useRef<HTMLVideoElement>(null);
-
-  useEffect(() => {
-    const el = ref.current;
-    if (!el) return;
-
-    // Reduced motion: load a frame to look at, and leave it alone.
-    if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) {
-      el.preload = "metadata";
-      return;
-    }
-
-    const io = new IntersectionObserver(
-      ([entry]) => {
-        if (entry.isIntersecting) void el.play().catch(() => {});
-        else el.pause();
-      },
-      { threshold: 0.25 },
-    );
-    io.observe(el);
-    return () => io.disconnect();
-  }, []);
-
   return (
-    <video
-      ref={ref}
+    <LazyClip
       src={src}
-      // A codec the browser can't decode errors out, and the card falls back
-      // to the placeholder rather than showing an empty frame.
+      title={title}
       onError={onError}
-      aria-label={`${title} preview`}
-      muted
-      loop
-      playsInline
-      preload="none"
       className="aspect-[16/9] w-full rounded-lg border border-ink/10 object-cover"
     />
   );
