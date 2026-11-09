@@ -92,7 +92,7 @@ function ProjectClip({
       loop
       playsInline
       preload="none"
-      className="aspect-[16/10] w-full rounded-lg border border-ink/10 object-cover"
+      className="aspect-[16/9] w-full rounded-lg border border-ink/10 object-cover"
     />
   );
 }
@@ -121,14 +121,14 @@ function ProjectMock({ project }: { project: Project }) {
         // Filling the box, so the grid reads as a row of screens rather than
         // of framed pictures. The mocks are 1.4–1.6 wide, so a centred cover
         // trims a few percent off the top and bottom at most.
-        className="aspect-[16/10] w-full rounded-lg border border-ink/10 object-cover object-center"
+        className="aspect-[16/9] w-full rounded-lg border border-ink/10 object-cover object-center"
         onError={() => setFailed(true)}
       />
     );
   }
 
   return (
-    <div className="flex aspect-[16/10] w-full items-center justify-center rounded-lg border border-ink/15 bg-ink/[0.04]">
+    <div className="flex aspect-[16/9] w-full items-center justify-center rounded-lg border border-ink/15 bg-ink/[0.04]">
       <span className={`${LABEL} text-ink/35`}>[ {fileName} ]</span>
     </div>
   );
