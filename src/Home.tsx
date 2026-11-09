@@ -55,25 +55,18 @@ function Hero() {
 
 /* ── work ────────────────────────────────────────────────────────────── */
 
-/** The still mocks' box, with a clip inside it. */
-function ProjectClip({
-  src,
-  title,
-  onError,
-}: {
-  src: string;
-  title: string;
-  onError: () => void;
-}) {
+/** The rounded frame every thumbnail sits in. It clips, so the media inside
+ *  can push past its edges on hover without spilling. */
+function Frame({ children }: { children: React.ReactNode }) {
   return (
-    <LazyClip
-      src={src}
-      title={title}
-      onError={onError}
-      className="aspect-[16/9] w-full rounded-lg border border-ink/10 object-cover"
-    />
+    <div className="overflow-hidden rounded-lg border border-ink/10 bg-ink/[0.04]">{children}</div>
   );
 }
+
+// The media pushes in while the frame presses back, which reads as a camera
+// move rather than a resize. 500ms, so it feels like a glide, not a snap.
+const MEDIA =
+  "aspect-[16/9] w-full object-cover object-center transition-transform duration-500 ease-out dt:group-hover:scale-[1.06]";
 
 function ProjectMock({ project }: { project: Project }) {
   // Tracked apart, so a clip a browser can't decode falls back to the still
@@ -87,28 +80,39 @@ function ProjectMock({ project }: { project: Project }) {
 
   if (project.videoSrc && !clipFailed) {
     return (
-      <ProjectClip src={project.videoSrc} title={project.name} onError={() => setClipFailed(true)} />
+      <Frame>
+        <LazyClip
+          src={project.videoSrc}
+          title={project.name}
+          onError={() => setClipFailed(true)}
+          className={MEDIA}
+        />
+      </Frame>
     );
   }
 
   if (project.mockSrc && !failed) {
     return (
-      <img
-        src={project.mockSrc}
-        alt={`${project.name} preview`}
-        // Filling the box, so the grid reads as a row of screens rather than
-        // of framed pictures. The mocks are 1.4–1.6 wide, so a centred cover
-        // trims a few percent off the top and bottom at most.
-        className="aspect-[16/9] w-full rounded-lg border border-ink/10 object-cover object-center"
-        onError={() => setFailed(true)}
-      />
+      <Frame>
+        {/* Filling the box, so the grid reads as a row of screens rather than
+            of framed pictures. The mocks are 1.4–1.6 wide, so a centred cover
+            trims a few percent off the top and bottom at most. */}
+        <img
+          src={project.mockSrc}
+          alt={`${project.name} preview`}
+          className={MEDIA}
+          onError={() => setFailed(true)}
+        />
+      </Frame>
     );
   }
 
   return (
-    <div className="flex aspect-[16/9] w-full items-center justify-center rounded-lg border border-ink/15 bg-ink/[0.04]">
-      <span className={`${LABEL} text-ink/35`}>[ {fileName} ]</span>
-    </div>
+    <Frame>
+      <div className="flex aspect-[16/9] w-full items-center justify-center">
+        <span className={`${LABEL} text-ink/35`}>[ {fileName} ]</span>
+      </div>
+    </Frame>
   );
 }
 
@@ -198,11 +202,11 @@ function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embe
 
   return (
     <article className="group flex min-w-0 flex-col">
-      {/* The whole card presses in a hair on hover. */}
+      {/* The frame presses back as the media pushes in. */}
       <ProjectLink
         project={project}
         onEmbed={onEmbed}
-        className="block transition-transform duration-300 ease-out group-hover:scale-[0.99]"
+        className="block transition-transform duration-500 ease-out dt:group-hover:scale-[0.975]"
       >
         <ProjectMock project={project} />
       </ProjectLink>
@@ -243,10 +247,15 @@ function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embe
         <ProjectLink
           project={project}
           onEmbed={onEmbed}
-          className={`${LABEL} mt-[max(0.875rem,3.7vw)] inline-flex items-center gap-2 self-start border-b border-ink/30 pb-0.5 text-ink/60 dt:mt-4 dt:translate-y-2 dt:opacity-0 dt:transition dt:duration-300 dt:ease-out dt:group-hover:translate-y-0 dt:group-hover:opacity-100`}
+          className={`${LABEL} mt-[max(0.875rem,3.7vw)] inline-flex items-center gap-2 self-start border-b border-ink/30 pb-0.5 text-ink/60 dt:mt-4 dt:translate-y-3 dt:opacity-0 dt:transition dt:duration-500 dt:ease-out dt:group-hover:translate-y-0 dt:group-hover:text-ink dt:group-hover:opacity-100`}
         >
           {external ? "View case study" : "Learn more"}{" "}
-          <span aria-hidden="true">{external ? "↗" : "→"}</span>
+          <span
+            aria-hidden="true"
+            className="transition-transform duration-500 ease-out dt:group-hover:translate-x-1"
+          >
+            {external ? "↗" : "→"}
+          </span>
         </ProjectLink>
       ) : null}
 
