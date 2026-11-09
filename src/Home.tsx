@@ -98,15 +98,18 @@ function ProjectClip({
 }
 
 function ProjectMock({ project }: { project: Project }) {
+  // Tracked apart, so a clip a browser can't decode falls back to the still
+  // mock where there is one, rather than all the way to the placeholder.
+  const [clipFailed, setClipFailed] = useState(false);
   const [failed, setFailed] = useState(false);
   // With no mock yet, the placeholder drops the extension: a filename that
   // doesn't exist anywhere reads as a broken image rather than a gap.
   const slug = project.name.replace(/[^A-Za-z0-9]+/g, "_").toUpperCase();
   const fileName = project.mockSrc ? `${slug}.PNG` : project.videoSrc ? `${slug}.WEBM` : slug;
 
-  if (project.videoSrc && !failed) {
+  if (project.videoSrc && !clipFailed) {
     return (
-      <ProjectClip src={project.videoSrc} title={project.name} onError={() => setFailed(true)} />
+      <ProjectClip src={project.videoSrc} title={project.name} onError={() => setClipFailed(true)} />
     );
   }
 

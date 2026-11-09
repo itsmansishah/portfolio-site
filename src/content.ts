@@ -118,6 +118,7 @@ export const PROJECTS: Project[] = [
     category: "AI & Enterprise",
     caseStudySlug: "describe-to-design",
     mockSrc: "/describe-to-design.png",
+    videoSrc: "/describe-to-design.mp4",
   },
   {
     num: "/02",
