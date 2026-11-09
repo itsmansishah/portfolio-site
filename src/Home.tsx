@@ -92,7 +92,7 @@ function ProjectClip({
       loop
       playsInline
       preload="none"
-      className="aspect-[16/10] w-full rounded-lg border border-ink/15 bg-ink/[0.03] object-contain p-1.5"
+      className="aspect-[16/10] w-full rounded-lg border border-ink/10 object-cover"
     />
   );
 }
@@ -115,9 +115,10 @@ function ProjectMock({ project }: { project: Project }) {
       <img
         src={project.mockSrc}
         alt={`${project.name} preview`}
-        // contain, not cover: these are UI mocks, so cropping the frame edges
-        // (a toolbar, a button bar) does real damage.
-        className="aspect-[16/10] w-full rounded-lg border border-ink/15 bg-ink/[0.03] object-contain p-1.5"
+        // Filling the box, so the grid reads as a row of screens rather than
+        // of framed pictures. The mocks are 1.4–1.6 wide, so a centred cover
+        // trims a few percent off the top and bottom at most.
+        className="aspect-[16/10] w-full rounded-lg border border-ink/10 object-cover object-center"
         onError={() => setFailed(true)}
       />
     );
