@@ -134,6 +134,7 @@ export const PROJECTS: Project[] = [
     category: "AI & Enterprise",
     caseStudySlug: "unified-transform",
     mockSrc: "/unified-transform.png",
+    videoSrc: "/unified-transform-thumb.mp4",
   },
   {
     num: "/03",
