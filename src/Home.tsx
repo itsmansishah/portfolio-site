@@ -213,13 +213,15 @@ function ProjectLink({
 function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embed) => void }) {
   const external = !project.caseStudySlug && !!project.caseStudyUrl;
   const number = project.num.replace(/\D/g, "");
+  const opens = project.caseStudySlug || project.href || project.caseStudyUrl;
 
   return (
-    <article className="flex min-w-0 flex-col">
+    <article className="group flex min-w-0 flex-col">
+      {/* The whole card presses in a hair on hover. */}
       <ProjectLink
         project={project}
         onEmbed={onEmbed}
-        className="block transition hover:opacity-90"
+        className="block transition-transform duration-300 ease-out group-hover:scale-[0.99]"
       >
         <ProjectMock project={project} />
       </ProjectLink>
@@ -252,6 +254,20 @@ function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embe
           </span>
         ))}
       </div>
+
+      {/* Holds its place in the layout at all times and only fades up into
+          view on hover, so nothing below it shifts. A phone has no hover, so
+          it simply stays visible there. */}
+      {opens ? (
+        <ProjectLink
+          project={project}
+          onEmbed={onEmbed}
+          className={`${LABEL} mt-[max(0.875rem,3.7vw)] inline-flex items-center gap-2 self-start border-b border-ink/30 pb-0.5 text-ink/60 dt:mt-4 dt:translate-y-2 dt:opacity-0 dt:transition dt:duration-300 dt:ease-out dt:group-hover:translate-y-0 dt:group-hover:opacity-100`}
+        >
+          {external ? "View case study" : "Learn more"}{" "}
+          <span aria-hidden="true">{external ? "↗" : "→"}</span>
+        </ProjectLink>
+      ) : null}
 
       {project.links?.length ? (
         <ul className="flex flex-col items-start">
