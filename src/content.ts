@@ -389,20 +389,18 @@ export const ABOUT = {
   caption: "Mansi Shah • New York, NY",
   /** The hobbies named in the bio, given a little more room. */
   grounded: {
-    title: "What keeps me grounded outside the browser",
+    title: "offline activities",
     cards: [
       {
-        eyebrow: "Endurance & Web Experiments",
         title: "Marathon Training",
-        body: "Most weeks start with miles logged somewhere around New York, working toward the next 26.2. Race Receipts grew out of that — a telemetry generator that turns a morning of splits, elevation and pacing data into a receipt you can actually hold.",
+        body: "Most of my ideas don’t happen at my desk. They happen a few miles into a run, exhibit A: ",
+        link: { label: "race receipts", to: "/races" },
       },
       {
-        eyebrow: "Tactile Craft",
-        title: "Knitting Cozy Sweaters",
-        body: "A gauge swatch is a usability test with yarn. I like the slow architecture of a handknit garment — stitch counts, shaping, planning a sleeve three steps ahead — and quiet weekends spent making one row at a time.",
+        title: "Knitting",
+        body: "Knitting forces me to slow down whether I want to or not. I'm counting stitches a few dozen times, figuring out shaping, trying to plan a whole other project when I am only a fraction of the way through with the first one.",
       },
       {
-        eyebrow: "NYC Exploration",
         title: "Ice Cream Hunts",
         body: "Long coffee walks through neighborhoods I don’t know yet, usually ending with me googling “ice cream near me” for the hundredth time. Always accepting recommendations.",
       },

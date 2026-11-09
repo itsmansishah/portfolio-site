@@ -460,11 +460,20 @@ function AboutView() {
               key={card.title}
               className="flex min-w-0 flex-col rounded-xl border border-ink/12 bg-white/55 p-[max(18px,4.8vw)] dt:p-6"
             >
-              <p className={`${LABEL} text-ink/40`}>{card.eyebrow}</p>
-              <h3 className="mt-3 font-serif text-[clamp(1.35rem,5.8vw,3.5rem)] leading-tight tracking-[-0.02em] dt:text-[1.5rem]">
+              <h3 className="font-serif text-[clamp(1.35rem,5.8vw,3.5rem)] leading-tight tracking-[-0.02em] dt:text-[1.5rem]">
                 {card.title}
               </h3>
-              <p className="mt-3 font-mono text-body leading-relaxed text-ink/65">{card.body}</p>
+              <p className="mt-3 font-mono text-body leading-relaxed text-ink/65">
+                {card.body}
+                {"link" in card && card.link ? (
+                  <Link
+                    to={card.link.to}
+                    className="border-b border-ink/30 text-ink hover:opacity-60"
+                  >
+                    {card.link.label}
+                  </Link>
+                ) : null}
+              </p>
             </article>
           ))}
         </div>
