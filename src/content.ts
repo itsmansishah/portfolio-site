@@ -4,11 +4,22 @@ export type Project = {
   blurb: string;
   meta: string[];
   role: string;
+  /** The meta line above each card title: "01 / QUALTRICS \u00b7 LEAD DESIGNER". */
+  company: string;
+  /** Set at the right end of that line \u2014 a year, or what the thing is. */
+  year: string;
+  /** Which filter the card answers to. */
+  category: Category;
   caseStudyUrl?: string; // external (e.g. Figma prototype)
   caseStudySlug?: string; // internal case study page
+  href?: string; // internal page that isn't a case study (e.g. /races)
   mockSrc?: string;
   links?: { label: string; url: string }[]; // extra external links, e.g. demo videos
 };
+
+/** The filter row above the work grid. "All" is implicit and always first. */
+export const CATEGORIES = ["AI & Enterprise", "Fintech", "Side Quests"] as const;
+export type Category = (typeof CATEGORIES)[number];
 
 /** One of the four cards under the case study title. */
 export type FactCard = {
@@ -100,6 +111,9 @@ export const PROJECTS: Project[] = [
       "Describe to Design set out to let people describe what they wanted in plain language and have AI simply build and configure the workflow for them. This project was successfully launched in 2026.",
     meta: ["2026", "0→1"],
     role: "Lead Designer",
+    company: "Qualtrics",
+    year: "2026",
+    category: "AI & Enterprise",
     caseStudySlug: "describe-to-design",
     mockSrc: "/describe-to-design.png",
   },
@@ -110,6 +124,9 @@ export const PROJECTS: Project[] = [
       "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end. Currently in development, targeting a Q4 2026 launch.",
     meta: ["2026", "redesign", "UXR"],
     role: "Lead Designer",
+    company: "Qualtrics",
+    year: "2026",
+    category: "AI & Enterprise",
     caseStudySlug: "unified-transform",
     mockSrc: "/unified-transform.png",
   },
@@ -120,6 +137,9 @@ export const PROJECTS: Project[] = [
       "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space, Workspaces, and custom fields and saved lists. The case studies highlight two projects launched in 2021.",
     meta: ["2021"],
     role: "Lead Designer · Lead Researcher",
+    company: "PitchBook",
+    year: "2021",
+    category: "Fintech",
     mockSrc: "/pitchbook.png",
     links: [
       {
@@ -133,6 +153,18 @@ export const PROJECTS: Project[] = [
     ],
     caseStudyUrl:
       "https://www.figma.com/proto/rZ1VDRfVbJ3xziSJcXC0K1/Case-Studies?node-id=101-8872&viewport=407%2C406%2C0.02&t=ZaXoOVmx3rNedutz-1&scaling=scale-down&content-scaling=fixed&starting-point-node-id=101%3A8872&page-id=101%3A8865",
+  },
+  {
+    num: "/04",
+    name: "Race Receipts",
+    blurb:
+      "An interactive web experiment turning endurance race splits, marathon telemetry, elevation, and pacing data into authentic printed-style thermal paper receipts.",
+    meta: ["Interactive Web Experiment", "Telemetry"],
+    role: "Creative Development",
+    company: "Side Quest",
+    year: "Interactive",
+    category: "Side Quests",
+    href: "/races",
   },
 ];
 
@@ -349,6 +381,49 @@ export const ABOUT = {
     "By day, I'm a UX designer at Qualtrics, where I get to untangle complicated problems into experiences that feel simple. Outside of that, I'm equal parts restless tinkerer, designer, and random hobby collector. I find so much joy in the process of making and exploring: building interactive web experiments, knitting cozy sweaters, training for my next marathon, and frequently googling “ice cream near me.”",
     "I value living a life anchored in curiosity and quiet creativity — and I'm always up for talking design, sweaters, or good ice cream spots. feel free to say hi!",
   ],
+  /** Sits under the portrait in the dossier. */
+  caption: "Mansi Shah • New York, NY",
+  /** The hobbies named in the bio, given a little more room. */
+  grounded: {
+    title: "What keeps me grounded outside the browser",
+    cards: [
+      {
+        eyebrow: "Endurance & Web Experiments",
+        title: "Marathon Training",
+        body: "Most weeks start with miles logged somewhere around New York, working toward the next 26.2. Race Receipts grew out of that — a telemetry generator that turns a morning of splits, elevation and pacing data into a receipt you can actually hold.",
+      },
+      {
+        eyebrow: "Tactile Craft",
+        title: "Knitting Cozy Sweaters",
+        body: "A gauge swatch is a usability test with yarn. I like the slow architecture of a handknit garment — stitch counts, shaping, planning a sleeve three steps ahead — and quiet weekends spent making one row at a time.",
+      },
+      {
+        eyebrow: "NYC Exploration",
+        title: "Ice Cream Hunts",
+        body: "Long coffee walks through neighborhoods I don’t know yet, usually ending with me googling “ice cream near me” for the hundredth time. Always accepting recommendations.",
+      },
+    ],
+  },
+  /** Where the work in the grid above actually happened. */
+  timeline: {
+    title: "Where I’ve Designed",
+    roles: [
+      {
+        company: "Qualtrics",
+        role: "Senior Product Designer",
+        when: "2022 — Present",
+        where: "New York",
+        body: "AI Workflows, Ingestion & Data Transformation — Describe to Design and Unified Transform.",
+      },
+      {
+        company: "PitchBook",
+        role: "Lead Designer · Lead Researcher",
+        when: "2020 — 2022",
+        where: "",
+        body: "Market Intelligence, Emerging Markets, Workspaces, and custom fields & saved lists.",
+      },
+    ],
+  },
 };
 
 export const CONTACT = {

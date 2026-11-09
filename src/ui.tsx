@@ -58,6 +58,43 @@ export function usePath() {
   return path;
 }
 
+/** The hash doubles as the home page's view switch (#work / #about), so it
+ *  needs the same subscription the path has. */
+export function useHash() {
+  const [hash, setHash] = useState(() => window.location.hash);
+
+  useEffect(() => {
+    const update = () => setHash(window.location.hash);
+    listeners.push(update);
+    window.addEventListener("popstate", update);
+    window.addEventListener("hashchange", update);
+    return () => {
+      listeners = listeners.filter((l) => l !== update);
+      window.removeEventListener("popstate", update);
+      window.removeEventListener("hashchange", update);
+    };
+  }, []);
+
+  return hash;
+}
+
+/** Switches the home page between its two views. It deliberately doesn't go
+ *  through navigate(): there is no anchor to seek, the whole page changes, so
+ *  it lands at the top rather than smooth-scrolling to an element. */
+export function goToView(hash: string) {
+  if (window.location.pathname !== "/") {
+    navigate(`/${hash}`);
+    return;
+  }
+  if (window.location.hash !== hash) {
+    window.history.pushState({}, "", `/${hash}`);
+    listeners.forEach((l) => l());
+  }
+  // Instant, not smooth: the view has already swapped, so animating the
+  // scroll would be a trip through content nobody asked to see.
+  window.scrollTo({ top: 0, behavior: "instant" });
+}
+
 /** Internal link: keeps normal anchor semantics (real href, middle-click,
  *  cmd-click, right-click all work) but routes in-page on a plain click. */
 export function Link({
@@ -181,23 +218,77 @@ export function SlashRule() {
 }
 
 export function Nav() {
+  const path = usePath();
+  const hash = useHash();
+  const home = path === "/" || path === "";
+  const view = home && hash === "#about" ? "about" : home ? "work" : null;
+
   // py-3 on the links (not the bar) gives each one a thumb-sized hit area.
-  const link = `${LABEL} inline-block py-3 hover:opacity-60`;
+  const seg = (active: boolean) =>
+    `${LABEL} whitespace-nowrap rounded-full px-3 py-2.5 transition dt:px-3.5 ${
+      active ? "bg-ink text-paper" : "text-ink/55 hover:text-ink"
+    }`;
+
+  // No display utility here: each use picks its own, so `hidden` can't lose a
+  // specificity tie to an `inline-flex` baked into the shared string.
+  const hello = `${LABEL} items-center gap-1.5 whitespace-nowrap rounded-full bg-ink px-4 py-2.5 text-paper transition hover:opacity-80`;
 
   return (
-    <nav className="sticky top-0 z-30 bg-paper/85 backdrop-blur-sm">
-      <div className="mx-auto flex max-w-[1100px] items-center justify-between px-[var(--gutter)] dt:py-2">
-        <Link to="/" className={link}>
-          Mansi Shah
-        </Link>
-        <Link to="/#work" className={link}>
-          Work
-        </Link>
-        <Link to="/#about" className={link}>
-          About Me
-        </Link>
-      </div>
-    </nav>
+    <>
+      <nav className="sticky top-0 z-30 border-b border-ink/10 bg-paper/80 backdrop-blur-md">
+        <div className="mx-auto flex max-w-[1100px] items-center justify-between gap-3 px-[var(--gutter)] py-2 dt:py-3">
+          <Link to="/" className="shrink-0 whitespace-nowrap font-serif text-[clamp(1.1rem,4.6vw,1.6rem)] leading-none tracking-[-0.02em] hover:opacity-60">
+            Mansi Shah
+          </Link>
+
+          <div className="flex items-center gap-2 dt:gap-3">
+            {/* One segmented control, the way the wireframe has it: the two
+                views sit in a single pill so the active one is obvious. */}
+            <div className="flex shrink-0 items-center rounded-full border border-ink/12 bg-ink/[0.04] p-1">
+              <a
+                href="/#work"
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                  e.preventDefault();
+                  goToView("#work");
+                }}
+                aria-current={view === "work" ? "page" : undefined}
+                className={seg(view === "work")}
+              >
+                Work
+              </a>
+              <a
+                href="/#about"
+                onClick={(e) => {
+                  if (e.metaKey || e.ctrlKey || e.shiftKey || e.altKey || e.button !== 0) return;
+                  e.preventDefault();
+                  goToView("#about");
+                }}
+                aria-current={view === "about" ? "page" : undefined}
+                className={seg(view === "about")}
+              >
+                About Me
+              </a>
+            </div>
+
+            {/* On a phone this sits in the corner of the screen instead, so
+                the bar keeps room for the name and the toggle. */}
+            <a href={`mailto:${CONTACT.email}`} className={`${hello} hidden dt:inline-flex`}>
+              Say hello <span aria-hidden="true">↗</span>
+            </a>
+          </div>
+        </div>
+      </nav>
+
+      {home && (
+        <a
+          href={`mailto:${CONTACT.email}`}
+          className={`${hello} inline-flex dt:hidden fixed bottom-[max(1.25rem,env(safe-area-inset-bottom))] right-[var(--gutter)] z-40 shadow-md`}
+        >
+          Say hello <span aria-hidden="true">↗</span>
+        </a>
+      )}
+    </>
   );
 }
 
