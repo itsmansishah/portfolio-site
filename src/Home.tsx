@@ -1,6 +1,6 @@
 import { useEffect, useRef, useState } from "react";
 import { ABOUT, CATEGORIES, CONTACT, PROJECTS, type Category, type Project } from "./content";
-import { EmbedModal, LABEL, Link, delay, toEmbed, useHash, type Embed } from "./ui";
+import { EmbedModal, LABEL, Link, SlashRule, delay, toEmbed, useHash, type Embed } from "./ui";
 
 const WRAP = "mx-auto w-full max-w-[1100px] px-[var(--gutter)]";
 
@@ -279,7 +279,12 @@ function WorkView() {
     <>
       <Hero />
 
-      <section id="work" className={`${WRAP} pt-[max(3rem,12vw)] dt:pt-24`}>
+      {/* The slash rule, full bleed, closing the hero off from the work. */}
+      <div className="rise py-[max(2.5rem,10vw)] dt:py-16" style={delay(300)}>
+        <SlashRule />
+      </div>
+
+      <section id="work" className={WRAP}>
         <p className={`${LABEL} text-ink/45`}>A sample of my work</p>
 
         <div className="mt-[max(1.25rem,5vw)] flex flex-wrap items-center gap-2 dt:mt-6">
