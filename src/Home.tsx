@@ -16,14 +16,14 @@ function Hero() {
         Mansi Shah
       </h1>
       <p
-        className="rise mt-1 font-serif text-[clamp(1.6rem,8vw,5rem)] italic leading-[1.05] tracking-[-0.02em] text-ink/50 dt:mt-2 dt:text-[2.5rem]"
+        className="rise mt-1 font-serif text-[clamp(1.6rem,8vw,5rem)] leading-[1.05] tracking-[-0.02em] text-ink/50 dt:mt-2 dt:text-[2.5rem]"
         style={delay(120)}
       >
         Senior Product Designer
       </p>
 
       <p
-        className="rise mt-[max(1.5rem,6vw)] max-w-[46ch] font-mono text-[clamp(0.875rem,3.9vw,2.6rem)] leading-[1.75] text-ink/70 dt:mt-7 dt:text-[1rem]"
+        className="rise mt-[max(1.5rem,6vw)] max-w-[46ch] font-mono text-[clamp(0.875rem,3.9vw,2.6rem)] leading-[1.75] text-ink/70 dt:mt-7 dt:max-w-[64ch] dt:text-[1rem]"
         style={delay(200)}
       >
         As a UX designer, I love transforming complicated tools into intuitive experiences. I
