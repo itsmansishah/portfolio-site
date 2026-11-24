@@ -448,7 +448,7 @@ function AboutView() {
           {ABOUT.grounded.cards.map((card) => (
             <article
               key={card.title}
-              className="flex min-w-0 flex-col rounded-xl border border-ink/12 bg-white/55 p-[max(18px,4.8vw)] dt:p-6"
+              className="flex min-w-0 flex-col rounded-xl border border-ink/12 bg-white p-[max(18px,4.8vw)] dt:p-6"
             >
               <h3 className="font-serif text-[clamp(1.35rem,5.8vw,3.5rem)] leading-tight tracking-[-0.02em] dt:text-[1.5rem]">
                 {card.title}

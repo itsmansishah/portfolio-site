@@ -23,7 +23,7 @@
 }
 
 @theme {
-  --color-paper: #f7f2ed;
+  --color-paper: #faf9f6; /* warm white: light like the reference, not cream */
   --color-ink: #101010;
   --color-accent: #cadd57;
   --color-spark: #a8d8e8; /* the outcome figure on those bands */
