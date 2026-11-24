@@ -36,7 +36,7 @@ function Hero() {
         className="rise mt-[max(1.5rem,6vw)] max-w-[46ch] font-mono text-[clamp(0.875rem,3.9vw,2.6rem)] leading-[1.75] text-ink/70 dt:mt-7 dt:max-w-[64ch] dt:text-[1rem]"
         style={delay(200)}
       >
-        As a UX designer, I love transforming complicated tools into intuitive experiences. I
+        As a Sr UX designer, I love transforming complicated tools into intuitive experiences. I
         believe everyday software should make life feel a little lighter, easier, and much more
         human
       </p>
@@ -117,7 +117,7 @@ function ProjectMock({ project }: { project: Project }) {
 }
 
 // pt-3 enlarges the tap area upward without moving the underline.
-const ACTION = `${LABEL} mt-3 inline-flex items-center gap-2 border-b border-ink pb-1 pt-3 hover:opacity-60`;
+const ACTION = `${LABEL} inline-flex items-center gap-2 border-b border-ink pb-1 pt-3 hover:opacity-60`;
 
 /** Opens Drive and Figma links in the modal, but stays a real link: a
  *  modified click, or anything that can't be embedded, behaves normally. */
@@ -240,6 +240,21 @@ function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embe
         ))}
       </div>
 
+      {/* The list sets its own rhythm: each link reserves pt-3 above its text
+          for the tap area, so the margin here is the remainder that makes the
+          gap under the tags match the one above them. */}
+      {project.links?.length ? (
+        <ul className="mt-[max(0.125rem,0.7vw)] flex flex-col items-start dt:mt-1">
+          {project.links.map((link) => (
+            <li key={link.url}>
+              <ExternalLink href={link.url} title={link.label} className={ACTION} onEmbed={onEmbed}>
+                {link.label} <span aria-hidden="true">↗</span>
+              </ExternalLink>
+            </li>
+          ))}
+        </ul>
+      ) : null}
+
       {/* Holds its place in the layout at all times and only fades up into
           view on hover, so nothing below it shifts. A phone has no hover, so
           it simply stays visible there. */}
@@ -257,18 +272,6 @@ function ProjectCard({ project, onEmbed }: { project: Project; onEmbed: (e: Embe
             {external ? "↗" : "→"}
           </span>
         </ProjectLink>
-      ) : null}
-
-      {project.links?.length ? (
-        <ul className="flex flex-col items-start">
-          {project.links.map((link) => (
-            <li key={link.url}>
-              <ExternalLink href={link.url} title={link.label} className={ACTION} onEmbed={onEmbed}>
-                {link.label} <span aria-hidden="true">↗</span>
-              </ExternalLink>
-            </li>
-          ))}
-        </ul>
       ) : null}
     </article>
   );
