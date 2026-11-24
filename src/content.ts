@@ -113,7 +113,7 @@ export const PROJECTS: Project[] = [
     name: "Describe to Design",
     blurb:
       "Describe to Design set out to let people describe what they wanted in plain language and have AI simply build and configure the workflow for them. This project was successfully launched in 2026.",
-    meta: ["2026", "0→1"],
+    meta: ["AI powered", "0-1", "Usability Testing"],
     role: "Lead Designer",
     company: "Qualtrics",
     year: "2026",
@@ -127,7 +127,7 @@ export const PROJECTS: Project[] = [
     name: "Unified Transform",
     blurb:
       "A redesign of how users transform data fields when ingesting information into Qualtrics — replacing two separate, unequal tools (Basic and Advanced Transform) with a single task that lets people move fluidly between AI-assisted, manual, and code-based transformation without ever hitting a dead end. Currently in development, targeting a Q4 2026 launch.",
-    meta: ["2026", "redesign", "UXR"],
+    meta: ["Redesign", "Design Led Research"],
     role: "Lead Designer",
     company: "Qualtrics",
     year: "2026",
@@ -141,7 +141,7 @@ export const PROJECTS: Project[] = [
     name: "Pitchbook Projects",
     blurb:
       "I worked on the Market Intelligence team at PitchBook. I led the Emerging Markets space, Workspaces, and custom fields and saved lists. The case studies highlight two projects launched in 2021.",
-    meta: ["2021"],
+    meta: ["Custom Data", "Mapping Interactions"],
     role: "Lead Designer · Lead Researcher",
     company: "PitchBook",
     year: "2021",
